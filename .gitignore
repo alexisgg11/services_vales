@@ -1,0 +1,27 @@
+/.local/
+/backend/target/
+/docs/fuentes/
+
+# Notas internas y referencias de desarrollo
+/AGENTS.md
+/docs/analisis-requerimientos.md
+/docs/arquitectura.md
+/docs/consultas-docente.md
+/docs/contraste-base-datos.md
+/docs/interfaz.md
+/docs/plan-construccion.md
+/docs/revision-audio-y-servicios.md
+
+.env
+.env.*
+!/.env.example
+*.key
+*.pem
+*.p12
+*.pfx
+*.jks
+*.keystore
+*.dump
+*.backup
+*.log
+*.crt

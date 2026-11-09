@@ -1,0 +1,27 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Ejecutar Services Vales",
+      "request": "launch",
+      "noDebug": true,
+      "suppressMultipleSessionWarning": true,
+      "mainClass": "org.springframework.boot.loader.launch.JarLauncher",
+      "classPaths": ["${workspaceFolder}/.local/ejecucion-vscode/services-vales.jar"],
+      "shortenCommandLine": "none",
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "VALES_PORT": "8080"
+      },
+      "preLaunchTask": "Vales: preparar ejecución",
+      "console": "internalConsole",
+      "internalConsoleOptions": "neverOpen",
+      "serverReadyAction": {
+        "pattern": "Vales listo en (https?://\\S+)",
+        "uriFormat": "%s",
+        "action": "openExternally"
+      }
+    }
+  ]
+}

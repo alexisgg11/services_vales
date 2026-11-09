@@ -1,0 +1,79 @@
+.pdf-dialog {
+  width: min(960px, calc(100vw - 40px));
+  max-width: none;
+  max-height: calc(100dvh - 40px);
+  margin: auto;
+  border-radius: 16px;
+}
+.pdf-dialog .sheet-inner { max-height: calc(100dvh - 40px); }
+.pdf-dialog .sheet-body {
+  background: #e9eef2;
+  padding: 24px;
+}
+.pdf-pages {
+  max-width: 740px;
+  margin: auto;
+  display: grid;
+  gap: 20px;
+}
+.pdf-pages canvas {
+  display: block;
+  background: white;
+  box-shadow: 0 2px 10px #18324b12;
+  height: auto;
+}
+.pdf-loading {
+  padding: 60px 20px;
+  text-align: center;
+  color: var(--muted);
+}
+.pdf-dialog .sheet-footer {
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+#print-document { display: none; }
+@media (max-width: 700px) {
+  .pdf-dialog {
+    width: calc(100vw - 16px);
+    max-height: calc(100dvh - 20px);
+  }
+  .pdf-dialog .sheet-inner { max-height: calc(100dvh - 20px); }
+  .pdf-dialog .sheet-body {
+    padding: 12px;
+  }
+  .pdf-dialog .sheet-footer {
+    padding: 12px;
+    gap: 7px;
+  }
+  .pdf-dialog .sheet-footer .btn {
+    font-size: 12px;
+    padding: 8px 10px;
+  }
+  .pdf-dialog .sheet-header {
+    padding: 18px;
+  }
+}
+@media print {
+  @page {
+    size: A4;
+    margin: 0;
+  }
+  html, body { background: white !important; }
+  body > * { display: none !important; }
+  body #print-document {
+    display: block !important;
+    background: white;
+    padding: 0;
+  }
+  .pdf-print-page {
+    display: block;
+    width: 210mm;
+    max-width: 100%;
+    height: auto;
+    break-after: page;
+    break-inside: avoid;
+  }
+  .pdf-print-page:last-child {
+    break-after: auto;
+  }
+}

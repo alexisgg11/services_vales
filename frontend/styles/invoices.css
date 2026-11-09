@@ -1,0 +1,512 @@
+.invoice-workspace {
+  display: grid;
+  grid-template-columns: minmax(330px, 0.9fr) minmax(530px, 1.3fr);
+  gap: 24px;
+  align-items: start;
+}
+.invoice-selection,
+.invoice-panel {
+  min-width: 0;
+}
+.invoice-panel {
+  position: sticky;
+  top: 22px;
+}
+.invoice-workspace .section-title h2 {
+  font-size: 16px;
+}
+.invoice-workspace .section-title > svg {
+  width: 22px;
+  height: 22px;
+  color: var(--primary);
+}
+.invoice-workspace .table-tools {
+  padding: 14px;
+  gap: 8px;
+}
+.invoice-workspace .search {
+  flex-basis: 100%;
+  max-width: none;
+}
+.invoice-workspace .table-filter {
+  max-width: calc(100% - 113px);
+}
+.invoice-workspace .table-scroll {
+  max-height: min(490px, calc(100dvh - 300px));
+  min-height: 210px;
+}
+.invoice-workspace .data-table th,
+.invoice-workspace .data-table td {
+  padding: 12px;
+}
+.table-provider {
+  display: flex !important;
+  align-items: flex-start;
+  gap: 5px;
+  white-space: normal;
+  max-width: 145px;
+  line-height: 1.4;
+}
+.table-provider svg {
+  width: 12px;
+  height: 12px;
+  margin-top: 2px;
+}
+.invoice-workspace .table-footer {
+  padding: 12px;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.invoice-workspace .table-footer > .row {
+  margin-left: auto;
+}
+.invoice-panel .invoice-comparison {
+  grid-template-columns: minmax(0, 1fr) 48px minmax(0, 1fr);
+}
+.invoice-panel .comparison-card {
+  padding: 20px 17px;
+}
+.invoice-panel .comparison-heading {
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.invoice-panel .comparison-heading h3 {
+  font-size: 15px;
+}
+.invoice-panel .comparison-heading > svg {
+  width: 21px;
+  height: 21px;
+}
+.invoice-panel .comparison-provider {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  font-size: 13px;
+  line-height: 1.5;
+  min-height: 38px;
+}
+.comparison-provider svg {
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+}
+.invoice-panel .comparison-bridge svg {
+  width: 36px;
+  height: 36px;
+  stroke-width: 1.8;
+}
+.invoice-panel .selected-vouchers {
+  list-style: none;
+  padding: 7px 6px 8px 0;
+  margin: 0 0 18px;
+  max-height: 350px;
+  overflow: auto;
+  display: grid;
+  gap: 14px;
+  align-content: start;
+}
+.selected-voucher-item {
+  position: relative;
+  min-width: 0;
+  list-style: none;
+}
+.selected-voucher-remove {
+  position: absolute;
+  right: 0;
+  top: 0;
+  transform: translate(12%, -15%);
+  z-index: 2;
+  background: white;
+  border: 1px solid var(--line);
+  width: 28px;
+  height: 28px;
+}
+.selected-voucher-remove svg {
+  width: 15px;
+  height: 15px;
+}
+.selected-voucher-remove:hover {
+  color: var(--danger);
+  background: #fff5f5;
+}
+.selected-vouchers .voucher-stub {
+  padding: 17px 0 17px 14px;
+  gap: 9px;
+  flex-wrap: wrap;
+}
+.selected-vouchers .voucher-code {
+  font-size: 17px;
+}
+.selected-vouchers .voucher-label {
+  font-size: 10px;
+}
+.selected-vouchers .voucher-mark {
+  width: 32px;
+  height: 39px;
+}
+.selected-vouchers .voucher-stub > .badge {
+  font-size: 10px;
+  padding-inline: 7px;
+}
+.selected-vouchers .receipt-content {
+  padding: 18px 14px;
+}
+.selected-vouchers .vale-facts {
+  gap: 17px 14px;
+}
+.selected-vouchers .vale-facts dd {
+  font-size: 13px;
+}
+.selected-vouchers .vale-facts dt {
+  font-size: 11px;
+  align-items: flex-start;
+}
+.selected-vouchers .vale-facts dt svg {
+  margin-top: 1px;
+}
+.invoice-panel .comparison-total {
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 6px;
+}
+.invoice-panel .comparison-total strong {
+  font-size: 25px;
+}
+.invoice-panel .comparison-total span {
+  font-size: 13px;
+}
+.invoice-panel .field > label {
+  font-size: 13px;
+}
+.invoice-panel .field select {
+  font-size: 14px;
+  padding-inline: 9px;
+}
+.entity-line {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.entity-line > svg {
+  width: 20px;
+  height: 20px;
+  color: #56848b;
+  margin-top: 2px;
+}
+.entity-line small {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 3px;
+}
+.invoice-panel .invoice-meta {
+  gap: 22px;
+  margin-block: 23px 26px;
+}
+.invoice-panel .comparison-actions {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 15px;
+  padding-top: 16px;
+}
+.invoice-panel .comparison-actions p {
+  font-size: 13px;
+}
+.invoice-panel .comparison-actions > .btn {
+  align-self: flex-end;
+}
+.invoice-confirm-dialog {
+  width: min(820px, calc(100vw - 40px));
+}
+.invoice-confirm-document {
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  padding: 22px;
+  background: #fafcfc;
+}
+.invoice-confirm-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.invoice-confirm-title > span:first-child {
+  display: grid;
+  place-items: center;
+  width: 43px;
+  height: 48px;
+  border: 1px solid #cce1df;
+  border-radius: 8px;
+  background: #edf6f4;
+  color: var(--primary);
+}
+.invoice-confirm-title > span:first-child svg {
+  width: 25px;
+  height: 25px;
+}
+.invoice-confirm-title > div {
+  min-width: 125px;
+  flex: 1;
+}
+.invoice-confirm-title small {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+.invoice-confirm-title strong {
+  font-size: 21px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.invoice-confirm-count {
+  color: var(--primary);
+  font-size: 12px;
+  padding: 4px 9px;
+  border-radius: 5px;
+  background: #e7f3ef;
+  white-space: nowrap;
+}
+.invoice-confirmation .invoice-meta {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr;
+  gap: 20px;
+  margin: 23px 0 0;
+}
+.invoice-confirm-totals {
+  display: grid;
+  grid-template-columns: 1fr 62px 1fr;
+  align-items: center;
+  gap: 12px;
+  margin-top: 22px;
+  padding: 20px;
+  border: 1px solid #b9dacb;
+  border-radius: 10px;
+  background: #f4faf6;
+}
+.invoice-confirm-totals > div {
+  display: grid;
+  gap: 7px;
+}
+.invoice-confirm-totals > div:last-child {
+  text-align: right;
+}
+.invoice-confirm-totals strong {
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--success);
+  font-variant-numeric: tabular-nums;
+}
+.invoice-confirm-totals > div > span {
+  color: #577669;
+  font-size: 12px;
+}
+.invoice-confirm-link {
+  display: grid;
+  place-items: center;
+  color: var(--success);
+}
+.invoice-confirm-link svg {
+  width: 36px;
+  height: 36px;
+}
+.invoice-confirm-status {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  color: var(--success);
+  font-size: 13px;
+  margin-top: 13px;
+}
+.invoice-confirm-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  margin: 25px 0 14px;
+}
+.invoice-confirm-label > svg {
+  color: var(--primary);
+}
+.invoice-confirm-vales {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+.invoice-confirm-vales .voucher-stub {
+  padding: 18px 0 18px 18px;
+}
+.invoice-confirm-vales .receipt-content {
+  padding: 19px 18px;
+}
+.invoice-confirm-vales .voucher-code {
+  font-size: 18px;
+}
+@media (min-width: 1600px) {
+  .invoice-workspace {
+    grid-template-columns: minmax(350px, 0.95fr) minmax(620px, 1.25fr);
+  }
+  .invoice-panel .comparison-card {
+    padding: 22px;
+  }
+  .selected-vouchers .voucher-code {
+    font-size: 18px;
+  }
+}
+@media (max-width: 1250px) and (min-width: 951px) {
+  .invoice-workspace {
+    grid-template-columns: minmax(280px, 1fr) minmax(400px, 1.4fr);
+    gap: 18px;
+  }
+  .invoice-panel .invoice-comparison {
+    grid-template-columns: minmax(0, 1fr) 38px minmax(0, 1fr);
+  }
+  .invoice-panel .comparison-card {
+    padding: 17px 12px;
+  }
+  .invoice-panel .comparison-heading h3 {
+    font-size: 13px;
+  }
+  .invoice-panel .comparison-heading > svg {
+    display: none;
+  }
+  .invoice-panel .comparison-bridge svg {
+    width: 32px;
+    height: 32px;
+  }
+  .selected-vouchers .vale-facts {
+    grid-template-columns: 1fr;
+  }
+  .selected-vouchers .voucher-stub {
+    padding: 14px 10px;
+    gap: 7px;
+  }
+  .selected-vouchers .voucher-code {
+    font-size: 16px;
+  }
+  .selected-vouchers .voucher-label {
+    font-size: 9px;
+  }
+  .invoice-panel .selected-vouchers {
+    max-height: 330px;
+  }
+  .entity-line {
+    font-size: 13px;
+    gap: 7px;
+  }
+  .entity-line small {
+    font-size: 11px;
+  }
+  .entity-line > svg {
+    width: 18px;
+    height: 18px;
+  }
+  .invoice-panel .field select {
+    font-size: 13px;
+  }
+  .invoice-panel .comparison-total strong {
+    font-size: 23px;
+  }
+}
+@media (max-width: 950px) {
+  .invoice-workspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .invoice-panel {
+    position: static;
+  }
+  .invoice-workspace .table-scroll {
+    max-height: 300px;
+    min-height: 0;
+  }
+  .invoice-panel .invoice-comparison {
+    grid-template-columns: minmax(0, 1fr) 48px minmax(0, 1fr);
+  }
+  .invoice-panel .comparison-total {
+    flex-direction: row;
+    align-items: center;
+  }
+  .invoice-panel .selected-vouchers {
+    max-height: 340px;
+  }
+}
+@media (max-width: 600px) {
+  .invoice-panel .invoice-comparison {
+    grid-template-columns: 1fr;
+  }
+  .invoice-panel .comparison-bridge {
+    height: 60px;
+  }
+  .invoice-panel .comparison-bridge svg {
+    width: 38px;
+    height: 38px;
+  }
+  .invoice-panel .comparison-total {
+    flex-direction: row;
+  }
+  .invoice-panel .selected-vouchers {
+    max-height: 370px;
+  }
+  .invoice-panel .invoice-meta {
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  .invoice-panel .invoice-meta .entity-line:first-child {
+    grid-column: 1/-1;
+  }
+  .invoice-panel .field select {
+    font-size: 16px;
+  }
+  .invoice-panel .comparison-actions > .btn {
+    align-self: stretch;
+  }
+  .invoice-confirmation .invoice-meta {
+    grid-template-columns: 1fr;
+    gap: 17px;
+  }
+  .invoice-confirm-document {
+    padding: 18px;
+  }
+  .invoice-confirm-totals {
+    gap: 7px;
+    grid-template-columns: 1fr 30px 1fr;
+    padding: 16px 12px;
+  }
+  .invoice-confirm-totals strong {
+    font-size: 21px;
+  }
+  .invoice-confirm-totals > div > span {
+    font-size: 11px;
+  }
+  .invoice-confirm-link svg {
+    width: 28px;
+    height: 28px;
+  }
+  .invoice-confirm-title strong {
+    font-size: 18px;
+  }
+  .invoice-confirm-title {
+    gap: 9px;
+    flex-wrap: wrap;
+  }
+  .invoice-confirm-title > span:first-child {
+    width: 35px;
+    height: 42px;
+  }
+  .invoice-confirm-count {
+    font-size: 11px;
+  }
+  .invoice-confirm-vales {
+    grid-template-columns: 1fr;
+  }
+  .invoice-confirm-dialog {
+    width: calc(100vw - 20px);
+  }
+}
