@@ -34,7 +34,7 @@ En una copia recién instalada, el vale autorizado **2026110044 de Piura** permi
 3. **Facturar y consultar gastos.** Contabilidad elige vales usados y sin factura de un mismo grifo. Selecciona un documento que corresponda a esos consumos. Los ejemplos históricos incluyen facturas que cuadran y otras con un céntimo de diferencia. Después de confirmar, el gasto aparece en el mes del **consumo**, aunque la factura sea de otro mes.
 4. **Anular y consultar PDF.** El emisor puede anular un vale propio emitido o autorizado, indicando el motivo. El PDF refleja el estado actualizado. Se abre desde el servicio **PDF del vale** o desde la ficha del QR tras iniciar sesión.
 
-En **Asociar factura**, un documento puede cubrir consumos **con contrato y S/C** si corresponde a ambos, todos pertenecen al mismo grifo y el total coincide a dos decimales. Si el grifo emitió dos facturas, Contabilidad asocia cada grupo a su documento. Una factura que cubre solo consumos con contrato se concilia con esos vales. El sistema compara proveedor, elegibilidad y total final. La modalidad no es un filtro de la factura. Una asociación cerrada bloquea cambios posteriores. [Flujo de asociación](flujos-vales.md#4-asociar-factura)
+En **Asociar factura**, dos vales de un mismo grifo por S/ 300 con contrato y S/ 80 S/C pueden asociarse a una factura de S/ 380 que cubra ambos. [Flujo de asociación](flujos-vales.md#4-asociar-factura)
 
 Para probar **S/C por vencimiento**, el operativo de Sullana elige **Grifo Contrato Vencido (demo)** y **Diésel B5** si la fecha de emisión cumple la regla de vencimiento. Jefatura de Sullana autoriza y `demo.grifo.vencido` atiende con el DNI `90000002`. Para probar **S/C para tercero**, se puede usar **Estación Santa Elena (demo)** y el DNI ficticio `90000003`. El grifo verifica ese documento aunque el vale figure a nombre del trabajador interno responsable.
 
@@ -53,5 +53,7 @@ Para probar **S/C por vencimiento**, el operativo de Sullana elige **Grifo Contr
 
 3. Reiniciar **Ejecutar Services Vales**. En Windows x64, Vales prepara lego, valida el dominio mediante DuckDNS y obtiene un certificado de Let's Encrypt. El token queda en `.env` y los certificados se guardan en `.local/https/`.
 4. Abrir en el celular la dirección HTTPS que anuncia Vales. Ir a **Registrar atención → Escanear QR → Activar cámara** y conceder el permiso. Los PDF descargados con otra dirección se generan nuevamente para actualizar el enlace impreso. Si cambia la IP privada de la PC, se actualiza `VALES_HTTPS_IPV4` y se reinicia.
+
+Para probar con un QR guardado, usar **Leer imagen** en el escáner.
 
 El QR abre una ficha pública dentro de la red local con código, grifo, fecha de emisión y estado. Para ver el PDF o realizar operaciones se requiere sesión y permiso. Los accesos de la ficha llevan al servicio correspondiente. El PDF muestra el DNI del trabajador a las cuentas habilitadas para verlo. Al grifo le indica que debe verificarlo con el documento presentado.

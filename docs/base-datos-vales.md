@@ -2,7 +2,7 @@
 
 ## Copia incluida
 
-Una instalación nueva desde VS Code carga automáticamente la [copia de prueba del 8 de noviembre de 2026](../backend/src/main/resources/db/datos/copia-prueba.sql) después de aplicar las [migraciones](../backend/src/main/resources/db/migraciones). Contiene los registros operativos de la base de Vales en esa fecha.
+Una instalación nueva carga la [copia de prueba](../backend/src/main/resources/db/datos/copia-prueba.sql) después de aplicar las [migraciones](../backend/src/main/resources/db/migraciones).
 
 | Registros | Cantidad |
 | --- | ---: |
@@ -12,7 +12,7 @@ Una instalación nueva desde VS Code carga automáticamente la [copia de prueba 
 | Cuentas de prueba | 25 |
 | Movimientos de historial | 526 |
 
-La copia conserva identificadores, correlativos, estados, precios, contratos y asociaciones. Incluye cuentas y DNI ficticios. Las credenciales de PostgreSQL, los archivos de HTTPS y los registros de la publicación remota retirada quedan fuera del repositorio. La copia conserva las fechas originales. Las pruebas de reportes pueden hacerse en noviembre de 2026 y meses anteriores. Las bases existentes conservan sus datos.
+Para probar los reportes, seleccionar noviembre de 2026 o un mes anterior.
 
 ## Ver la instancia privada en pgAdmin
 
@@ -53,11 +53,11 @@ La copia conserva identificadores, correlativos, estados, precios, contratos y a
    VALES_DB_PASSWORD=
    ```
 
-   El archivo usa el formato `CLAVE=valor`, sin comillas. Una barra invertida literal se escribe como `\\`. Git excluye `.env`. Para usar la instancia privada, se elige `VALES_DB_MODE=local`. Si la instalación anterior guardaba la conexión en `.local/vales-db.properties`, se trasladan los valores de `url`, `usuario` y `clave` a las variables indicadas arriba.
+   El archivo usa el formato `CLAVE=valor`, sin comillas. Una barra invertida literal se escribe como `\\`. Para volver a la instancia privada, se elige `VALES_DB_MODE=local`.
 
-En una base de Vales ya configurada en 5432, el propietario aplica solo las migraciones pendientes. Para habilitar el DNI por QR en una instalación anterior, corresponde [la migración 11](../backend/src/main/resources/db/migraciones/11-dni-documento-qr.sql). El instalador completo se reserva para bases nuevas.
+## Actualizar una instalación existente
 
-Spring Boot mantiene el grupo de conexiones PostgreSQL mediante HikariCP y lo cierra al detener Vales. Los repositorios usan JDBC para las consultas. Las cuentas `demo.*` y sus hashes son datos de prueba de Vales. La cuenta de conexión PostgreSQL es independiente.
+El propietario de la base aplica solo las [migraciones pendientes](../backend/src/main/resources/db/migraciones), en orden. Si la conexión estaba en `.local/vales-db.properties`, se trasladan `url`, `usuario` y `clave` a las variables de `.env` del paso anterior.
 
 ## Dónde se guarda cada dato
 
