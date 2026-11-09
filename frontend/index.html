@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <title>Vales | Control de combustible</title>
+    <link rel="stylesheet" href="styles/tokens.css" />
+    <link rel="stylesheet" href="styles/components.css" />
+    <link rel="stylesheet" href="styles/services.css" />
+    <link rel="stylesheet" href="styles/vales.css" />
+    <link rel="stylesheet" href="styles/workspace.css" />
+    <link rel="stylesheet" href="styles/invoices.css" />
+    <link rel="stylesheet" href="styles/pdf-viewer.css" />
+    <script defer src="vendor/lucide.min.js"></script>
+    <script defer src="vendor/qrcode.js"></script>
+    <script defer src="vendor/pdf-lib.min.js"></script>
+    <script defer src="vendor/fontkit.umd.min.js"></script>
+    <script defer src="vendor/selawik-regular.js"></script>
+    <script defer src="vendor/pdf.worker.js"></script>
+    <script defer src="vendor/pdf.js"></script>
+    <link rel="stylesheet" href="styles/lector-qr.css">
+    <script defer src="vendor/jsQR.js"></script>
+    <script type="module" src="app.js"></script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <div id="overlays"></div>
+    <div id="notifications" aria-live="polite" aria-atomic="true"></div>
+    <div id="print-document"></div>
+    <noscript>Activa JavaScript para usar Services Vales.</noscript>
+  </body>
+</html>

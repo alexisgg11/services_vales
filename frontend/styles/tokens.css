@@ -1,0 +1,156 @@
+:root {
+  font-family: "Segoe UI", Arial, sans-serif;
+  color: #18324b;
+  background: #f5f7fa;
+  font-synthesis: none;
+  --canvas: #f5f7fa;
+  --surface: #fff;
+  --ink: #18324b;
+  --muted: #647487;
+  --line: #dce3ea;
+  --soft: #edf2f6;
+  --primary: #087f86;
+  --primary-hover: #06676d;
+  --navy: #153047;
+  --danger: #ae3542;
+  --success: #217452;
+  --radius: 10px;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+button,
+a,
+select,
+summary,
+input[type="checkbox"] {
+  cursor: pointer;
+}
+button:disabled,
+select:disabled {
+  cursor: not-allowed;
+}
+input:not([type="checkbox"]),
+textarea {
+  cursor: text;
+}
+button:disabled {
+  opacity: 0.45;
+}
+a {
+  color: inherit;
+}
+button {
+  transition: background 0.12s;
+}
+button,
+select,
+input,
+textarea {
+  outline-offset: 3px;
+}
+*:focus-visible {
+  outline: 3px solid #6ebfc4;
+}
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+h1 {
+  font-size: 28px;
+  line-height: 1.25;
+  font-weight: 650;
+  letter-spacing: -0.7px;
+}
+h2 {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.25px;
+}
+h3 {
+  font-size: 15px;
+  font-weight: 600;
+}
+small {
+  font-size: 12px;
+}
+svg {
+  width: 18px;
+  height: 18px;
+  stroke-width: 1.7;
+  flex-shrink: 0;
+}
+[hidden] {
+  display: none !important;
+}
+.muted {
+  color: var(--muted);
+}
+.numeric {
+  font-variant-numeric: tabular-nums;
+}
+.sr-only {
+  position: absolute;
+  clip: rect(0, 0, 0, 0);
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.text-end {
+  text-align: right;
+}
+.stack {
+  display: grid;
+  gap: 18px;
+}
+.row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.spaced {
+  justify-content: space-between;
+}
+.grow {
+  flex: 1;
+  min-width: 0;
+}
+.wide {
+  grid-column: 1/-1;
+}
+.eyebrow {
+  font-size: 12px;
+  color: var(--muted);
+}
+.space-top {
+  margin-top: 24px;
+}
+.space-top-sm {
+  margin-top: 8px;
+}
+.space-top-md {
+  margin-top: 15px;
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,101 @@
+.barra {
+  padding: 0.9rem max(1rem, calc((100vw - 42rem) / 2));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.barra a:first-child {
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.consulta {
+  width: min(42rem, calc(100% - 2rem));
+  margin: 1.5rem auto 3rem;
+}
+
+.ficha {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.ficha > header, .ficha > section {
+  padding: 1rem;
+}
+
+.ficha > header {
+  border-bottom: 1px solid var(--line);
+  background: var(--soft);
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.8rem;
+}
+
+.ficha-acciones {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.verificacion { max-width: 34rem; }
+.verificacion-datos {
+  display: grid;
+  gap: 0.85rem;
+  margin: 0 0 1.25rem;
+}
+.verificacion-datos dt { color: var(--muted); }
+.verificacion-datos dd { margin: 0.2rem 0 0; font-weight: 600; }
+.verificacion .btn + p { margin-top: 0.45rem; }
+
+.ficha > section + section {
+  border-top: 1px solid var(--line);
+}
+
+.ficha > .ficha-documento {
+  background: #e9eef2;
+  padding: clamp(0.5rem, 2vw, 1rem);
+}
+
+.zonal, .fila-vale small {
+  color: var(--muted);
+}
+
+.estado {
+  display: inline-block;
+  padding: 0.2rem 0.65rem;
+  margin-top: 0.45rem;
+  border-radius: 2rem;
+  font-weight: 600;
+  color: var(--ink);
+  background: var(--soft);
+}
+
+.estado[data-estado="0"] { background: #fff0d4; color: #77490d; }
+.estado[data-estado="1"] { background: #d9f2f0; color: #06585c; }
+.estado[data-estado="3"] { background: #e1eef9; color: #214f76; }
+.estado[data-estado="4"] { background: #fbe6e8; color: #862334; }
+
+.vales-lista { padding: 0; margin: 0.8rem 0 0; list-style: none; }
+.fila-vale {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.8rem 1rem;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+  text-decoration: none;
+}
+.fila-vale small { display: block; }
+.fila-vale .estado { margin: 0; flex-shrink: 0; }
+
+

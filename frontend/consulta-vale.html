@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="es-PE">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>Consulta de vales</title>
+  <link rel="stylesheet" href="/app/styles/tokens.css">
+  <link rel="stylesheet" href="/app/styles/components.css">
+  <link rel="stylesheet" href="/app/styles/services.css">
+  <link rel="stylesheet" href="/app/styles/vales.css">
+  <link rel="stylesheet" href="/app/consulta.css">
+  <link rel="stylesheet" href="/app/styles/lector-qr.css">
+  <link rel="stylesheet" href="/app/styles/pdf-viewer.css">
+  <script defer src="/app/vendor/lucide.min.js"></script>
+  <script defer src="/app/vendor/jsQR.js"></script>
+  <script type="module" src="/app/features/consulta/pagina.js"></script>
+</head>
+<body>
+  <header class="barra">
+    <a href="/">Vales de combustible</a>
+    <button id="escanear-vale" type="button" class="icon-btn" aria-label="Escanear QR" title="Escanear QR"><i data-lucide="scan-line" aria-hidden="true"></i></button>
+    <button id="cerrar-sesion" type="button" class="btn btn--ghost btn--small">Cerrar sesión</button>
+  </header>
+  <main class="consulta">
+    <p id="estado-carga" role="status">Cargando…</p>
+    <div id="resultado"></div>
+  </main>
+  <div id="overlays"></div>
+  <div id="print-document"></div>
+</body>
+</html>
