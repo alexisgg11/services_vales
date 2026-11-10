@@ -12,6 +12,15 @@
   position: sticky;
   top: 22px;
 }
+.invoice-evidence {
+  border: 0;
+  padding: 0;
+  margin: 18px 0 0;
+  min-width: 0;
+}
+#invoice-tickets:not(:empty) {
+  margin-top: 16px;
+}
 .invoice-workspace .section-title h2 {
   font-size: 16px;
 }
@@ -109,25 +118,6 @@
   position: relative;
   min-width: 0;
   list-style: none;
-}
-.selected-voucher-remove {
-  position: absolute;
-  right: 0;
-  top: 0;
-  transform: translate(12%, -15%);
-  z-index: 2;
-  background: white;
-  border: 1px solid var(--line);
-  width: 28px;
-  height: 28px;
-}
-.selected-voucher-remove svg {
-  width: 15px;
-  height: 15px;
-}
-.selected-voucher-remove:hover {
-  color: var(--danger);
-  background: #fff5f5;
 }
 .selected-vouchers .voucher-stub {
   padding: 17px 0 17px 14px;

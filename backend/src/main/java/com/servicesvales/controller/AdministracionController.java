@@ -1,6 +1,7 @@
 package com.servicesvales.controller;
 
 import com.servicesvales.dto.CuentaRequest;
+import com.servicesvales.dto.HabilitacionUnidadRequest;
 import com.servicesvales.dto.OperacionResponse;
 import com.servicesvales.dto.PrecioContratoRequest;
 import com.servicesvales.dto.RolRequest;
@@ -61,6 +62,24 @@ public class AdministracionController {
     @PostMapping("/precios-contrato")
     public OperacionResponse registrarPrecioContrato(Principal principal, @RequestBody PrecioContratoRequest datos) {
         administracion.registrarPrecioContrato(principal.getName(), datos.aModelo());
+        return OperacionResponse.completada();
+    }
+
+    @GetMapping("/unidades")
+    public JsonNode unidades(Principal principal) {
+        return administracion.unidades(principal.getName());
+    }
+
+    @PostMapping("/unidades/{id}/zonal/{zonal}")
+    public OperacionResponse asignarZonalUnidad(Principal principal, @PathVariable int id, @PathVariable String zonal) {
+        administracion.asignarZonalUnidad(principal.getName(), id, zonal);
+        return OperacionResponse.completada();
+    }
+
+    @PostMapping("/unidades/{id}/habilitaciones")
+    public OperacionResponse habilitarUnidad(Principal principal, @PathVariable int id,
+                                            @RequestBody HabilitacionUnidadRequest datos) {
+        administracion.habilitarUnidad(principal.getName(), datos.aModelo(id));
         return OperacionResponse.completada();
     }
 }

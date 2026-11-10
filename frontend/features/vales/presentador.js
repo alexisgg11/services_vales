@@ -65,9 +65,12 @@ export default (() => {
         ["DNI", v.workerDocument || "Se verifica con el documento del conductor"],
         ["Unidad organizativa", v.org],
         ["Centro de costo", v.center],
+        ...(v.centerLocality ? [["Localidad del centro", v.centerLocality]] : []),
+        ...(v.centerLocationReference ? [["Ubicación de referencia", v.centerLocationReference]] : []),
         ["Zonal", v.zone],
         ["Localidad", v.locality],
         ["Unidad móvil", catalogos.unit(v.unit)?.plate || v.plate || "Sin unidad móvil"],
+        ...(v.unitBase ? [["Zonal base de la unidad", v.unitBase]] : []),
       ]),
     )}
     ${v.consumption ? section("Atención registrada", "receipt", attentionFacts(v) + amount(v) + facts([["Factura", catalogos.invoice(v.invoice)?.number || "Sin asociar"]])) : ""}

@@ -1,7 +1,7 @@
 package com.servicesvales.service;
 
 import com.servicesvales.model.ContextoAplicacion;
-import com.servicesvales.model.LoteVales;
+import com.servicesvales.model.RespaldoFactura;
 import com.servicesvales.repository.ContabilidadRepository;
 import java.time.LocalDate;
 import org.springframework.stereotype.Service;
@@ -20,10 +20,15 @@ public class ContabilidadService {
         this.sesiones = sesiones;
     }
 
+    @Transactional(readOnly = true)
+    public JsonNode validarTickets(String login, long factura, RespaldoFactura respaldo) {
+        return contabilidad.validarTickets(usuarios.identificarActor(login), factura, respaldo);
+    }
+
     @Transactional
-    public ContextoAplicacion asociarFactura(String login, long factura, LoteVales lote) {
+    public ContextoAplicacion asociarFactura(String login, long factura, RespaldoFactura respaldo) {
         int actor = usuarios.identificarActor(login);
-        contabilidad.asociarFactura(actor, factura, lote);
+        contabilidad.asociarFactura(actor, factura, respaldo);
         return sesiones.contexto(actor, null);
     }
 

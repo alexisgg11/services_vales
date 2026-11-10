@@ -5,11 +5,13 @@ import { catalogos } from "../../state/catalogos.js";
 import { DataTable } from "../../components/tabla.js";
 import * as administracion from "../../api/administracion-api.js";
 import { mostrarPreciosContrato } from "./precios-contrato.js";
+import { mostrarUnidades } from "./unidades.js";
 
 export default function mostrarAdministracion() {
   ui.page("Administración", `<div class="row" aria-label="Secciones de administración">
     ${ui.button("Tarifas", { attrs: 'data-admin-tab="tarifas"' })}
     ${ui.button("Precios de contrato", { attrs: 'data-admin-tab="contratos"' })}
+    ${ui.button("Unidades móviles", { attrs: 'data-admin-tab="unidades"' })}
     ${ui.button("Usuarios y acceso", { attrs: 'data-admin-tab="usuarios"' })}
   </div><div id="admin-panel"><p role="status">Cargando administración…</p></div>`);
   const panel = document.getElementById("admin-panel");
@@ -138,6 +140,10 @@ export default function mostrarAdministracion() {
     });
     if (current === "contratos") {
       mostrarPreciosContrato(panel);
+      return;
+    }
+    if (current === "unidades") {
+      mostrarUnidades(panel, data.zonales, openForm);
       return;
     }
     const users = current === "usuarios";

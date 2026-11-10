@@ -35,4 +35,8 @@ $$;
 \ir datos/copia-prueba.sql
 \endif
 
+\ir migraciones/12-unidad-movil-por-vale.sql
+\ir migraciones/13-unidades-por-zonal.sql
+\ir migraciones/14-conciliacion-tickets-ubicaciones.sql
+
 SELECT count(*) AS vales_de_prueba, count(DISTINCT cod_zonal) AS zonales FROM vales.vales;

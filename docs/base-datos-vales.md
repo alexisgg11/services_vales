@@ -2,7 +2,7 @@
 
 ## Copia incluida
 
-Una instalación nueva carga la [copia de prueba](../backend/src/main/resources/db/datos/copia-prueba.sql) después de aplicar las [migraciones](../backend/src/main/resources/db/migraciones).
+Una instalación nueva prepara el esquema, carga la [copia de prueba](../backend/src/main/resources/db/datos/copia-prueba.sql) y aplica las migraciones 12 a 14. Cada vale conserva la unidad con la que se emitió.
 
 | Registros | Cantidad |
 | --- | ---: |
@@ -59,11 +59,17 @@ Para probar los reportes, seleccionar noviembre de 2026 o un mes anterior.
 
 El propietario de la base aplica solo las [migraciones pendientes](../backend/src/main/resources/db/migraciones), en orden. Si la conexión estaba en `.local/vales-db.properties`, se trasladan `url`, `usuario` y `clave` a las variables de `.env` del paso anterior.
 
+Para una base que ya tiene la migración 11, el propietario ejecuta la [migración 12](../backend/src/main/resources/db/migraciones/12-unidad-movil-por-vale.sql) una sola vez. Se elimina la asignación de la ficha del trabajador y se conservan las unidades guardadas en los vales. La instancia privada de Vales aplica el cambio al arrancar.
+
+La [migración 13](../backend/src/main/resources/db/migraciones/13-unidades-por-zonal.sql) añade la zonal base al catálogo y las habilitaciones por trabajo. Los vales existentes conservan su unidad. Las unidades del catálogo que todavía carecen de zonal base se configuran desde Administración.
+
+La [migración 14](../backend/src/main/resources/db/migraciones/14-conciliacion-tickets-ubicaciones.sql) añade los tickets y su origen a las nuevas conciliaciones. Las asociaciones históricas conservan sus vínculos y carecen de respaldo registrado por este flujo. La migración separa la ubicación explícita del nombre del centro de costo. Si el texto identifica una localidad única del catálogo, guarda su código. Los demás textos explícitos se conservan como referencia. El catálogo guarda la zonal base de la unidad por separado y retira el sufijo de la descripción cuando coincide con esa zonal.
+
 ## Dónde se guarda cada dato
 
 - **Identidad y acceso.** `persona` guarda el DNI, `trabajador` guarda la ficha laboral y `usuario` referencia al trabajador. `usuario_rol` asigna el rol y, cuando corresponde, la zonal y el grifo.
-- **Operación.** `vales` guarda emisión, responsables, despacho, ticket y factura. `historial_vale` registra cada cambio.
+- **Operación.** `vales` guarda emisión, responsables, despacho, ticket y factura. `factura_ticket` guarda los tickets de las nuevas conciliaciones. `historial_vale` registra cada cambio.
 - **Precios.** `contrato_suministro` guarda el precio pactado por combustible. `tarifa` guarda el precio vigente del grifo. El vale conserva el precio de emisión y el de atención.
-- **Organización.** `asignacion_costo` vincula centros de costo con sus unidades organizativas. El vale conserva el centro seleccionado.
+- **Organización.** `asignacion_costo` vincula centros de costo con sus unidades organizativas. El centro puede tener una localidad de catálogo. `unidad_maquinaria` guarda la zonal base y `habilitacion_unidad` registra los préstamos por zonal, centro y fechas. El vale conserva el centro y la unidad elegidos.
 
 [Diagrama de relaciones](diagrama-base-datos.md) · [Guía de uso y cuentas](guia-proyecto.md)

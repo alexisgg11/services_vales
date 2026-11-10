@@ -1,6 +1,6 @@
 # Diagrama de la base de datos de vales
 
-Los tres diagramas muestran las relaciones del [esquema PostgreSQL de vales](../backend/src/main/resources/db/migraciones/01-esquema.sql). [Administración](../backend/src/main/resources/db/migraciones/04-administracion.sql) añade el historial de cambios de cuentas y roles.
+Los tres diagramas muestran las relaciones vigentes del esquema PostgreSQL de vales. [Administración](../backend/src/main/resources/db/migraciones/04-administracion.sql) añade el historial de cuentas y roles. La [migración de unidades móviles](../backend/src/main/resources/db/migraciones/12-unidad-movil-por-vale.sql) deja la asignación del vehículo en el vale.
 
 **PK** indica clave primaria, **FK** indica clave foránea y **UK** indica unicidad. Varias columnas marcadas PK en una tabla forman una sola clave compuesta. Un círculo indica participación opcional. La pata de gallo indica que puede haber varias filas relacionadas.
 
@@ -84,14 +84,18 @@ erDiagram
     centroCosto ||--o{ asignacionCosto : "se asigna"
     localidad |o..o{ trabajador : "ubica por defecto"
     localidad ||..o{ vales : "ubica al emitir"
+    localidad |o..o{ centroCosto : "ubica el centro"
     unidadOrg |o..o{ trabajador : "identifica organización"
     centroCosto |o..o{ trabajador : "identifica centro"
     unidadOrg |o..o{ vales : "se conserva al emitir"
     centroCosto |o..o{ vales : "se conserva al emitir"
     asignacionCosto |o..o{ trabajador : "valida el par de costos"
     asignacionCosto |o..o{ vales : "valida el par de costos"
-    unidadMaquinaria |o..o{ trabajador : "se asigna"
-    unidadMaquinaria |o..o{ vales : "se conserva al emitir"
+    zonal |o..o{ unidadMaquinaria : "es base de"
+    unidadMaquinaria |o..o{ vales : "se elige al emitir"
+    unidadMaquinaria ||--o{ habilitacionUnidad : "se habilita por trabajo"
+    zonal ||--o{ habilitacionUnidad : "recibe la unidad"
+    centroCosto ||--o{ habilitacionUnidad : "identifica el trabajo"
     zonal ||--o{ correlativoVale : "numera por año"
 
     zonal {
@@ -110,6 +114,8 @@ erDiagram
     centroCosto["centro_costo"] {
         varchar cod_centro_costo PK
         varchar descripcion
+        varchar cod_localidad FK
+        text ubicacion_referencia
     }
     asignacionCosto["asignacion_costo"] {
         varchar cod_uni_organizativa PK, FK
@@ -118,6 +124,14 @@ erDiagram
     unidadMaquinaria["unidad_maquinaria"] {
         integer codigo PK
         varchar placa UK
+        varchar cod_zonal FK
+    }
+    habilitacionUnidad["habilitacion_unidad"] {
+        integer codigo_unidad PK, FK
+        varchar cod_zonal PK, FK
+        varchar cod_centro_costo PK, FK
+        date desde PK
+        date hasta
     }
     trabajador {
         integer id_trabajador PK
@@ -125,7 +139,6 @@ erDiagram
         varchar cod_localidad FK
         varchar cod_uni_organizativa FK
         varchar cod_centro_costo FK
-        integer codigo_unidad_movil FK
     }
     vales {
         bigint id_vale PK
@@ -147,7 +160,11 @@ erDiagram
     }
 ```
 
-Zonal y localidad son obligatorias en el vale y deben coincidir con el catálogo. El trabajador puede tener una localidad y una unidad móvil predeterminadas. Si falta la localidad, se indica al emitir. Unidad organizativa y centro de costo son opcionales y, cuando ambos existen, su pareja se valida en `asignacion_costo`. Al emitir se propone el centro de la ficha. Se puede elegir otro habilitado para la misma unidad organizativa. El vale conserva el centro elegido.
+Zonal y localidad son obligatorias en el vale y deben coincidir con el catálogo. Si la ficha del trabajador carece de localidad, se indica al emitir. Unidad organizativa y centro de costo son opcionales y, cuando ambos existen, su pareja se valida en `asignacion_costo`. Al emitir se propone el centro de la ficha y se puede elegir otro habilitado para la misma unidad organizativa. El vale conserva el centro y, si corresponde, la unidad móvil seleccionada. Una misma unidad puede aparecer en vales de diferentes trabajadores.
+
+La unidad de otra zonal se acepta cuando una habilitación coincide con la zonal y el centro de costo del vale y está vigente en su fecha de emisión.
+
+El centro de costo puede referenciar su localidad. La zonal de esa localidad se obtiene del catálogo. Cuando un dato heredado no identifica una localidad de forma inequívoca, se conserva como referencia de ubicación.
 
 El correlativo de vale se guarda por `(cod_zonal, anio)`. La identidad interna es `id_vale` y la búsqueda por código de negocio se distingue mediante el par único `(cod_zonal, codigo_vale)`.
 
@@ -169,6 +186,8 @@ erDiagram
     contratoVale |o..o{ vales : "financia"
     contratoSuministro |o..o{ vales : "respalda precio"
     factura |o..o{ vales : "agrupa consumos"
+    factura ||--o{ facturaTicket : "documenta tickets"
+    vales ||..o| facturaTicket : "respalda el despacho"
     estadoVale ||..o{ vales : "clasifica"
     tercero |o..o{ vales : "recibe vale S/C"
     usuario ||..o{ tarifa : "registra tarifa"
@@ -207,6 +226,13 @@ erDiagram
         varchar numero
         numeric total
         integer asociado_por FK
+        varchar origen_tickets
+        varchar referencia_anexo
+    }
+    facturaTicket["factura_ticket"] {
+        bigint codigo_factura PK, FK
+        varchar cod_proveedor FK
+        varchar ticket PK, FK
     }
     estadoVale["estado_vale"] {
         smallint codigo PK
@@ -241,5 +267,7 @@ erDiagram
 ```
 
 Un vale corresponde a un grifo y a un combustible. Si tiene contrato, sus referencias validan tanto el grifo del contrato como el combustible pactado. S/C admite un tercero registrado o un trabajador cuando el grifo tiene un contrato vencido y ninguno vigente. La factura se asocia por `(codigo_factura, cod_proveedor)` y puede reunir varios vales usados del mismo grifo.
+
+En las nuevas conciliaciones, `factura_ticket` identifica los despachos del respaldo del grifo. Se guarda su origen en la factura y la referencia cuando procede de un anexo. Los vínculos históricos se conservan.
 
 El correlativo del ticket es por grifo. La unicidad corresponde al par `(cod_proveedor, ticket)`. Los estados vigentes son EMITIDO (0), AUTORIZADO (1), USADO (3) y ANULADO (4).

@@ -50,6 +50,7 @@ DECLARE
     factura_sc bigint;
     saldo numeric;
     documento jsonb;
+    unidad_compartida integer := (SELECT codigo FROM unidad_maquinaria WHERE placa = 'DEM-202');
 BEGIN
     -- 1. Registrar. Clave zonal, asignaciones, reinicio anual, tarifa S/C y saldo.
     ASSERT emitido.codigo_vale = autorizado.codigo_vale AND emitido.cod_zonal <> autorizado.cod_zonal;
@@ -68,13 +69,41 @@ BEGIN
         'SELECT registrar_vale(%s, %L, %L, %L, 1, p_centro_costo => %L)',
         op_piura, '90000001', '20000000001', 'REGULAR', '90214201'),
         '22023', 'unidad organizativa del trabajador');
+    PERFORM pg_temp.esperar_error(format(
+        'SELECT registrar_vale(%s, %L, %L, %L, 1, p_unidad_movil => -1)',
+        op_piura, '90000001', '20000000001', 'REGULAR'),
+        '22023', 'unidad móvil válida');
+    PERFORM pg_temp.esperar_error(format(
+        'SELECT registrar_vale(%s, %L, %L, %L, 1, p_unidad_movil => %s)',
+        op_piura, '90000001', '20000000001', 'REGULAR', unidad_compartida),
+        '22023', 'no está habilitada');
+    PERFORM pg_temp.esperar_error(format('SELECT habilitar_unidad(%s,%s,%L,%L,%L,%L)',
+        op_piura, unidad_compartida, '01', '90211212', hoy, hoy), '42501', 'Administrador');
+    PERFORM habilitar_unidad(admin, unidad_compartida, '01', '90211212', hoy, hoy);
+    PERFORM pg_temp.esperar_error(format(
+        'SELECT registrar_vale(%s, %L, %L, %L, 1, p_unidad_movil => %s)',
+        op_piura, '90000001', '20000000001', 'REGULAR', unidad_compartida),
+        '22023', 'no está habilitada');
+    PERFORM pg_temp.esperar_error(format(
+        'SELECT registrar_vale(%s, %L, %L, %L, 1, p_centro_costo => %L, p_unidad_movil => %s, p_fecha => %L)',
+        op_piura, '90000001', '20000000001', 'REGULAR', '90211212', unidad_compartida, hoy - 1),
+        '22023', 'no está habilitada');
+    ASSERT EXISTS (SELECT 1 FROM jsonb_array_elements(contexto_aplicacion(op_piura)->'maquinaria') u
+        WHERE u->>'placa' = 'DEM-202' AND u->'habilitaciones'->0->>'centro' = '90211212');
+    ASSERT NOT EXISTS (SELECT 1 FROM jsonb_array_elements(contexto_aplicacion(op_piura)->'maquinaria') u
+        WHERE u->>'placa' = 'DEM-303');
     nuevo := registrar_vale(op_piura, '90000001', '20000000001', 'REGULAR', 1,
-        p_centro_costo => '90211212');
+        p_centro_costo => '90211212', p_unidad_movil => unidad_compartida);
     ASSERT nuevo.cod_centrocosto = '90211212' AND nuevo.cod_uni_organizativa = '0800';
+    ASSERT unidad_compartida IS NOT NULL AND nuevo.codigo_unidad_movil = unidad_compartida;
     ASSERT (SELECT cod_centro_costo FROM trabajador WHERE id_trabajador = nuevo.id_trabajador) = '90211214';
     documento := consultar_pdf_vale(op_piura, nuevo.cod_zonal, nuevo.codigo_vale);
     ASSERT documento->>'cod_centrocosto' = '90211212';
     ASSERT documento->>'centro_costo' LIKE 'POZO PACHITEA%';
+    ASSERT documento->>'localidad_centro' = 'PIURA';
+    ASSERT documento->>'placa' = 'DEM-202';
+    ASSERT documento->>'zonal_base_unidad' = 'SULLANA';
+    ASSERT NOT (contexto_aplicacion(op_piura)->'trabajador' ? 'maquinaria');
 
     PERFORM pg_temp.esperar_error(format(
         'SELECT registrar_vale(%s, %L, %L, %L, 1)', op_sullana, '90000001', '20000000001', 'REGULAR'),
@@ -154,6 +183,10 @@ BEGIN
         '42501', 'grifo y la zonal del usuario');
 
     nuevo := registrar_vale(op_sullana, '90000002', '20000000001', 'REGULAR', 1);
+    ASSERT nuevo.codigo_unidad_movil IS NULL;
+    nuevo := registrar_vale(op_sullana, '90000002', '20000000001', 'REGULAR', 1,
+        p_unidad_movil => unidad_compartida);
+    ASSERT nuevo.codigo_unidad_movil = unidad_compartida;
     PERFORM autorizar_vales(jefe_sullana, ARRAY[nuevo.id_vale]);
     ASSERT NOT EXISTS (SELECT 1 FROM listar_vales(grifo_a) WHERE id_vale = nuevo.id_vale);
     PERFORM pg_temp.esperar_error(format('SELECT consultar_vale_qr(%s,%L)', grifo_a, nuevo.id_qr),
@@ -187,21 +220,36 @@ BEGIN
         'P0001', 'vales autorizados');
     ASSERT redondeado.importe = 28.08;
 
-    -- 4. Asociar. Exactitud, grifo, duplicados y cierre.
+    -- 4. Asociar. Tickets del respaldo, exactitud, grifo, duplicados y cierre.
     ASSERT (SELECT count(*) FROM listar_facturas_disponibles(pagos, '20000000001') WHERE serie = 'F001') = 2;
+    ASSERT NOT has_function_privilege('vales_app', 'vales.asociar_factura(integer,bigint,bigint[])', 'EXECUTE');
+    documento := validar_tickets_factura(pagos, factura_ok, ARRAY[usado.ticket, redondeado.ticket, 'NO-EXISTE']);
+    ASSERT documento->>'coincide' = 'false';
+    ASSERT (documento->>'total_vales')::numeric = (documento->>'total_factura')::numeric;
+    ASSERT documento->'tickets'->2->>'estado' = 'NO_ENCONTRADO';
     PERFORM pg_temp.esperar_error(format(
-        'SELECT asociar_factura(%s,%s,ARRAY[%s,%s]::bigint[])', pagos, factura_mal, usado.id_vale, redondeado.id_vale),
+        'SELECT asociar_factura_con_tickets(%s,%s,ARRAY[%L,%L],%L,NULL)',
+        pagos, factura_mal, usado.ticket, redondeado.ticket, 'FACTURA'),
         'P0001', 'no coinciden');
     PERFORM pg_temp.esperar_error(format(
-        'SELECT asociar_factura(%s,%s,ARRAY[%s,%s]::bigint[])', pagos, factura_ok, usado.id_vale, otro_grifo.id_vale),
-        'P0001', 'mismo grifo');
+        'SELECT asociar_factura_con_tickets(%s,%s,ARRAY[%L,%L,%L],%L,NULL)',
+        pagos, factura_ok, usado.ticket, redondeado.ticket, 'NO-EXISTE', 'FACTURA'),
+        'P0001', 'en este grifo');
     PERFORM pg_temp.esperar_error(format(
-        'SELECT asociar_factura(%s,%s,ARRAY[%s,%s]::bigint[])', pagos, factura_ok, usado.id_vale, usado.id_vale),
+        'SELECT validar_tickets_factura(%s,%s,ARRAY[%L,%L])', pagos, factura_ok, usado.ticket, usado.ticket),
         '22023', 'repetidos');
-    PERFORM asociar_factura(pagos, factura_ok, ARRAY[usado.id_vale, redondeado.id_vale]);
+    PERFORM pg_temp.esperar_error(format(
+        'SELECT asociar_factura_con_tickets(%s,%s,ARRAY[%L,%L],%L,NULL)',
+        pagos, factura_ok, usado.ticket, redondeado.ticket, 'ANEXO'), '22023', 'referencia');
+    PERFORM asociar_factura_con_tickets(pagos, factura_ok, ARRAY[usado.ticket, redondeado.ticket],
+        'ANEXO', 'Relación de despachos');
+    ASSERT (SELECT origen_tickets = 'ANEXO' AND referencia_anexo = 'Relación de despachos'
+        FROM factura WHERE codigo_factura = factura_ok);
+    ASSERT (SELECT count(*) FROM factura_ticket WHERE codigo_factura = factura_ok) = 2;
+    ASSERT validar_tickets_factura(pagos, factura_mal, ARRAY[usado.ticket])->'tickets'->0->>'estado' = 'FACTURADO';
     ASSERT (SELECT count(*) FROM listar_facturas_disponibles(pagos, '20000000001') WHERE serie = 'F001') = 1;
     PERFORM pg_temp.esperar_error(format(
-        'SELECT asociar_factura(%s,%s,ARRAY[%s]::bigint[])', pagos, factura_ok, usado.id_vale),
+        'SELECT validar_tickets_factura(%s,%s,ARRAY[%L])', pagos, factura_ok, usado.ticket),
         'P0001', 'ya está cerrada');
 
     -- 5. Anular. Solo el emisor, antes del uso, y libera la reserva.
@@ -262,7 +310,7 @@ BEGIN
     INSERT INTO factura (cod_proveedor, serie, numero, fecha_emision, total)
     VALUES (nuevo.cod_proveedor, 'QA-SC', '000001', hoy, nuevo.importe)
     RETURNING codigo_factura INTO factura_sc;
-    PERFORM asociar_factura(pagos, factura_sc, ARRAY[nuevo.id_vale]);
+    PERFORM asociar_factura_con_tickets(pagos, factura_sc, ARRAY[nuevo.ticket], 'FACTURA', NULL);
     ASSERT EXISTS (SELECT 1 FROM jsonb_array_elements(consultar_gastos(pagos, hoy)->'vales') d
                    WHERE (d->>'id_vale')::bigint = nuevo.id_vale AND (d->>'importe')::numeric = 24.60
                      AND d->'nrocontrato' = 'null'::jsonb);
@@ -287,7 +335,7 @@ BEGIN
     ASSERT nuevo.estado_vale = 3 AND nuevo.importe = 80;
     ASSERT (SELECT monto_disponible FROM contrato_vale WHERE cod_contrato = 'DEMO-SC') = 90000;
     SELECT codigo_factura INTO factura_sc FROM factura WHERE cod_proveedor = '20000000007' AND serie = 'SC01';
-    PERFORM asociar_factura(pagos, factura_sc, ARRAY[nuevo.id_vale]);
+    PERFORM asociar_factura_con_tickets(pagos, factura_sc, ARRAY[nuevo.ticket], 'FACTURA', NULL);
     ASSERT EXISTS (SELECT 1 FROM jsonb_array_elements(consultar_gastos(pagos, hoy)->'vales') d
                    WHERE (d->>'id_vale')::bigint = nuevo.id_vale AND (d->>'importe')::numeric = 80
                      AND d->'nrocontrato' = 'null'::jsonb);
