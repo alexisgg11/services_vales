@@ -1,6 +1,6 @@
 package com.servicesvales.repository;
 
-import com.servicesvales.model.LoteVales;
+import com.servicesvales.model.RespaldoFactura;
 import java.time.LocalDate;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.jdbc.support.SqlArrayValue;
@@ -18,10 +18,20 @@ public class ContabilidadRepository {
         this.json = json;
     }
 
-    public void asociarFactura(int actor, long factura, LoteVales lote) {
-        jdbc.sql("SELECT (vales.asociar_factura(:actor, :factura, :ids)).codigo_factura")
+    public JsonNode validarTickets(int actor, long factura, RespaldoFactura respaldo) {
+        String resultado = jdbc.sql("SELECT vales.validar_tickets_factura(:actor, :factura, :tickets)::text")
                 .param("actor", actor).param("factura", factura)
-                .param("ids", new SqlArrayValue("bigint", lote.ids().toArray())).query(Long.class).single();
+                .param("tickets", new SqlArrayValue("text", respaldo.tickets().toArray()))
+                .query(String.class).single();
+        return json.readTree(resultado);
+    }
+
+    public void asociarFactura(int actor, long factura, RespaldoFactura respaldo) {
+        jdbc.sql("SELECT vales.asociar_factura_con_tickets(:actor, :factura, :tickets, :origen, :referencia)")
+                .param("actor", actor).param("factura", factura)
+                .param("tickets", new SqlArrayValue("text", respaldo.tickets().toArray()))
+                .param("origen", respaldo.origen()).param("referencia", respaldo.referenciaAnexo())
+                .query(Long.class).single();
     }
 
     public JsonNode consultarGastos(int actor, LocalDate mes) {

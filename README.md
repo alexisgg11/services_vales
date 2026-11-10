@@ -11,6 +11,8 @@ Si PostgreSQL está instalado en otra ruta, `VALES_PG_BIN` debe apuntar a su car
 
 Vales gestiona la emisión, autorización, atención y facturación de vales de combustible.
 
+Cada vale conserva su centro de costo y, cuando corresponde, la unidad móvil elegida. Contabilidad parte de una factura y concilia los tickets de su respaldo con el importe final.
+
 ## Arquitectura y stack
 
 ```mermaid

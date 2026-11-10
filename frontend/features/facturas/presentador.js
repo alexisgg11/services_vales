@@ -17,16 +17,15 @@ export default (() => {
       ["Ticket del grifo", v.ticket, "receipt"],
       ["Importe real", formato.money(v.amount), "banknote"],
     ]);
-  const selected = (vales, { removable = true, expanded = new Set() } = {}) =>
-    vales
-      .map(
-        (v) =>
-          `<li class="selected-voucher-item">${valePresentador.card(v, { collapsible: true, expanded: expanded.has(v.id), content: consumption(v) })}${removable ? `<button type="button" class="icon-btn selected-voucher-remove" data-remove-vale="${e(v.id)}" aria-label="Quitar vale ${e(formato.reference(v))}">${ui.icon("x")}</button>` : ""}</li>`,
-      )
-      .join("");
-  const confirmation = (invoice, vales) => {
-    const total = vales.reduce((s, v) => s + v.amount, 0);
-    return `<div class="invoice-confirmation"><section class="invoice-confirm-document"><div class="invoice-confirm-title"><span>${ui.icon("receipt-text")}</span><div><small>Factura</small><strong>${e(invoice.number)}</strong></div><span class="invoice-confirm-count">${vales.length} ${vales.length === 1 ? "vale" : "vales"}</span></div><div class="invoice-meta">${metadata(invoice)}</div></section><div class="invoice-confirm-totals"><div><span>Total de vales</span><strong>${formato.money(total)}</strong></div><span class="invoice-confirm-link">${ui.icon("arrow-left-right")}</span><div><span>Importe de factura</span><strong>${formato.money(invoice.total)}</strong></div></div><p class="invoice-confirm-status">${ui.icon("circle-check")}Los importes coinciden</p><h3 class="invoice-confirm-label">${ui.icon("tickets")}Vales por asociar</h3><ul class="invoice-confirm-vales">${selected(vales, { removable: false })}</ul></div>`;
+  const selected = (tickets) => tickets.map(t => {
+    const contenido = t.vale
+      ? valePresentador.card(t.vale, { collapsible: true, content: consumption(t.vale) })
+      : valePresentador.facts([["Vale", t.codigo_vale, "tickets"], ["Ticket del grifo", t.ticket, "receipt"]]);
+    return `<li class="selected-voucher-item">${contenido}</li>`;
+  }).join("");
+  const confirmation = (invoice, vales, respaldo, total) => {
+    const origen = respaldo.origen === "ANEXO" ? respaldo.referenciaAnexo : "Factura " + invoice.number;
+    return `<div class="invoice-confirmation"><section class="invoice-confirm-document"><div class="invoice-confirm-title"><span>${ui.icon("receipt-text")}</span><div><small>Factura</small><strong>${e(invoice.number)}</strong></div><span class="invoice-confirm-count">${respaldo.tickets.length} ${respaldo.tickets.length === 1 ? "ticket" : "tickets"}</span></div><div class="invoice-meta">${metadata(invoice)}</div><div class="entity-line">${ui.icon("file-text")}<span><small>Respaldo</small>${e(origen)}</span></div></section><div class="invoice-confirm-totals"><div><span>Total de tickets</span><strong>${formato.money(total)}</strong></div><span class="invoice-confirm-link">${ui.icon("arrow-left-right")}</span><div><span>Importe de factura</span><strong>${formato.money(invoice.total)}</strong></div></div><p class="invoice-confirm-status">${ui.icon("circle-check")}Los tickets y el total coinciden</p><h3 class="invoice-confirm-label">${ui.icon("tickets")}Vales por asociar</h3><ul class="invoice-confirm-vales">${selected(vales)}</ul></div>`;
   };
-  return { metadata, selected, confirmation };
+  return { metadata, confirmation };
 })();

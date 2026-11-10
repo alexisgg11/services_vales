@@ -3,8 +3,9 @@ import { aplicarContexto, enOrden } from "./sesion.js";
 import { vales } from "../state/vales.js";
 import { centesimos, identificador } from "../model/valores.js";
 
-export const asociarFactura = (factura, ids) =>
-  enOrden(async () => aplicarContexto(await api.asociarFactura(factura, ids)));
+export const validarTickets = (factura, respaldo) => api.validarTickets(factura, respaldo);
+export const asociarFactura = (factura, respaldo) =>
+  enOrden(async () => aplicarContexto(await api.asociarFactura(factura, respaldo)));
 
 export async function consultarGastos(periodo) {
   const reporte = await api.consultarGastos(periodo);

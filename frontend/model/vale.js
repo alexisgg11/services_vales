@@ -16,6 +16,8 @@ export function mapearVale(datos) {
     worker: datos.dni_trabajador || "t-" + datos.id_trabajador, workerDocument: datos.dni_trabajador || "",
     workerName: datos.trabajador, unit: identificador(datos.codigo_unidad_movil), plate: datos.placa,
     center: datos.centro_costo, org: datos.unidad_organizativa, contract: datos.nrocontrato || "S/C",
+    centerLocality: datos.localidad_centro, centerLocationReference: datos.referencia_ubicacion_centro,
+    unitBase: datos.zonal_base_unidad,
     third: datos.tercero, hasThird: datos.codigo_tercero != null, destination: datos.destino_tercero, emission: datos.fecha_emision,
     quantity: centesimos(datos.cantidad_emitida), price: centesimos(datos.precio_referencial),
     state: datos.estado_vale, note: datos.observacion, consumption: datos.fecha_consumo,

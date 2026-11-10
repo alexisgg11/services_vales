@@ -2,6 +2,7 @@ package com.servicesvales.service;
 
 import com.servicesvales.model.AsignacionRol;
 import com.servicesvales.model.CambioCuenta;
+import com.servicesvales.model.HabilitacionUnidad;
 import com.servicesvales.model.OperacionException;
 import com.servicesvales.model.PrecioContrato;
 import com.servicesvales.model.TarifaCombustible;
@@ -65,5 +66,20 @@ public class AdministracionService {
     @Transactional
     public void registrarPrecioContrato(String login, PrecioContrato datos) {
         administracion.registrarPrecioContrato(usuarios.identificarActor(login), datos);
+    }
+
+    @Transactional(readOnly = true)
+    public JsonNode unidades(String login) {
+        return administracion.unidades(usuarios.identificarActor(login));
+    }
+
+    @Transactional
+    public void asignarZonalUnidad(String login, int unidad, String zonal) {
+        administracion.asignarZonalUnidad(usuarios.identificarActor(login), unidad, zonal);
+    }
+
+    @Transactional
+    public void habilitarUnidad(String login, HabilitacionUnidad datos) {
+        administracion.habilitarUnidad(usuarios.identificarActor(login), datos);
     }
 }

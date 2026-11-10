@@ -23,6 +23,9 @@ final class MigradorPostgres {
             "demo/01-datos.sql", "demo/02-acceso.sql", "demo/03-historial.sql", "demo/04-cobertura.sql",
             "demo/05-sc-vencido.sql");
     private static final String COPIA_PRUEBA = "datos/copia-prueba.sql";
+    private static final List<String> MIGRACIONES_POSTERIORES_A_DATOS = List.of(
+            "migraciones/12-unidad-movil-por-vale.sql", "migraciones/13-unidades-por-zonal.sql",
+            "migraciones/14-conciliacion-tickets-ubicaciones.sql");
 
     private MigradorPostgres() {}
 
@@ -57,6 +60,7 @@ final class MigradorPostgres {
             } else {
                 migrar(connection, COPIA_PRUEBA);
             }
+            for (String migration : MIGRACIONES_POSTERIORES_A_DATOS) migrar(connection, migration);
         }
     }
 

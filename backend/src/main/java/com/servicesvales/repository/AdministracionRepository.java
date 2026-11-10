@@ -2,6 +2,7 @@ package com.servicesvales.repository;
 
 import com.servicesvales.model.AsignacionRol;
 import com.servicesvales.model.CambioCuenta;
+import com.servicesvales.model.HabilitacionUnidad;
 import com.servicesvales.model.PrecioContrato;
 import com.servicesvales.model.TarifaCombustible;
 import java.math.BigDecimal;
@@ -56,6 +57,25 @@ public class AdministracionRepository {
         jdbc.sql("SELECT vales.registrar_precio_contrato(:actor, :proveedor, :contrato, :suministro, :precio)")
                 .param("actor", actor).param("proveedor", datos.proveedor()).param("contrato", datos.contrato())
                 .param("suministro", datos.suministro()).param("precio", datos.precio())
+                .query((rs, fila) -> Boolean.TRUE).single();
+    }
+
+    public JsonNode unidades(int actor) {
+        String datos = jdbc.sql("SELECT vales.unidades_administracion(:actor)::text")
+                .param("actor", actor).query(String.class).single();
+        return json.readTree(datos);
+    }
+
+    public void asignarZonalUnidad(int actor, int unidad, String zonal) {
+        jdbc.sql("SELECT vales.asignar_zonal_unidad(:actor, :unidad, :zonal)")
+                .param("actor", actor).param("unidad", unidad).param("zonal", zonal)
+                .query((rs, fila) -> Boolean.TRUE).single();
+    }
+
+    public void habilitarUnidad(int actor, HabilitacionUnidad datos) {
+        jdbc.sql("SELECT vales.habilitar_unidad(:actor, :unidad, :zonal, :centro, :desde, :hasta)")
+                .param("actor", actor).param("unidad", datos.unidad()).param("zonal", datos.zonal())
+                .param("centro", datos.centro()).param("desde", datos.desde()).param("hasta", datos.hasta())
                 .query((rs, fila) -> Boolean.TRUE).single();
     }
 }

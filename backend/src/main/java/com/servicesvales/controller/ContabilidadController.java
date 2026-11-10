@@ -1,7 +1,7 @@
 package com.servicesvales.controller;
 
 import com.servicesvales.dto.ContextoResponse;
-import com.servicesvales.dto.LoteValesRequest;
+import com.servicesvales.dto.RespaldoFacturaRequest;
 import com.servicesvales.service.ContabilidadService;
 import java.security.Principal;
 import java.time.LocalDate;
@@ -21,8 +21,13 @@ public class ContabilidadController {
         this.contabilidad = contabilidad;
     }
 
+    @PostMapping("/api/facturas/{id}/validacion")
+    public JsonNode validarTickets(Principal principal, @PathVariable long id, @RequestBody RespaldoFacturaRequest datos) {
+        return contabilidad.validarTickets(principal.getName(), id, datos.aModelo());
+    }
+
     @PostMapping("/api/facturas/{id}/vales")
-    public ContextoResponse asociarFactura(Principal principal, @PathVariable long id, @RequestBody LoteValesRequest datos) {
+    public ContextoResponse asociarFactura(Principal principal, @PathVariable long id, @RequestBody RespaldoFacturaRequest datos) {
         return ContextoResponse.desde(contabilidad.asociarFactura(principal.getName(), id, datos.aModelo()));
     }
 
