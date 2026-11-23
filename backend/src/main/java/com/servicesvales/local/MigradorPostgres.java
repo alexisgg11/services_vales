@@ -47,7 +47,8 @@ final class MigradorPostgres {
     "migraciones/19-punto-partida-ruta.sql",
     "migraciones/20-despacho-guiado.sql",
     "migraciones/21-consistencia-operativa.sql",
-    "migraciones/22-ubicaciones-centros-costo.sql"
+    "migraciones/22-ubicaciones-centros-costo.sql",
+    "migraciones/23-rutas-quince-paradas.sql"
   );
 
   private MigradorPostgres() {}

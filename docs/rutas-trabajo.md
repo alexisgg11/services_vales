@@ -2,7 +2,7 @@
 
 ## Funcionamiento
 
-Jefatura registra los recorridos de su zonal desde **Configuración → Rutas de trabajo**. Una ruta representa un trabajo o recorrido con fechas de vigencia y entre una y ocho paradas en orden de visita. Puede asignarse a varios operativos de esa zonal. Un operativo puede tener varias rutas vigentes y elige la correspondiente a su trabajo al registrar el vale.
+Jefatura registra los recorridos de su zonal desde **Configuración → Rutas de trabajo**. Una ruta representa un trabajo o recorrido con fechas de vigencia y de 1 a 15 paradas en orden de visita, además del punto de partida. Puede asignarse a varios operativos de esa zonal. Un operativo puede tener varias rutas vigentes y elige la correspondiente a su trabajo al registrar el vale.
 
 Cada ruta tiene un punto de partida compartido. El sistema propone la referencia de la localidad del primer operativo asignado. Jefatura puede elegir otra localidad o marcar un punto en el mapa. Cuando la partida y todas las paradas están ubicadas, el mapa dibuja automáticamente el recorrido por calles. La casa indica la partida, los números indican el orden de visita y la bandera indica la llegada.
 
@@ -25,7 +25,7 @@ Para un tercero, Jefatura asigna al operativo emisor la ruta correspondiente al 
 
 ## Optimización del orden de visita
 
-La varita de Jefatura consulta a OSRM por las distancias entre la partida y cada parada en ambos sentidos. Java compara las secuencias de visita válidas para las dos a ocho paradas y elige la de menor distancia acumulada en esa matriz. La partida queda fija y el recorrido termina en la última parada del orden sugerido.
+La varita de Jefatura consulta a OSRM por las distancias viales entre la partida y las paradas en ambos sentidos. Con 2 a 15 paradas, Java usa programación dinámica para reutilizar el mejor recorrido parcial de cada conjunto de paradas visitadas y su última parada. Elige la secuencia de menor distancia acumulada en esa matriz. La partida queda fija y el recorrido termina en la última parada del orden sugerido.
 
 Con un costo constante por kilómetro, este criterio reduce el costo estimado de traslado. La matriz usa la distancia de los trayectos más rápidos del perfil vial de OSRM. La interfaz muestra los kilómetros estimados antes y después del cambio. La lista y los pines se actualizan en el borrador y el nuevo orden se registra al pulsar **Guardar ruta**.
 
@@ -58,6 +58,8 @@ Si faltan rutas o el motor vial no responde, se puede seleccionar el grifo en **
 La migración [18-rutas-trabajo.sql](../backend/src/main/resources/db/migraciones/18-rutas-trabajo.sql) añade las tablas y funciones de rutas. La [19-punto-partida-ruta.sql](../backend/src/main/resources/db/migraciones/19-punto-partida-ruta.sql) añade la partida guardada y su vínculo con el vale. El modo local aplica las migraciones pendientes al arrancar. En una base externa con registros, hacer un respaldo y aplicar solo las migraciones pendientes en orden con la cuenta propietaria.
 
 La [migración 22](../backend/src/main/resources/db/migraciones/22-ubicaciones-centros-costo.sql) carga los puntos y direcciones de referencia del catálogo.
+
+La [migración 23](../backend/src/main/resources/db/migraciones/23-rutas-quince-paradas.sql) habilita hasta 15 paradas por ruta. Aplícala antes de desplegar la versión que amplía el límite.
 
 Las funciones de PostgreSQL validan rol, zonal, vigencia y asignación. La cuenta de aplicación solo ejecuta esas funciones y no recibe permisos de escritura directa sobre las tablas nuevas. La vinculación de la ruta y el registro del vale se confirman en la misma transacción; si la versión cambió, se revierte el vale.
 

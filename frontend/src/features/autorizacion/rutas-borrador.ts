@@ -8,6 +8,8 @@ import type {
 import { origenValido } from "@/lib/geografia/coordenadas";
 import { origenDeRuta, origenLocalidad } from "@/lib/geografia/origenes";
 
+export const MAX_PARADAS_RUTA = 15;
+
 export type SeccionRuta = "datos" | "operativos" | "paradas";
 export type CentroRuta = ContextoRutas["centros"][number];
 export type ModoPunto = "centro" | "libre";
@@ -137,6 +139,12 @@ export function validarRuta(
   }
   if (!ruta.paradas.length) {
     return { seccion: "paradas", mensaje: "Añade una parada a la ruta." };
+  }
+  if (ruta.paradas.length > MAX_PARADAS_RUTA) {
+    return {
+      seccion: "paradas",
+      mensaje: `La ruta admite hasta ${MAX_PARADAS_RUTA} paradas.`,
+    };
   }
   for (const [i, parada] of ruta.paradas.entries()) {
     const campo = { seccion: "paradas" as const, parada: parada.clave };
