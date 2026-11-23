@@ -91,9 +91,13 @@ public class OptimizacionRutaService {
       consulta.zonal().isBlank() ||
       consulta.paradas() == null ||
       consulta.paradas().size() < minimoParadas ||
-      consulta.paradas().size() > 8
+      consulta.paradas().size() > OrdenParadas.MAX_PARADAS
     ) throw OperacionException.invalida(
-      "Selecciona una zonal y entre " + minimoParadas + " y 8 paradas."
+      "Selecciona una zonal y entre " +
+        minimoParadas +
+        " y " +
+        OrdenParadas.MAX_PARADAS +
+        " paradas."
     );
 
     int actor = usuarios.identificarActor(login);

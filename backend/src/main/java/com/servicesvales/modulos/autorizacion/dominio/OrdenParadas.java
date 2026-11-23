@@ -1,10 +1,14 @@
 package com.servicesvales.modulos.autorizacion.dominio;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 public final class OrdenParadas {
+
+  public static final int MAX_PARADAS = 15;
 
   private OrdenParadas() {}
 
@@ -15,10 +19,85 @@ public final class OrdenParadas {
   ) {}
 
   public static Optional<Recorrido> calcular(Double[][] metros) {
-    var busqueda = new Busqueda(metros);
-    busqueda.visitar(0, 0, new ArrayList<>());
-    return Optional.ofNullable(busqueda.mejorOrden).map(orden ->
-      new Recorrido(orden, medirOrdenOriginal(metros), busqueda.mejorDistancia)
+    int paradas = metros.length - 1;
+    if (paradas < 0 || paradas > MAX_PARADAS) return Optional.empty();
+    if (paradas == 0) return Optional.of(new Recorrido(List.of(), 0.0, 0));
+
+    int todas = (1 << paradas) - 1;
+    int base = paradas + 1;
+    double[] distancias = new double[(todas + 1) * paradas];
+    Arrays.fill(distancias, Double.POSITIVE_INFINITY);
+    // Cada ordinal es un dígito en base paradas + 1. Con 15 paradas la
+    // secuencia cabe en un long y su orden numérico resuelve los empates.
+    long[] ordenes = new long[distancias.length];
+    for (int parada = 0; parada < paradas; parada++) {
+      Double tramo = metros[0][parada + 1];
+      if (tramo == null) continue;
+      int estado = (1 << parada) * paradas + parada;
+      distancias[estado] = tramo;
+      ordenes[estado] = parada + 1L;
+    }
+
+    // Cada estado conserva el mejor recorrido para el conjunto visitado y su
+    // última parada. Añadir una parada siempre lleva a una máscara mayor.
+    for (int visitadas = 1; visitadas < todas; visitadas++) {
+      for (int ultima = 0; ultima < paradas; ultima++) {
+        int estado = visitadas * paradas + ultima;
+        if (ordenes[estado] == 0) continue;
+        for (int siguiente = 0; siguiente < paradas; siguiente++) {
+          int bit = 1 << siguiente;
+          if ((visitadas & bit) != 0) continue;
+          Double tramo = metros[ultima + 1][siguiente + 1];
+          if (tramo == null) continue;
+          int destino = (visitadas | bit) * paradas + siguiente;
+          double distancia = distancias[estado] + tramo;
+          long orden = ordenes[estado] * base + siguiente + 1;
+          if (esMejor(distancia, orden, distancias[destino], ordenes[destino])) {
+            distancias[destino] = distancia;
+            ordenes[destino] = orden;
+          }
+        }
+      }
+    }
+
+    int mejor = todas * paradas;
+    for (int estado = mejor + 1; estado < distancias.length; estado++) {
+      if (
+        esMejor(
+          distancias[estado],
+          ordenes[estado],
+          distancias[mejor],
+          ordenes[mejor]
+        )
+      ) {
+        mejor = estado;
+      }
+    }
+    if (ordenes[mejor] == 0) return Optional.empty();
+
+    var orden = new ArrayList<Integer>(paradas);
+    for (long secuencia = ordenes[mejor]; secuencia > 0; secuencia /= base) {
+      orden.add((int) (secuencia % base) - 1);
+    }
+    Collections.reverse(orden);
+    return Optional.of(
+      new Recorrido(
+        List.copyOf(orden),
+        medirOrdenOriginal(metros),
+        distancias[mejor]
+      )
+    );
+  }
+
+  private static boolean esMejor(
+    double distancia,
+    long orden,
+    double mejorDistancia,
+    long mejorOrden
+  ) {
+    return (
+      distancia < mejorDistancia ||
+      (distancia == mejorDistancia && orden < mejorOrden)
     );
   }
 
@@ -30,38 +109,5 @@ public final class OrdenParadas {
       total += tramo;
     }
     return total;
-  }
-
-  private static final class Busqueda {
-
-    private final Double[][] metros;
-    private final boolean[] visitadas;
-    private List<Integer> mejorOrden;
-    private double mejorDistancia = Double.POSITIVE_INFINITY;
-
-    private Busqueda(Double[][] metros) {
-      this.metros = metros;
-      this.visitadas = new boolean[metros.length];
-    }
-
-    private void visitar(int desde, double distancia, List<Integer> orden) {
-      if (distancia >= mejorDistancia) return;
-      if (orden.size() == metros.length - 1) {
-        mejorOrden = List.copyOf(orden);
-        mejorDistancia = distancia;
-        return;
-      }
-      // La matriz empieza por el origen. Se prueban primero las paradas
-      // en su orden actual para conservarlo si empata con el mejor.
-      for (int hasta = 1; hasta < metros.length; hasta++) {
-        Double tramo = metros[desde][hasta];
-        if (visitadas[hasta] || tramo == null) continue;
-        visitadas[hasta] = true;
-        orden.add(hasta - 1);
-        visitar(hasta, distancia + tramo, orden);
-        orden.remove(orden.size() - 1);
-        visitadas[hasta] = false;
-      }
-    }
   }
 }

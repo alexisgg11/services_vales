@@ -2,6 +2,7 @@ package com.servicesvales.modulos.autorizacion.dominio;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
@@ -20,6 +21,24 @@ class OrdenParadasTest {
     assertEquals(List.of(0, 2, 1), recorrido.orden());
     assertEquals(32.0, recorrido.metrosPrevios());
     assertEquals(4.0, recorrido.metros());
+  }
+
+  @Test
+  void optimizaQuinceParadasConOrigenFijoYFinalLibre() {
+    var orden = List.of(14, 0, 12, 4, 9, 1, 10, 2, 7, 6, 5, 8, 3, 13, 11);
+    Double[][] metros = new Double[16][16];
+    for (Double[] fila : metros) Arrays.fill(fila, 100.0);
+    int desde = 0;
+    for (int parada : orden) {
+      metros[desde][parada + 1] = 1.0;
+      desde = parada + 1;
+    }
+    metros[desde][0] = null;
+
+    var recorrido = OrdenParadas.calcular(metros).orElseThrow();
+    assertEquals(orden, recorrido.orden());
+    assertEquals(1500.0, recorrido.metrosPrevios());
+    assertEquals(15.0, recorrido.metros());
   }
 
   @Test

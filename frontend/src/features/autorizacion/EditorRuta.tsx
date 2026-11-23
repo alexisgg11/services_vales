@@ -46,6 +46,7 @@ import {
   datosParaGuardarRuta,
   partidaDelBorrador,
   validarRuta,
+  MAX_PARADAS_RUTA,
   type BorradorRuta,
   type ModoPunto,
   type ParadaBorrador,
@@ -764,7 +765,9 @@ export function EditorRuta({
                       id={idParadas + "-agregar"}
                       type="button"
                       variant="outline"
-                      disabled={f.paradas.length >= 8 || !!mapa || ocupado}
+                      disabled={
+                        f.paradas.length >= MAX_PARADAS_RUTA || !!mapa || ocupado
+                      }
                       onClick={agregarParada}
                     >
                       <Plus /> Añadir parada
