@@ -449,9 +449,8 @@ export default function RegistrarVale({
                       </Button>
                       <InfoPopover title="Consulta del DNI">
                         <p>
-                          Se consulta el nombre antes de asignar el vale al
-                          tercero. Para las pruebas pueden usarse los DNI
-                          99000001 y 99000002.
+                          Consulta el DNI para confirmar el nombre antes de
+                          asignar el vale al tercero.
                         </p>
                       </InfoPopover>
                     </div>

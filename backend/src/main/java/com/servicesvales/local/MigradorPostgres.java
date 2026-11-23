@@ -57,8 +57,7 @@ final class MigradorPostgres {
     String propietario,
     String clavePropietario,
     String appPassword,
-    Path directorio,
-    String claveDemo
+    Path directorio
   ) throws Exception {
     try (
       Connection connection = DriverManager.getConnection(
@@ -109,18 +108,16 @@ final class MigradorPostgres {
       }
       for (String migration : MIGRACIONES) migrar(connection, migration);
       if (!aplicada(connection, COPIA_ANTERIOR)) {
-        cargarDemostracion(connection, directorio, claveDemo);
+        cargarDemostracion(connection, directorio);
       }
       for (String migration : MIGRACIONES_POSTERIORES_A_DATOS)
         migrar(connection, migration);
     }
   }
 
-  private static void cargarDemostracion(
-    Connection connection,
-    Path directorio,
-    String claveDemo
-  ) throws IOException, SQLException {
+  private static void cargarDemostracion(Connection connection, Path directorio)
+    throws IOException, SQLException
+  {
     boolean credencialPreparada = false;
     for (String archivo : DATOS_DEMO) {
       if (aplicada(connection, archivo)) continue;
@@ -130,10 +127,7 @@ final class MigradorPostgres {
             "SELECT set_config('vales.demo_clave_hash', ?, false)"
           )
         ) {
-          configurar.setString(
-            1,
-            CredencialDemostracion.hash(directorio, claveDemo)
-          );
+          configurar.setString(1, CredencialDemostracion.hash(directorio));
           configurar.execute();
         }
         credencialPreparada = true;

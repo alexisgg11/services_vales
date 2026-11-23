@@ -4,19 +4,33 @@ import { Button } from "@/components/ui/button";
 import { Busy, ErrorText } from "@/components/ui/feedback";
 import { api, date, states } from "@/lib/api";
 
+type VerificacionVale = {
+  codigo: string;
+  grifo: string;
+  fechaEmision: string;
+  estado: number;
+};
+
 export default function ConsultaPublica() {
-  const id = location.pathname.split("/")[3],
-    q = useQuery({
-      queryKey: ["publico", id],
-      queryFn: () =>
-        api<{
-          codigo: string;
-          grifo: string;
-          fechaEmision: string;
-          estado: number;
-        }>("/api/publico/vales/" + id),
-      retry: false,
-    });
+  const id = location.pathname.split("/")[3];
+  const {
+    data: vale,
+    error,
+    isPending,
+    isPaused,
+    isRefetchError,
+  } = useQuery({
+    queryKey: ["publico", id],
+    queryFn: ({ signal }) =>
+      api<VerificacionVale>("/api/publico/vales/" + id, undefined, signal),
+    retry: false,
+    staleTime: 0,
+    refetchInterval: ({ state }) => {
+      const estado = state.data?.estado;
+      return estado === 0 || estado === 1 ? 3_000 : false;
+    },
+    refetchIntervalInBackground: false,
+  });
   return (
     <div className="public-vale">
       <a href="/app/" className="brand">
@@ -30,29 +44,34 @@ export default function ConsultaPublica() {
       </a>
       <section className="panel stack">
         <h1>Verificación de vale</h1>
-        {q.isPending ? (
-          <Busy />
-        ) : q.error ? (
-          <ErrorText error={q.error} />
-        ) : (
+        {vale ? (
           <dl className="facts">
             <div>
               <dt>Código</dt>
-              <dd>{q.data?.codigo}</dd>
+              <dd>{vale.codigo}</dd>
             </div>
             <div>
               <dt>Grifo</dt>
-              <dd>{q.data?.grifo}</dd>
+              <dd>{vale.grifo}</dd>
             </div>
             <div>
               <dt>Fecha de emisión</dt>
-              <dd>{date(q.data?.fechaEmision)}</dd>
+              <dd>{date(vale.fechaEmision)}</dd>
             </div>
             <div>
               <dt>Estado actual</dt>
-              <dd>{states[q.data!.estado]}</dd>
+              <dd aria-live="polite">{states[vale.estado]}</dd>
             </div>
           </dl>
+        ) : isPending ? (
+          <Busy />
+        ) : (
+          <ErrorText error={error} />
+        )}
+        {vale && (isPaused || isRefetchError) && (
+          <p className="text-sm text-muted-foreground" role="status">
+            Último estado consultado. Actualización pendiente.
+          </p>
         )}
         <Button asChild>
           <a href={"/vales/q/" + id + "/documento"}>

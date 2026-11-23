@@ -42,8 +42,7 @@ public final class ArranqueVales {
 
     BaseLocal base = BaseLocal.iniciar(
       directorio,
-      configuracion.getProperty("VALES_PG_BIN"),
-      configuracion.getProperty("VALES_DEMO_PASSWORD")
+      configuracion.getProperty("VALES_PG_BIN")
     );
     try {
       propiedades.putAll(base.propiedades());

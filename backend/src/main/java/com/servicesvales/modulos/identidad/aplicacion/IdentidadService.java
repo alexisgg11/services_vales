@@ -2,16 +2,11 @@ package com.servicesvales.modulos.identidad.aplicacion;
 
 import com.servicesvales.compartido.dominio.OperacionException;
 import com.servicesvales.modulos.identidad.infraestructura.IdentidadRepository;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.time.Duration;
+import com.servicesvales.modulos.identidad.infraestructura.ProveedorDniHttp;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import tools.jackson.databind.ObjectMapper;
 
 @Service
 public class IdentidadService {
@@ -20,11 +15,8 @@ public class IdentidadService {
 
   private final IdentidadRepository repository;
   private final UsuarioService usuarios;
-  private final ObjectMapper json;
-  private final String proveedor, token;
-  private final HttpClient http = HttpClient.newBuilder()
-    .connectTimeout(Duration.ofSeconds(4))
-    .build();
+  private final ProveedorDniHttp proveedorHttp;
+  private final String proveedor;
   private final Map<Integer, Long> ultimaConsulta = new ConcurrentHashMap<>();
 
   private record ConsultaReciente(Identidad persona, long vence) {}
@@ -35,15 +27,13 @@ public class IdentidadService {
   public IdentidadService(
     IdentidadRepository repository,
     UsuarioService usuarios,
-    ObjectMapper json,
-    @Value("${vales.dni.proveedor:demo}") String proveedor,
-    @Value("${vales.dni.token:}") String token
+    ProveedorDniHttp proveedorHttp,
+    @Value("${vales.dni.proveedor:apisperu}") String proveedor
   ) {
     this.repository = repository;
     this.usuarios = usuarios;
-    this.json = json;
+    this.proveedorHttp = proveedorHttp;
     this.proveedor = proveedor;
-    this.token = token;
   }
 
   public Identidad consultar(String login, String dni) {
@@ -54,7 +44,7 @@ public class IdentidadService {
     if (
       dni == null || !dni.matches("[0-9]{8}")
     ) throw OperacionException.invalida("Indica un DNI de ocho dígitos.");
-    var local = repository.consultar(actor, dni); // Also checks role before any external request.
+    var local = repository.consultar(actor, dni);
     if (local != null) return new Identidad(
       dni,
       local.path("nombre").asText(),
@@ -72,11 +62,6 @@ public class IdentidadService {
       );
       return new Identidad(dni, nombre, "Demostración ficticia");
     }
-    if (
-      !"decolecta".equals(proveedor) || token.isBlank()
-    ) throw OperacionException.invalida(
-      "La consulta externa necesita VALES_DNI_PROVIDER=decolecta y VALES_DNI_TOKEN en .env."
-    );
     long ahora = System.currentTimeMillis();
     String cacheKey = actor + ":" + dni;
     var reciente = consultasRecientes.get(cacheKey);
@@ -91,48 +76,15 @@ public class IdentidadService {
       ultimaConsulta.entrySet().removeIf(e -> ahora - e.getValue() > 60000);
       ultimaConsulta.put(actor, ahora);
     }
-    try {
-      var request = HttpRequest.newBuilder(
-        URI.create("https://api.decolecta.com/v1/reniec/dni?numero=" + dni)
-      )
-        .timeout(Duration.ofSeconds(6))
-        .header("Authorization", "Bearer " + token)
-        .header("Accept", "application/json")
-        .GET()
-        .build();
-      var response = http.send(request, HttpResponse.BodyHandlers.ofString());
-      if (response.statusCode() != 200) throw OperacionException.invalida(
-        "El proveedor de DNI no devolvió datos. Revisa su disponibilidad y el token configurado."
-      );
-      var datos = json.readTree(response.body());
-      String nombre = datos.path("full_name").asText("").strip();
-      if (
-        !dni.equals(datos.path("document_number").asText()) ||
-        nombre.length() < 3 ||
-        nombre.length() > 150
-      ) throw OperacionException.invalida(
-        "El proveedor devolvió datos de identidad incompletos."
-      );
-      var identidad = new Identidad(dni, nombre, "Proveedor externo Decolecta");
-      consultasRecientes
-        .entrySet()
-        .removeIf(e -> e.getValue().vence() <= ahora);
-      if (consultasRecientes.size() >= 1000) consultasRecientes.clear();
-      consultasRecientes.put(
-        cacheKey,
-        new ConsultaReciente(identidad, ahora + 60000)
-      );
-      return identidad;
-    } catch (OperacionException e) {
-      throw e;
-    } catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      throw OperacionException.invalida("La consulta de DNI fue interrumpida.");
-    } catch (Exception e) {
-      throw OperacionException.invalida(
-        "No se pudo consultar el proveedor de DNI. Vuelve a intentarlo."
-      );
-    }
+    var consulta = proveedorHttp.consultar(proveedor, dni);
+    var identidad = new Identidad(dni, consulta.nombre(), consulta.origen());
+    consultasRecientes.entrySet().removeIf(e -> e.getValue().vence() <= ahora);
+    if (consultasRecientes.size() >= 1000) consultasRecientes.clear();
+    consultasRecientes.put(
+      cacheKey,
+      new ConsultaReciente(identidad, ahora + 60000)
+    );
+    return identidad;
   }
 
   public int registrarTercero(int actor, String dni) {

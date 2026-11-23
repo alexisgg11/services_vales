@@ -13,16 +13,13 @@ final class CredencialDemostracion {
 
   private CredencialDemostracion() {}
 
-  static String hash(Path directorio, String configurada) throws IOException {
-    String clave =
-      configurada == null || configurada.isBlank()
-        ? claveLocal(directorio)
-        : configurada;
+  static String hash(Path directorio) throws IOException {
+    String clave = claveLocal(directorio);
     if (
       clave.length() < 8 || clave.getBytes(StandardCharsets.UTF_8).length > 72
     ) {
       throw new IOException(
-        "VALES_DEMO_PASSWORD debe tener al menos 8 caracteres y como máximo 72 bytes."
+        "La clave local de demostración debe tener al menos 8 caracteres y un máximo de 72 bytes."
       );
     }
     return PasswordEncoderFactories.createDelegatingPasswordEncoder().encode(

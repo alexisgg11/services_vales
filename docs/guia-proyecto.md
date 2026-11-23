@@ -14,7 +14,7 @@ Un contrato sin saldo suficiente bloquea la emisión con contrato. Para emitir S
 
 ## Cuentas de prueba
 
-Usa la contraseña asignada al instalar tu base de demostración. En modo local se toma de `VALES_DEMO_PASSWORD` o de `.local/demo.clave` cuando Vales la genera.
+Usa la contraseña asignada a tu cuenta. En una base local recién creada, la clave inicial está en `.local/demo.clave`.
 
 | Zonal | Operativo | Jefatura | Grifo | DNI ficticio |
 | --- | --- | --- | --- | --- |
@@ -62,11 +62,11 @@ Para probar **S/C por vencimiento**, el operativo de Sullana elige **Grifo Contr
 
 Para probar con un QR guardado, usar **Leer QR desde una imagen** en el escáner.
 
-El QR abre una ficha pública dentro de la red local con código, grifo, fecha de emisión y estado. Para ver el PDF o realizar operaciones se requiere sesión y permiso. Los accesos de la ficha llevan al servicio correspondiente. El PDF muestra el DNI del trabajador a las cuentas habilitadas para verlo. Al grifo le indica que debe verificarlo con el documento presentado.
+El QR abre una ficha pública con código, grifo, fecha de emisión y estado. Si mantienes abierta la verificación, el estado se actualiza automáticamente hasta que el vale quede **Usado** o **Anulado**. Para ver el PDF o realizar operaciones se requiere sesión y permiso. Los accesos de la ficha llevan al servicio correspondiente. El PDF muestra el DNI del trabajador a las cuentas habilitadas para verlo. Al grifo le indica que debe verificarlo con el documento presentado.
 
 ## Nuevas pruebas
 
-1. **DNI de tercero.** Operativo elige Sin contrato para tercero, escribe 99000001 y pulsa Consultar. Aparece Ana Torres Rojas como demostración ficticia. Debe completar destino o motivo antes de registrar.
+1. **DNI de tercero.** Operativo elige Sin contrato para tercero, escribe el DNI y pulsa Consultar. Vales muestra el nombre del catálogo o del proveedor configurado. Debe completar destino o motivo antes de registrar. En una prueba aislada con `VALES_DNI_PROVIDER=demo`, el DNI 99000001 muestra a Ana Torres Rojas.
 2. **Facturación automática.** Después de atender un vale, el grifo abre Facturas del grifo, selecciona el ticket y confirma Emitir factura. Se muestra la serie y número generado. Contabilidad lo elige en Asociar factura y verifica el conjunto de tickets y el total.
 3. **Generar mejor opción.** Jefatura programa rutas y asigna operativos desde **Configuración → Rutas de trabajo**. Al emitir el vale, el operativo completa modalidad, suministro y galones y pulsa la varita junto a **Grifo**. En la modal **Comparar grifos** elige su ruta y puede cambiar el origen. **Generar mejor opción** muestra el recorrido por el grifo que minimiza la suma de combustible y desvío vial, respetando el orden de las paradas. Se pueden consultar los pines del origen, las paradas y los grifos. **Elegir grifo** aplica la recomendación y vuelve al formulario. El importe del vale corresponde al combustible. El registro guarda la versión de la ruta y el origen sin modificar la localidad administrativa. [Ejemplo paso a paso, permisos y configuración](rutas-trabajo.md).
 5. **Móvil.** En el menú del navegador se puede instalar Vales cuando esté disponible. El lector con cámara requiere localhost o HTTPS. Las operaciones de registro necesitan conexión.
