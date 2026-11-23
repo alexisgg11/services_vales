@@ -8,7 +8,14 @@ import {
   Tickets,
   X,
 } from "lucide-react";
-import { Search, matches, useData, useModal } from "@/components/common";
+import { Search } from "@/components/formularios/campos";
+import { matches } from "@/lib/busqueda-vales";
+import {
+  useData,
+  actualizarContexto,
+  invalidarDetalles,
+} from "@/lib/consultas";
+import { useModal } from "@/components/dialogos/confirmacion";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -19,9 +26,9 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { ValesList } from "@/components/vales-list";
+import { ValesList } from "@/components/vales/lista-vales";
 import { api, money } from "@/lib/api";
-import { actualizarContexto, invalidarDetalles } from "@/lib/consultas";
+
 import type { Contexto, Vale } from "@/lib/types";
 import { CompararFactura, DiagnosticoFactura } from "./CompararFactura";
 import {

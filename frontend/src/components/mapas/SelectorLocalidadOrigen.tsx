@@ -1,4 +1,4 @@
-import { Field } from "@/components/common";
+import { Field } from "@/components/formularios/campos";
 import type { Cuenta } from "@/lib/types";
 
 export function SelectorLocalidadOrigen({

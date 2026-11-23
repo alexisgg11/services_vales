@@ -1,7 +1,9 @@
 import { useState, type ReactNode } from "react";
 import { Eye, ChevronLeft, ChevronRight, Fuel, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Empty, State, ValeCard } from "./common";
+import { Empty } from "@/components/ui/feedback";
+import { State } from "@/components/vales/estado";
+import { ValeCard } from "@/components/vales/TarjetaVale";
 import { money, date, qty } from "@/lib/api";
 import type { Vale } from "@/lib/types";
 export function ValesList({

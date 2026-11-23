@@ -3,10 +3,16 @@ import { CheckCircle2, ListFilter } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Field, Search, matches, useData } from "@/components/common";
-import { ValesList } from "@/components/vales-list";
+import { Field, Search } from "@/components/formularios/campos";
+import { matches } from "@/lib/busqueda-vales";
+import {
+  useData,
+  actualizarContexto,
+  invalidarDetalles,
+} from "@/lib/consultas";
+import { ValesList } from "@/components/vales/lista-vales";
 import { api, cents, money } from "@/lib/api";
-import { actualizarContexto, invalidarDetalles } from "@/lib/consultas";
+
 import { puedeAutorizarVale } from "@/lib/permisos";
 import type { Contexto, Vale } from "@/lib/types";
 import { RevisionAutorizacion, type Revision } from "./RevisionAutorizacion";

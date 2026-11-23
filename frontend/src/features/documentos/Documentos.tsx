@@ -1,6 +1,8 @@
 import { useState } from "react";
-import { Search, matches, useData } from "@/components/common";
-import { ValesList } from "@/components/vales-list";
+import { Search } from "@/components/formularios/campos";
+import { matches } from "@/lib/busqueda-vales";
+import { useData } from "@/lib/consultas";
+import { ValesList } from "@/components/vales/lista-vales";
 import type { Vale } from "@/lib/types";
 export default function Documentos({ onOpen }: { onOpen: (v: Vale) => void }) {
   const { data } = useData(),

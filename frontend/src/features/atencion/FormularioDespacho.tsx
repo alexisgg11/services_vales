@@ -11,7 +11,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { ErrorText, Field, ValeCard } from "@/components/common";
+import { ErrorText } from "@/components/ui/feedback";
+import { Field } from "@/components/formularios/campos";
+import { ValeCard } from "@/components/vales/TarjetaVale";
 import { api, ApiError, today, money, qty } from "@/lib/api";
 import type { Vale } from "@/lib/types";
 import { mensajeEstado } from "./busqueda-atencion";

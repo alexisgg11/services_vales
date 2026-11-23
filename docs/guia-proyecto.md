@@ -14,7 +14,7 @@ Un contrato sin saldo suficiente bloquea la emisión con contrato. Para emitir S
 
 ## Cuentas de prueba
 
-La contraseña de las cuentas de ejemplo es `demo`.
+Usa la contraseña asignada al instalar tu base de demostración. En modo local se toma de `VALES_DEMO_PASSWORD` o de `.local/demo.clave` cuando Vales la genera.
 
 | Zonal | Operativo | Jefatura | Grifo | DNI ficticio |
 | --- | --- | --- | --- | --- |

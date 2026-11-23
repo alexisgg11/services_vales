@@ -3,20 +3,19 @@ import { useQueryClient } from "@tanstack/react-query";
 import { CheckCircle2, Copy, Fuel, ScanQrCode, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { ErrorText } from "@/components/ui/feedback";
+import { Field } from "@/components/formularios/campos";
+import { ValeCard } from "@/components/vales/TarjetaVale";
 import {
-  ErrorText,
-  Field,
-  ValeCard,
   useData,
   useRefresh,
-} from "@/components/common";
-import { ValesList } from "@/components/vales-list";
-import { api, ApiError, date, money, qty } from "@/lib/api";
-import {
   contextoConsulta,
   detalleValeConsulta,
   invalidarDetalles,
 } from "@/lib/consultas";
+import { ValesList } from "@/components/vales/lista-vales";
+import { api, ApiError, date, money, qty } from "@/lib/api";
+
 import type { Contexto, Vale } from "@/lib/types";
 import {
   coincideBusqueda,

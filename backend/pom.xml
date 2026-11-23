@@ -52,12 +52,45 @@
     </resources>
     <plugins>
       <plugin>
-        <groupId>com.github.eirslett</groupId><artifactId>frontend-maven-plugin</artifactId><version>1.15.1</version>
-        <configuration><workingDirectory>../frontend</workingDirectory><nodeVersion>v24.21.0</nodeVersion></configuration>
+        <groupId>com.github.eirslett</groupId>
+        <artifactId>frontend-maven-plugin</artifactId>
+        <version>1.15.1</version>
+        <configuration>
+          <workingDirectory>../frontend</workingDirectory>
+          <nodeVersion>v24.21.0</nodeVersion>
+        </configuration>
+        <!-- El empaquetado completo con Maven se encarga de compilar el frontend. -->
         <executions>
-          <execution><id>node</id><phase>generate-resources</phase><goals><goal>install-node-and-npm</goal></goals></execution>
-          <execution><id>dependencias-web</id><phase>generate-resources</phase><goals><goal>npm</goal></goals><configuration><arguments>ci --no-fund --no-audit</arguments></configuration></execution>
-          <execution><id>compilar-web</id><phase>generate-resources</phase><goals><goal>npm</goal></goals><configuration><arguments>run build</arguments></configuration></execution>
+          <execution>
+            <?m2e ignore?>
+            <id>node</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>install-node-and-npm</goal>
+            </goals>
+          </execution>
+          <execution>
+            <?m2e ignore?>
+            <id>dependencias-web</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+            <configuration>
+              <arguments>ci --no-fund --no-audit</arguments>
+            </configuration>
+          </execution>
+          <execution>
+            <?m2e ignore?>
+            <id>compilar-web</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+            <configuration>
+              <arguments>run build</arguments>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
       <plugin>

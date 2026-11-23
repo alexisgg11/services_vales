@@ -10,7 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { ErrorText } from "@/components/common";
+import { ErrorText } from "@/components/ui/feedback";
 
 function leerCuadro(
   ctx: CanvasRenderingContext2D,

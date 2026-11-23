@@ -7,7 +7,7 @@ import {
   X,
 } from "lucide-react";
 import { DropdownMenu } from "radix-ui";
-import { Field } from "@/components/common";
+import { Field } from "@/components/formularios/campos";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {

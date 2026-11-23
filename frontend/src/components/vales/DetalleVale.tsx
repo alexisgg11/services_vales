@@ -1,45 +1,19 @@
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useQuery } from "@tanstack/react-query";
 import {
-  createContext,
-  useContext,
-  useState,
-  type ReactNode,
-  useId,
-  useRef,
-  useLayoutEffect,
-} from "react";
-import { useQuery, useQueryClient, type QueryKey } from "@tanstack/react-query";
-import {
-  AlertCircle,
   CheckCircle2,
-  Eye,
-  FileText,
-  MapPin,
-  Ticket,
-  LoaderCircle,
-  Droplet,
-  UserRound,
-  Receipt,
   CircleSlash,
+  Droplet,
+  FileText,
   History,
   MessageSquare,
+  Receipt,
+  UserRound,
   type LucideIcon,
 } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
+import QRCode from "qrcode";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
-import { InfoPopover } from "@/components/info-popover";
-import {
-  ValeCardLink,
-  type SeleccionTactil,
-} from "@/components/vale-card-link";
+import { ErrorText } from "@/components/ui/feedback";
 import {
   Sheet,
   SheetContent,
@@ -48,225 +22,15 @@ import {
   SheetDescription,
   SheetFooter,
 } from "@/components/ui/sheet";
-import { api, date, money, qty, states } from "@/lib/api";
-import type { RutaTrabajo, Vale } from "@/lib/types";
-import { contextoConsulta, detalleValeConsulta } from "@/lib/consultas";
+import { api, date, money, qty } from "@/lib/api";
+import { detalleValeConsulta, useData } from "@/lib/consultas";
 import { puedeAutorizarVale } from "@/lib/permisos";
-import { useValePdf } from "@/components/vale-pdf";
-import QRCode from "qrcode";
-import { RutaDelVale } from "@/components/vale-ruta";
-import { useEffect } from "react";
+import type { RutaTrabajo, Vale } from "@/lib/types";
+import { useValePdf } from "./pdf-provider";
+import { RutaDelVale } from "./ruta-vale";
+import { ValeCard } from "./TarjetaVale";
 
-export function useData() {
-  return useQuery(contextoConsulta);
-}
-export function useRefresh() {
-  const cache = useQueryClient();
-  return async (...claves: QueryKey[]) => {
-    if (claves.length === 0) return cache.invalidateQueries();
-    await Promise.all(
-      claves.map((queryKey) => cache.invalidateQueries({ queryKey })),
-    );
-  };
-}
-export function Field({
-  label,
-  children,
-  hint,
-  help,
-}: {
-  label: string;
-  children: ReactNode;
-  hint?: string;
-  help?: string;
-}) {
-  const id = useId(),
-    controlArea = useRef<HTMLDivElement>(null),
-    [controlId, setControlId] = useState(id);
-  useLayoutEffect(() => {
-    const control = controlArea.current?.querySelector<HTMLElement>(
-      'input,select,textarea,[role="combobox"]',
-    );
-    if (control) {
-      if (!control.id) control.id = id;
-      setControlId(control.id);
-      if ((hint || help) && !control.getAttribute("aria-describedby"))
-        control.setAttribute("aria-describedby", id + "-hint");
-    }
-  }, [children, id, hint, help]);
-  return (
-    <div className="field">
-      <div className="field-label">
-        <Label htmlFor={controlId}>{label}</Label>
-        {help && (
-          <span className="field-help">
-            <InfoPopover
-              title={"Información de " + label.toLocaleLowerCase("es-PE")}
-            >
-              <p>{help}</p>
-            </InfoPopover>
-          </span>
-        )}
-      </div>
-      <div ref={controlArea}>{children}</div>
-      {hint && <small id={id + "-hint"}>{hint}</small>}
-      {!hint && help && (
-        <span className="sr-only" id={id + "-hint"}>
-          {help}
-        </span>
-      )}
-    </div>
-  );
-}
-export function Empty({ children }: { children: ReactNode }) {
-  return (
-    <div className="empty">
-      <Ticket aria-hidden="true" />
-      <p>{children}</p>
-    </div>
-  );
-}
-export function ErrorText({ error }: { error: unknown }) {
-  return error ? (
-    <p className="error" role="alert">
-      {error instanceof Error ? error.message : String(error)}
-    </p>
-  ) : null;
-}
-export function Busy() {
-  return (
-    <div className="loading" role="status">
-      <LoaderCircle className="spin" /> Cargando Vales
-    </div>
-  );
-}
-export function Search({
-  value,
-  onChange,
-  placeholder = "Buscar por código, trabajador o ticket",
-}: {
-  value: string;
-  onChange: (v: string) => void;
-  placeholder?: string;
-}) {
-  return (
-    <Input
-      type="search"
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      placeholder={placeholder}
-      aria-label={placeholder}
-    />
-  );
-}
-export function matches(v: Vale, q: string) {
-  return [v.codigo_vale, v.trabajador, v.ticket, v.zonal, v.placa]
-    .join(" ")
-    .toLowerCase()
-    .includes(q.trim().toLowerCase());
-}
-export function State({ vale }: { vale: Vale }) {
-  return (
-    <Badge variant="outline" className={"state state-" + vale.estado_vale}>
-      {states[vale.estado_vale]}
-    </Badge>
-  );
-}
-interface ModalState {
-  title: string;
-  body: ReactNode;
-  action?: () => Promise<void>;
-  label?: string;
-  cancelLabel?: string;
-  success?: boolean;
-  destructive?: boolean;
-}
-const ModalContext = createContext<(m: ModalState) => void>(() => {});
-export function useModal() {
-  return useContext(ModalContext);
-}
-export function ModalProvider({ children }: { children: ReactNode }) {
-  const [modal, setModal] = useState<ModalState | null>(null),
-    [busy, setBusy] = useState(false),
-    [error, setError] = useState<unknown>();
-  const dialogRoot = useRef<HTMLDivElement>(null);
-  const show = (m: ModalState) => {
-    setError(undefined);
-    setModal(m);
-  };
-  return (
-    <ModalContext.Provider value={show}>
-      {children}
-      <Dialog
-        open={!!modal}
-        onOpenChange={(o) => {
-          if (!o && !busy) setModal(null);
-        }}
-      >
-        <DialogContent
-          ref={dialogRoot}
-          className="modal"
-          showCloseButton={!busy}
-          onOpenAutoFocus={(event) => {
-            event.preventDefault();
-            dialogRoot.current?.focus({ preventScroll: true });
-          }}
-        >
-          <DialogHeader>
-            <div className={"notice-icon " + (modal?.success ? "success" : "")}>
-              {modal?.success ? (
-                <CheckCircle2 size={48} />
-              ) : (
-                <AlertCircle size={48} />
-              )}
-            </div>
-            <DialogTitle>{modal?.title}</DialogTitle>
-          </DialogHeader>
-          <div className="modal-body">
-            <DialogDescription asChild>
-              <div>{modal?.body}</div>
-            </DialogDescription>
-            <ErrorText error={error} />
-          </div>
-          <div className="actions">
-            {modal?.action && (
-              <Button
-                variant="outline"
-                disabled={busy}
-                onClick={() => setModal(null)}
-              >
-                {modal.cancelLabel || "Volver"}
-              </Button>
-            )}
-            <Button
-              variant={modal?.destructive ? "destructive" : "default"}
-              disabled={busy}
-              onClick={async () => {
-                if (!modal?.action) {
-                  setModal(null);
-                  return;
-                }
-                setBusy(true);
-                try {
-                  await modal.action();
-                  setModal(null);
-                } catch (e) {
-                  setError(e);
-                } finally {
-                  setBusy(false);
-                }
-              }}
-            >
-              {busy ? <LoaderCircle className="spin" /> : null}
-              {modal?.action ? modal.label || "Confirmar" : "Entendido"}
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
-    </ModalContext.Provider>
-  );
-}
-export function Qr({ url }: { url: string }) {
+function Qr({ url }: { url: string }) {
   const [src, setSrc] = useState("");
   useEffect(() => {
     let alive = true;
@@ -285,108 +49,7 @@ export function Qr({ url }: { url: string }) {
     <img className="qr" src={src} alt="Código QR para consultar el vale" />
   ) : null;
 }
-export function ValeCard({
-  vale: v,
-  onOpen,
-  openLabel,
-  openDisabled,
-  seleccionTactil,
-  expand = false,
-  children,
-  identityOnly = false,
-  datos,
-  accionCabecera,
-}: {
-  vale: Vale;
-  onOpen?: (v: Vale) => void;
-  openLabel?: string;
-  openDisabled?: boolean;
-  seleccionTactil?: SeleccionTactil;
-  expand?: boolean;
-  children?: ReactNode;
-  identityOnly?: boolean;
-  datos?: readonly (readonly [string, ReactNode])[];
-  accionCabecera?: ReactNode;
-}) {
-  const [open, setOpen] = useState(false);
-  const Header = expand ? "button" : "div";
-  const campos = datos ?? [
-    ["Trabajador", v.trabajador],
-    ["Grifo", v.grifo],
-    [v.ticket ? "Ticket" : "Suministro", v.ticket || v.suministro],
-    [
-      v.importe != null ? "Importe real" : "Importe estimado",
-      money(v.importe ?? v.importe_estimado),
-    ],
-  ];
-  return (
-    <article
-      className={"vale-card" + (identityOnly ? " vale-card-identity-only" : "")}
-    >
-      <Header
-        type={expand ? "button" : undefined}
-        className="vale-card-head"
-        data-accion-cabecera={accionCabecera ? "" : undefined}
-        onClick={expand ? () => setOpen(!open) : undefined}
-        aria-label={
-          expand ? "Ver vale " + v.codigo_vale + " de " + v.zonal : undefined
-        }
-        aria-expanded={expand ? open : undefined}
-      >
-        <span className="ticket-icon">
-          <Ticket />
-        </span>
-        <span className="grow">
-          {identityOnly && (
-            <span className="vale-identity-label">Vale de combustible</span>
-          )}
-          <strong>{v.codigo_vale}</strong>
-          <span className="meta">
-            {!identityOnly && <MapPin size={13} />}
-            {v.zonal}
-          </span>
-        </span>
-        <State vale={v} />
-      </Header>
-      {!identityOnly && (!expand || open) && (
-        <div className="vale-card-body">
-          <dl className="facts">
-            {campos.map(([etiqueta, valor]) => (
-              <div key={etiqueta}>
-                <dt>{etiqueta}</dt>
-                <dd>{valor}</dd>
-              </div>
-            ))}
-          </dl>
-          {expand && onOpen && (
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              className="vale-card-ver-detalle"
-              aria-label={"Detalle completo de " + v.codigo_vale}
-              onClick={() => onOpen(v)}
-            >
-              <Eye aria-hidden="true" /> Ver detalle
-            </Button>
-          )}
-          {children}
-        </div>
-      )}
-      {!identityOnly && !expand && onOpen && (
-        <ValeCardLink
-          etiqueta={openLabel ?? "Ver vale " + v.codigo_vale + " de " + v.zonal}
-          disabled={openDisabled}
-          abrir={() => onOpen(v)}
-          seleccion={seleccionTactil}
-        />
-      )}
-      {accionCabecera && (
-        <div className="vale-card-accion-cabecera">{accionCabecera}</div>
-      )}
-    </article>
-  );
-}
+
 function ValeDetailSection({
   title,
   icon: Icon,

@@ -14,7 +14,7 @@ beforeAll(() => {
   ])
     vm.runInThisContext(
       fs.readFileSync(
-        new URL("../../../public/vendor/" + file, import.meta.url),
+        new URL("../../../public/documentos/vendor/" + file, import.meta.url),
         "utf8",
       ),
     );

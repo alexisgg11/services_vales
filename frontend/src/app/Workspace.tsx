@@ -1,13 +1,7 @@
-import { lazy, Suspense, useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   Fuel,
-  Ticket,
-  CheckCircle2,
-  ScanLine,
-  Receipt,
-  Ban,
-  FileText,
-  ChartColumn,
   PanelLeftClose,
   PanelLeftOpen,
   Menu,
@@ -16,90 +10,37 @@ import {
   WifiOff,
   RefreshCw,
   Download,
-  Eye,
-  EyeOff,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Sheet,
   SheetContent,
   SheetTitle,
   SheetDescription,
 } from "@/components/ui/sheet";
-import { api, ApiError, login, logout, date, states } from "@/lib/api";
+import { Busy, ErrorText } from "@/components/ui/feedback";
+import { useModal } from "@/components/dialogos/confirmacion";
+import { ValeDetail } from "@/components/vales/DetalleVale";
+import { useValePdf } from "@/components/vales/pdf-provider";
+import Login from "@/features/acceso/Login";
+import { ApiError, logout } from "@/lib/api";
 import { guardarValor, leerGuardado } from "@/lib/almacenamiento";
-import { contextoConsulta, detalleValeConsulta } from "@/lib/consultas";
-import { useValePdf } from "@/components/vale-pdf";
+import { detalleValeConsulta, useData, useRefresh } from "@/lib/consultas";
 import type { Vale } from "@/lib/types";
 import {
-  Busy,
-  ErrorText,
-  Field,
-  ValeDetail,
-  useData,
-  useModal,
-  useRefresh,
-} from "@/components/common";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-const Registrar = lazy(() => import("@/features/emision/RegistrarVale")),
-  Autorizar = lazy(() => import("@/features/autorizacion/AutorizarVales")),
-  Atender = lazy(() => import("@/features/atencion/RegistrarAtencion")),
-  Facturas = lazy(() => import("@/features/facturacion/Facturas")),
-  Anular = lazy(() => import("@/features/anulacion/AnularVale")),
-  Documentos = lazy(() => import("@/features/documentos/Documentos")),
-  Gastos = lazy(() => import("@/features/gastos/Gastos")),
-  Configuracion = lazy(() => import("@/features/configuracion/Configuracion"));
-const services = [
-  { id: "emision", name: "Registrar vale", icon: Ticket, roles: ["OPERATIVO"] },
-  {
-    id: "autorizacion",
-    name: "Autorizar vales",
-    icon: CheckCircle2,
-    roles: ["JEFE"],
-  },
-  {
-    id: "atencion",
-    name: "Registrar atención",
-    icon: ScanLine,
-    roles: ["GRIFO"],
-  },
-  {
-    id: "facturacion",
-    name: "Asociar factura",
-    icon: Receipt,
-    roles: ["CONTABILIDAD", "GRIFO"],
-  },
-  { id: "anulacion", name: "Anular vale", icon: Ban, roles: ["OPERATIVO"] },
-  {
-    id: "documentos",
-    name: "PDF del vale",
-    icon: FileText,
-    roles: ["OPERATIVO", "JEFE", "GRIFO", "CONTABILIDAD", "ADMIN"],
-  },
-  {
-    id: "gastos",
-    name: "Consultar gastos",
-    icon: ChartColumn,
-    roles: ["CONTABILIDAD"],
-  },
-];
-const roleNames: Record<string, string> = {
-  OPERATIVO: "Operativo",
-  JEFE: "Jefatura",
-  GRIFO: "Atención",
-  CONTABILIDAD: "Contabilidad",
-  ADMIN: "Administrador",
-};
-export default function App() {
-  if (
-    location.pathname.startsWith("/vales/q/") &&
-    !location.pathname.endsWith("/documento")
-  )
-    return <PublicVale />;
-  return <Workspace />;
-}
-function Workspace() {
+  Registrar,
+  Autorizar,
+  Atender,
+  Facturas,
+  Anular,
+  Documentos,
+  Gastos,
+  Configuracion,
+  services,
+  roleNames,
+} from "./modulos";
+
+export default function Workspace() {
   const context = useData(),
     modal = useModal(),
     refresh = useRefresh();
@@ -446,181 +387,6 @@ function Workspace() {
             : undefined
         }
       />
-    </div>
-  );
-}
-function Login() {
-  const queries = useQueryClient();
-  const [usuario, setUsuario] = useState(""),
-    [clave, setClave] = useState(""),
-    [claveVisible, setClaveVisible] = useState(false),
-    [error, setError] = useState<unknown>(),
-    [busy, setBusy] = useState(false);
-  const accionClave = claveVisible
-    ? "Ocultar contraseña"
-    : "Mostrar contraseña";
-  return (
-    <div className="login">
-      <div className="login-brand">
-        <div className="login-brand-lockup">
-          <span>
-            <Fuel aria-hidden="true" />
-          </span>
-          <div>
-            <strong>Vales</strong>
-            <small>Control de combustible</small>
-          </div>
-        </div>
-        <div className="login-copy">
-          <Ticket size={60} />
-          <h2>
-            Cada atención,
-            <br />
-            con su respaldo.
-          </h2>
-          <p>Registro, autorización y control de los vales de la empresa.</p>
-        </div>
-      </div>
-      <main className="login-form">
-        <h1>Iniciar sesión</h1>
-        <form
-          onSubmit={async (e) => {
-            e.preventDefault();
-            setBusy(true);
-            setError(undefined);
-            try {
-              const url = await login(usuario, clave);
-              const target = new URL(url);
-              if (target.origin !== location.origin)
-                throw new Error("El destino de la sesión no es válido.");
-              if (
-                target.pathname.startsWith("/vales/") ||
-                target.pathname === "/consulta"
-              )
-                history.replaceState(null, "", target.pathname + target.search);
-              queries.removeQueries({
-                predicate: (q) => q.queryKey[0] !== "contexto",
-              });
-              await queries.resetQueries({
-                queryKey: contextoConsulta.queryKey,
-              });
-            } catch (e) {
-              setError(e);
-            } finally {
-              setBusy(false);
-            }
-          }}
-        >
-          <Field label="Usuario">
-            <Input
-              id="username"
-              name="username"
-              placeholder="Escribe tu usuario"
-              autoComplete="username"
-              autoCapitalize="none"
-              spellCheck={false}
-              required
-              value={usuario}
-              onChange={(e) => setUsuario(e.target.value)}
-            />
-          </Field>
-          <Field label="Contraseña">
-            <div className="login-password">
-              <Input
-                id="password"
-                name="password"
-                type={claveVisible ? "text" : "password"}
-                placeholder="Escribe tu contraseña"
-                autoComplete="current-password"
-                autoCapitalize="none"
-                spellCheck={false}
-                required
-                value={clave}
-                onChange={(e) => setClave(e.target.value)}
-              />
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                className="login-password-toggle"
-                aria-label={accionClave}
-                aria-controls="password"
-                title={accionClave}
-                onClick={() => setClaveVisible((visible) => !visible)}
-              >
-                {claveVisible ? (
-                  <EyeOff aria-hidden="true" />
-                ) : (
-                  <Eye aria-hidden="true" />
-                )}
-              </Button>
-            </div>
-          </Field>
-          <ErrorText error={error} />
-          <Button disabled={busy} className="w-full">
-            {busy ? "Ingresando" : "Ingresar"}
-          </Button>
-        </form>
-      </main>
-    </div>
-  );
-}
-function PublicVale() {
-  const id = location.pathname.split("/")[3],
-    q = useQuery({
-      queryKey: ["publico", id],
-      queryFn: () =>
-        api<{
-          codigo: string;
-          grifo: string;
-          fechaEmision: string;
-          estado: number;
-        }>("/api/publico/vales/" + id),
-      retry: false,
-    });
-  return (
-    <div className="public-vale">
-      <a href="/app/" className="brand">
-        <span>
-          <Fuel />
-        </span>
-        <div>
-          <strong>Vales</strong>
-          <small>Control de combustible</small>
-        </div>
-      </a>
-      <section className="panel stack">
-        <h1>Verificación de vale</h1>
-        {q.isPending ? (
-          <Busy />
-        ) : q.error ? (
-          <ErrorText error={q.error} />
-        ) : (
-          <dl className="facts">
-            <div>
-              <dt>Código</dt>
-              <dd>{q.data?.codigo}</dd>
-            </div>
-            <div>
-              <dt>Grifo</dt>
-              <dd>{q.data?.grifo}</dd>
-            </div>
-            <div>
-              <dt>Fecha de emisión</dt>
-              <dd>{date(q.data?.fechaEmision)}</dd>
-            </div>
-            <div>
-              <dt>Estado actual</dt>
-              <dd>{states[q.data!.estado]}</dd>
-            </div>
-          </dl>
-        )}
-        <Button asChild>
-          <a href={"/vales/q/" + id + "/documento"}>
-            Iniciar sesión y consultar el vale
-          </a>
-        </Button>
-      </section>
     </div>
   );
 }

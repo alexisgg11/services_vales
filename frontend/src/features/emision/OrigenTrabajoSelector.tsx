@@ -1,7 +1,7 @@
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { LoaderCircle, MapPin, Navigation } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ErrorText } from "@/components/common";
+import { ErrorText } from "@/components/ui/feedback";
 import { SelectorLocalidadOrigen } from "@/components/mapas/SelectorLocalidadOrigen";
 import type { Cuenta } from "@/lib/types";
 import { origenValido, type OrigenTrabajo } from "@/lib/geografia/coordenadas";

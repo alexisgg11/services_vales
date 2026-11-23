@@ -36,7 +36,7 @@ WITH cuentas(dni, nombre, apellido, login, cargo, rol, zonal, localidad, grifo, 
     RETURNING dni, id_trabajador
 ), usuarios AS (
     INSERT INTO usuario (login, id_trabajador, clave_hash)
-    SELECT c.login, t.id_trabajador, '{bcrypt}$2a$10$gXpzPqhp/pe.F41HIXEI/eifcbu8wanEmnjGdgXzdPUhTTPCwOrXe'
+    SELECT c.login, t.id_trabajador, current_setting('vales.demo_clave_hash')
     FROM cuentas c JOIN trabajadores t USING (dni)
     RETURNING id_usuario, login
 )

@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
-import { Busy, ErrorText, Field, useRefresh } from "@/components/common";
+import { Busy, ErrorText } from "@/components/ui/feedback";
+import { Field } from "@/components/formularios/campos";
+import { useRefresh } from "@/lib/consultas";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { api, date, money, today } from "@/lib/api";

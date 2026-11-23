@@ -7,7 +7,7 @@ import {
   Ticket,
   X,
 } from "lucide-react";
-import { Empty } from "@/components/common";
+import { Empty } from "@/components/ui/feedback";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { money, qty } from "@/lib/api";

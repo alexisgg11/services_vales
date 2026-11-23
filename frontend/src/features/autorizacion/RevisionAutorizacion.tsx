@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { CheckCircle2, LoaderCircle, X } from "lucide-react";
-import { ErrorText, ValeCard } from "@/components/common";
+import { ErrorText } from "@/components/ui/feedback";
+import { ValeCard } from "@/components/vales/TarjetaVale";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,

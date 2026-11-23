@@ -1,6 +1,7 @@
 import { useMemo, useRef, useState } from "react";
 import { ReceiptText } from "lucide-react";
-import { Busy, ErrorText, useData } from "@/components/common";
+import { Busy, ErrorText } from "@/components/ui/feedback";
+import { useData } from "@/lib/consultas";
 import { money, today } from "@/lib/api";
 import { guardarValor, leerPreferencia } from "@/lib/almacenamiento";
 import type { Vale } from "@/lib/types";

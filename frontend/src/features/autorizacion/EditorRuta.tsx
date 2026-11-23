@@ -27,7 +27,9 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ErrorText, Field, useModal } from "@/components/common";
+import { ErrorText } from "@/components/ui/feedback";
+import { Field } from "@/components/formularios/campos";
+import { useModal } from "@/components/dialogos/confirmacion";
 import { api, today } from "@/lib/api";
 import type {
   ContextoRutas,
