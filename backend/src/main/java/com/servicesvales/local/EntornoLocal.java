@@ -101,7 +101,11 @@ public final class EntornoLocal {
     );
     propiedades.put(
       "vales.dni.proveedor",
-      configuracion.getProperty("VALES_DNI_PROVIDER", "demo")
+      configuracion.getProperty("VALES_DNI_PROVIDER", "apisperu")
+    );
+    propiedades.put(
+      "vales.dni.url",
+      configuracion.getProperty("VALES_DNI_URL", "")
     );
     propiedades.put(
       "vales.dni.token",

@@ -8,7 +8,7 @@ Aplicación para gestionar vales de combustible, con siete APIs por módulos en 
 2. Abrir la carpeta raíz en VS Code y habilitar la confianza del espacio de trabajo.
 3. En **Ejecutar y depurar**, seleccionar **Ejecutar Services Vales** y pulsar **▶**.
 4. Esperar la compilación y la apertura del navegador. El primer arranque crea `.env`, prepara una instancia privada de PostgreSQL y carga los datos de prueba. Maven descarga Node.js, npm y las dependencias de React.
-5. Ingresar con **demo.operativo.piura** y la clave de la base de demostración. En una instalación nueva, usa `VALES_DEMO_PASSWORD` de tu `.env` o lee `.local/demo.clave` si el sistema la generó. Para detener Vales, pulsar **Shift + F5**.
+5. Ingresar con **demo.operativo.piura** y la clave de la base de demostración. En una instalación local nueva, la clave inicial está en `.local/demo.clave`. Para detener Vales, pulsar **Shift + F5**.
 
 Dirección predeterminada [http://127.0.0.1:8080](http://127.0.0.1:8080). El primer arranque requiere Internet. Si PostgreSQL está instalado en otra ruta, la variable de entorno `VALES_PG_BIN` debe apuntar a su carpeta `bin`.
 
@@ -26,11 +26,9 @@ El modo predeterminado `VALES_DB_MODE=local` conserva sus archivos en `.local/` 
    VALES_DB_URL=jdbc:postgresql://127.0.0.1:5432/services_vales
    VALES_DB_USER=postgres
    VALES_DB_PASSWORD=contraseña_de_su_PostgreSQL
-   VALES_DNI_PROVIDER=demo
-   VALES_DNI_TOKEN=
    ```
 
-4. Ejecutar el perfil de VS Code.
+4. Ejecutar el perfil de VS Code. Para consultar DNI nuevos, configurar [el proveedor de DNI](#consulta-de-dni).
 
 Las credenciales de `.env` corresponden al PostgreSQL de esa PC. Las cuentas `demo.*` se utilizan en la pantalla de ingreso de Vales. El instalador solo admite bases vacías. Para actualizar una base con registros, se respalda y se aplican únicamente sus migraciones pendientes como propietario. Una cuenta de conexión limitada puede recibir el rol `vales_app`; `postgres` facilita la instalación de desarrollo.
 
@@ -77,7 +75,7 @@ flowchart LR
     phone["Teléfono o navegador"] --> web["React y TypeScript<br/>shadcn/ui y Tailwind"]
     web -->|"JSON y sesión con CSRF"| api["Spring Boot<br/>Siete APIs por módulos"]
     api -->|"Spring JDBC"| db[("PostgreSQL")]
-    api -.->|"DNI desconocido y token configurado"| dni["Decolecta"]
+    api -.->|"DNI nuevo y token configurado"| dni["APIs Perú"]
     api -.->|"Distancias y recorridos viales"| osrm["OSRM"]
     web -.->|"Mapa de grifos"| map["Leaflet y OpenStreetMap"]
     tools["VS Code y Maven Wrapper"] -->|"Vite compila y Maven empaqueta"| api
@@ -131,16 +129,19 @@ Se conservan las rutas anteriores para compatibilidad.
 
 ### Consulta de DNI
 
-El modo `demo` consulta primero el catálogo y permite probar **99000001 → Ana Torres Rojas** y **99000002 → Luis Rivera Prado** como personas ficticias. Emisión S/C consulta el DNI del tercero antes de registrar. Atención consulta el DNI presentado y mantiene la verificación del documento original.
+En **Sin contrato para tercero**, **Consultar** busca el DNI en el catálogo. Para un DNI nuevo, APIs Perú devuelve el nombre y los apellidos. Al confirmar el vale, Vales guarda el DNI y el nombre completo del tercero y los vincula con la emisión. En atención se verifica el DNI contra el tercero del vale.
 
-Para usar el proveedor externo, configurar en `.env` y reiniciar:
+Configurar estas variables en el `.env` privado para ejecución local o en **Vales → Variables** del entorno de Railway. El backend usa el token de tu cuenta de APIs Perú. Aplicar la configuración con el despliegue de la versión que incluye la integración.
 
 ```properties
-VALES_DNI_PROVIDER=decolecta
-VALES_DNI_TOKEN=token_de_su_cuenta
+VALES_DNI_PROVIDER=apisperu
+VALES_DNI_URL=https://dniruc.apisperu.com/api/v1
+VALES_DNI_TOKEN=token_de_tu_cuenta
 ```
 
-La integración utiliza el [endpoint documentado de Decolecta](https://decolecta.gitbook.io/docs/servicios/integrations-2). Su disponibilidad depende del proveedor y de la cuenta. El token se utiliza únicamente en el backend. No se necesita una API externa para probar con personas ficticias.
+[Documentación de APIs Perú](https://dniruc.apisperu.com/doc) y [variables de Railway](https://docs.railway.com/variables).
+
+Para pruebas aisladas, `VALES_DNI_PROVIDER=demo` habilita los DNI ficticios 99000001 y 99000002. Para usar Decolecta, configurar `VALES_DNI_PROVIDER=decolecta`, `VALES_DNI_URL=https://api.decolecta.com/v1/reniec` y el token de esa cuenta. [Documentación de Decolecta](https://decolecta.gitbook.io/docs/servicios/integrations-2)
 
 ## Comprobaciones
 
@@ -157,7 +158,7 @@ npm ci
 npm test
 ```
 
-Las pruebas SQL están en `backend/src/test/sql/`. Para `reglas.sql` y la prueba HTTP, prepara una base nueva de pruebas con `instalar-demo.sql` o con el modo local. Ejecuta `backend/src/test/api/flujo.mjs` con `VALES_DEMO_PASSWORD` en el entorno del proceso y Vales en el puerto de pruebas `18085`.
+Las pruebas SQL están en `backend/src/test/sql/`. Para `reglas.sql` y la prueba HTTP, prepara una base nueva de pruebas con `instalar-demo.sql` o con el modo local. Inicia Vales en el puerto de pruebas `18085` con `VALES_DNI_PROVIDER=demo` y ejecuta `backend/src/test/api/flujo.mjs` con `VALES_DEMO_PASSWORD` en el entorno de la prueba.
 
 ## Guías
 

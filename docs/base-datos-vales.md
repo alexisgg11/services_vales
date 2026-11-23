@@ -4,7 +4,7 @@
 
 Una instalación nueva prepara el esquema y genera [datos de demostración](../backend/src/main/resources/db/demo) con fechas relativas al día de carga en Perú. Incluye vales en los cuatro estados, facturas con tickets conciliables e historial del mes actual y los seis meses anteriores.
 
-Al crear una base local, Vales usa `VALES_DEMO_PASSWORD` de `.env` si está definida. Si queda vacía, genera la clave inicial en `.local/demo.clave`. Las cuentas de bases ya instaladas usan su contraseña existente.
+Al crear las cuentas de una base local nueva, Vales genera la clave inicial en `.local/demo.clave` y guarda su hash en PostgreSQL. Para iniciar sesión se usa la contraseña que corresponde al hash de cada cuenta.
 
 ## Ver la instancia privada en pgAdmin
 

@@ -46,8 +46,7 @@ public final class BaseLocal implements AutoCloseable {
 
   public static BaseLocal iniciar(
     Path home,
-    String binConfigurado,
-    String claveDemo
+    String binConfigurado
   ) throws Exception {
     Files.createDirectories(home);
     FileChannel channel = FileChannel.open(
@@ -63,7 +62,7 @@ public final class BaseLocal implements AutoCloseable {
         "Ya hay otra instancia de Services Vales usando " + home
       );
       base = new BaseLocal(home, channel, lock, binConfigurado);
-      base.arrancarPostgres(claveDemo);
+      base.arrancarPostgres();
       return base;
     } catch (Exception error) {
       if (base != null) base.close();
@@ -75,7 +74,7 @@ public final class BaseLocal implements AutoCloseable {
     }
   }
 
-  private void arrancarPostgres(String claveDemo) throws Exception {
+  private void arrancarPostgres() throws Exception {
     Path version = data.resolve("PG_VERSION");
     String owner = clave("propietario");
     if (!Files.isRegularFile(version)) {
@@ -124,8 +123,7 @@ public final class BaseLocal implements AutoCloseable {
       OWNER,
       owner,
       clave("aplicacion"),
-      home,
-      claveDemo
+      home
     );
   }
 
