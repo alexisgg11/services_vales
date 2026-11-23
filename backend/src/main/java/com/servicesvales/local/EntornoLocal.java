@@ -17,8 +17,8 @@ public final class EntornoLocal {
 
   private EntornoLocal() {}
 
-  public static Path directorio() {
-    return Path.of(System.getenv().getOrDefault("VALES_LOCAL_DIR", ".local"))
+  public static Path directorio(Properties configuracion) {
+    return Path.of(configuracion.getProperty("VALES_LOCAL_DIR", ".local"))
       .toAbsolutePath()
       .normalize();
   }

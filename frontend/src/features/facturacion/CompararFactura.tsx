@@ -7,10 +7,10 @@ import {
   Tickets,
   WandSparkles,
 } from "lucide-react";
-import { InfoPopover } from "@/components/info-popover";
+import { InfoPopover } from "@/components/ui/info-popover";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Field } from "@/components/common";
+import { Field } from "@/components/formularios/campos";
 import { money } from "@/lib/api";
 import type { Factura, Vale } from "@/lib/types";
 import {

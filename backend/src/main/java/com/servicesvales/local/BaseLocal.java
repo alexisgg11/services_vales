@@ -33,17 +33,22 @@ public final class BaseLocal implements AutoCloseable {
   private BaseLocal(
     Path home,
     FileChannel lockChannel,
-    FileLock lock
+    FileLock lock,
+    String binConfigurado
   ) throws IOException {
     this.home = home;
     this.data = home.resolve("postgres");
-    this.bin = detectarPostgres(data);
+    this.bin = detectarPostgres(data, binConfigurado);
     this.lockChannel = lockChannel;
     this.lock = lock;
     this.dbPort = EntornoLocal.puertoLibre(0);
   }
 
-  public static BaseLocal iniciar(Path home) throws Exception {
+  public static BaseLocal iniciar(
+    Path home,
+    String binConfigurado,
+    String claveDemo
+  ) throws Exception {
     Files.createDirectories(home);
     FileChannel channel = FileChannel.open(
       home.resolve("ejecucion.lock"),
@@ -57,8 +62,8 @@ public final class BaseLocal implements AutoCloseable {
       if (lock == null) throw new IOException(
         "Ya hay otra instancia de Services Vales usando " + home
       );
-      base = new BaseLocal(home, channel, lock);
-      base.arrancarPostgres();
+      base = new BaseLocal(home, channel, lock, binConfigurado);
+      base.arrancarPostgres(claveDemo);
       return base;
     } catch (Exception error) {
       if (base != null) base.close();
@@ -70,7 +75,7 @@ public final class BaseLocal implements AutoCloseable {
     }
   }
 
-  private void arrancarPostgres() throws Exception {
+  private void arrancarPostgres(String claveDemo) throws Exception {
     Path version = data.resolve("PG_VERSION");
     String owner = clave("propietario");
     if (!Files.isRegularFile(version)) {
@@ -118,7 +123,9 @@ public final class BaseLocal implements AutoCloseable {
       url(MigradorPostgres.DATABASE),
       OWNER,
       owner,
-      clave("aplicacion")
+      clave("aplicacion"),
+      home,
+      claveDemo
     );
   }
 
@@ -151,8 +158,10 @@ public final class BaseLocal implements AutoCloseable {
     );
   }
 
-  private static Path detectarPostgres(Path data) throws IOException {
-    String configured = System.getenv("VALES_PG_BIN");
+  private static Path detectarPostgres(
+    Path data,
+    String configured
+  ) throws IOException {
     if (configured != null && !configured.isBlank()) {
       Path bin = Path.of(configured);
       if (valido(bin)) return bin.toAbsolutePath();

@@ -4,23 +4,21 @@ import { ArrowLeft, ArrowRight, Check, Search, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { UnidadMovilSelect } from "@/components/unidad-movil-select";
+import { UnidadMovilSelect } from "@/features/emision/UnidadMovilSelect";
 import { api, money, today } from "@/lib/api";
 import {
   guardarValor,
   leerGuardado,
   prefijoBorrador,
 } from "@/lib/almacenamiento";
-import { actualizarContexto } from "@/lib/consultas";
+import { actualizarContexto, useData } from "@/lib/consultas";
 import type { Contexto, Persona, Vale } from "@/lib/types";
-import { InfoPopover } from "@/components/info-popover";
-import {
-  Field,
-  ErrorText,
-  ValeCard,
-  useData,
-  useModal,
-} from "@/components/common";
+import { InfoPopover } from "@/components/ui/info-popover";
+import { Field } from "@/components/formularios/campos";
+import { ErrorText } from "@/components/ui/feedback";
+import { ValeCard } from "@/components/vales/TarjetaVale";
+
+import { useModal } from "@/components/dialogos/confirmacion";
 import { condiciones, unidades, type Modalidad } from "./condiciones";
 import { CompararGrifos } from "./CompararGrifos";
 import { useRutaEmision } from "./use-ruta-emision";

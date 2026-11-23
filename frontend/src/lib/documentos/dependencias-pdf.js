@@ -4,7 +4,7 @@ function cargarScript(archivo) {
   if (!scripts.has(archivo)) {
     const carga = new Promise((resolve, reject) => {
       const script = document.createElement("script");
-      script.src = "/app/vendor/" + archivo;
+      script.src = import.meta.env.BASE_URL + "documentos/vendor/" + archivo;
       script.onload = resolve;
       script.onerror = () => {
         script.remove();

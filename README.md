@@ -8,7 +8,7 @@ Aplicación para gestionar vales de combustible, con siete APIs por módulos en 
 2. Abrir la carpeta raíz en VS Code y habilitar la confianza del espacio de trabajo.
 3. En **Ejecutar y depurar**, seleccionar **Ejecutar Services Vales** y pulsar **▶**.
 4. Esperar la compilación y la apertura del navegador. El primer arranque crea `.env`, prepara una instancia privada de PostgreSQL y carga los datos de prueba. Maven descarga Node.js, npm y las dependencias de React.
-5. Ingresar con **demo.operativo.piura** y contraseña **demo**. Para detener Vales, pulsar **Shift + F5**.
+5. Ingresar con **demo.operativo.piura** y la clave de la base de demostración. En una instalación nueva, usa `VALES_DEMO_PASSWORD` de tu `.env` o lee `.local/demo.clave` si el sistema la generó. Para detener Vales, pulsar **Shift + F5**.
 
 Dirección predeterminada [http://127.0.0.1:8080](http://127.0.0.1:8080). El primer arranque requiere Internet. Si PostgreSQL está instalado en otra ruta, la variable de entorno `VALES_PG_BIN` debe apuntar a su carpeta `bin`.
 
@@ -17,11 +17,7 @@ El modo predeterminado `VALES_DB_MODE=local` conserva sus archivos en `.local/` 
 ### Usar PostgreSQL en el puerto 5432
 
 1. Crear una base **vacía** llamada `services_vales` desde pgAdmin.
-2. Ejecutar el instalador con la cuenta propietaria desde la raíz del proyecto:
-
-   ```powershell
-   & "C:\Program Files\PostgreSQL\18\bin\psql.exe" -h 127.0.0.1 -p 5432 -U postgres -d services_vales -v ON_ERROR_STOP=1 -f backend/src/main/resources/db/instalar-demo.sql
-   ```
+2. Ejecutar el instalador como propietario y proporcionar `VALES_DEMO_PASSWORD` en el entorno de PowerShell. [Instalación de datos de prueba](docs/base-datos-vales.md#instalar-una-base-de-demostración-en-postgresql-5432).
 
 3. Copiar `.env.example` a `.env`, si todavía no existe, y completar:
 
@@ -70,7 +66,7 @@ Vales toma el puerto de `PORT` en Railway, salvo que se defina `VALES_PORT`. Rai
 | Contabilidad | `demo.contabilidad` | Seleccionar el vale usado, elegir la factura y asociar cuando coincidan tickets e importe. Consultar el gasto en el mes del consumo. |
 | Administrador | `demo.admin` | Configurar cuentas, roles, tarifas, precios faltantes de contrato y zonales base de vehículos. |
 
-Todas estas cuentas usan la contraseña de prueba **demo**. El emisor puede anular vales propios antes del despacho. PDF del vale muestra el documento y el historial actualizado.
+Todas estas cuentas usan la clave inicial de su base de demostración. El emisor puede anular vales propios antes del despacho. PDF del vale muestra el documento y el historial actualizado.
 
 Jefatura programa los lugares de trabajo desde **Configuración → Rutas de trabajo**. Un operativo puede tener varias rutas asignadas. La varita junto al campo **Grifo** abre el comparador, donde elige la ruta, revisa el origen y pulsa **Generar mejor opción** para comparar combustible y desvío vial. La ruta utilizada queda guardada con el vale. Consulta el [ejemplo y la configuración del motor vial](docs/rutas-trabajo.md).
 
@@ -92,17 +88,18 @@ Spring Boot sirve React y las APIs desde el mismo origen. Spring Security admini
 
 | Bloque | Carpeta o herramienta | Función |
 | --- | --- | --- |
-| Frontend | `frontend/src/features/` | Pantallas organizadas por servicio y administración. |
-| Frontend | `frontend/src/components/` | Tarjeta de vale, tablas, formularios, navegación y componentes shadcn reutilizables. |
+| Frontend | `frontend/src/app/` | Inicio de React, navegación, proveedores y estilos compartidos. |
+| Frontend | `frontend/src/features/` | Pantallas de cada servicio, acceso, consulta pública y administración. |
+| Frontend | `frontend/src/components/` | Formularios, diálogos, mapas, componentes de vales y controles shadcn compartidos. |
 | Frontend | `frontend/src/lib/` | Cliente HTTP con CSRF, tipos TypeScript, importes, QR y PDF comparativo. |
 | Frontend | TanStack Query | Consultas y actualización de datos después de cada operación. |
-| Frontend | `frontend/public/` | Manifiesto PWA, caché de recursos públicos y bibliotecas del PDF. |
+| Frontend | `frontend/public/pwa/` y `frontend/public/documentos/` | Identidad de la PWA y bibliotecas del PDF con sus licencias. El service worker está en la raíz pública del frontend. |
 | Backend | `modulos/<servicio>/api/` | Controladores y DTO de las solicitudes y respuestas HTTP. |
 | Backend | `modulos/<servicio>/aplicacion/` | Casos de uso y transacciones. |
 | Backend | `modulos/<servicio>/dominio/` | Modelos propios cuando el caso de uso los requiere. |
 | Backend | `modulos/<servicio>/infraestructura/` | Consultas parametrizadas a PostgreSQL. Los módulos colaboran mediante servicios y no acceden a repositorios ajenos. |
 | Backend | `modulos/identidad/` y `modulos/administracion/` | Sesión, DNI y configuración compartida. |
-| Backend | `config/`, `compartido/` y `local/` | Seguridad, errores, configuración, arranque y migraciones de la instancia privada. |
+| Backend | `ServicesValesApplication.java`, `config/` y `local/` | Punto de entrada, configuración del arranque y ciclo de vida de PostgreSQL local. |
 | Base de datos | `backend/src/main/resources/db/` | Migraciones numeradas, instalador y datos de prueba. |
 | Compilación | Vite y Maven Wrapper | Generación del frontend e incorporación al JAR de Spring Boot. |
 | HTTPS local | DuckDNS, lego y Let's Encrypt | Subdominio, validación DNS y certificado para usar la cámara del teléfono. |
@@ -160,7 +157,7 @@ npm ci
 npm test
 ```
 
-Las pruebas SQL están en `backend/src/test/sql/`. Para `reglas.sql` y la prueba HTTP, prepara una base nueva de pruebas con `instalar-demo.sql`. La prueba HTTP `backend/src/test/api/flujo.mjs` solo admite el puerto `18085`.
+Las pruebas SQL están en `backend/src/test/sql/`. Para `reglas.sql` y la prueba HTTP, prepara una base nueva de pruebas con `instalar-demo.sql` o con el modo local. Ejecuta `backend/src/test/api/flujo.mjs` con `VALES_DEMO_PASSWORD` en el entorno del proceso y Vales en el puerto de pruebas `18085`.
 
 ## Guías
 

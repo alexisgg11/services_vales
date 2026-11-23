@@ -7,7 +7,7 @@ import {
   Save,
   X,
 } from "lucide-react";
-import { Empty, ErrorText } from "@/components/common";
+import { Empty, ErrorText } from "@/components/ui/feedback";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,

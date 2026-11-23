@@ -9,7 +9,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { Empty } from "@/components/common";
+import { Empty } from "@/components/ui/feedback";
 import { Button } from "@/components/ui/button";
 import { money, qty } from "@/lib/api";
 import {

@@ -1,5 +1,5 @@
 import { BadgeCheck, CalendarDays, Fuel, X } from "lucide-react";
-import { ValeCard } from "@/components/common";
+import { ValeCard } from "@/components/vales/TarjetaVale";
 import { Button } from "@/components/ui/button";
 import { date, money, qty } from "@/lib/api";
 import type { Factura, Vale } from "@/lib/types";

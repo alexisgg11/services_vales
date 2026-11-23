@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { Busy, ErrorText, useData } from "@/components/common";
+import { Busy, ErrorText } from "@/components/ui/feedback";
+import { useData } from "@/lib/consultas";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { api } from "@/lib/api";
 import Accesos from "./Accesos";

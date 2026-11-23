@@ -18,7 +18,7 @@ WITH ficha AS (
     RETURNING id_trabajador
 ), cuenta AS (
     INSERT INTO usuario (login, id_trabajador, clave_hash)
-    SELECT 'demo.grifo.vencido', id_trabajador, '{bcrypt}$2a$10$gXpzPqhp/pe.F41HIXEI/eifcbu8wanEmnjGdgXzdPUhTTPCwOrXe'
+    SELECT 'demo.grifo.vencido', id_trabajador, current_setting('vales.demo_clave_hash')
     FROM ficha
     RETURNING id_usuario
 )

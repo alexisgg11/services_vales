@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { ArrowLeftRight, Link, LoaderCircle, Receipt } from "lucide-react";
-import { ErrorText } from "@/components/common";
+import { ErrorText } from "@/components/ui/feedback";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {

@@ -1,7 +1,6 @@
 -- Solo para las cuentas ficticias de una base de desarrollo.
--- Contraseña de prueba: demo.
 UPDATE vales.usuario
-SET clave_hash = '{bcrypt}$2a$10$gXpzPqhp/pe.F41HIXEI/eifcbu8wanEmnjGdgXzdPUhTTPCwOrXe'
+SET clave_hash = current_setting('vales.demo_clave_hash')
 WHERE login IN (
     'demo.contabilidad', 'demo.admin', 'demo.operativo.piura', 'demo.operativo.sullana',
     'demo.jefe.piura', 'demo.jefe.piura2', 'demo.jefe.sullana',

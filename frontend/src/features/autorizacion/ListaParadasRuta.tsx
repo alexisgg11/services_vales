@@ -29,7 +29,7 @@ import { DropdownMenu } from "radix-ui";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Field } from "@/components/common";
+import { Field } from "@/components/formularios/campos";
 import { origenValido } from "@/lib/geografia/coordenadas";
 import {
   seleccionarCentro,

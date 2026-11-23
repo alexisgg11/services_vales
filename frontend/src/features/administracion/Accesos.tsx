@@ -9,7 +9,8 @@ import {
   Shield,
   Trash2,
 } from "lucide-react";
-import { Field, Search, useRefresh } from "@/components/common";
+import { Field, Search } from "@/components/formularios/campos";
+import { useRefresh } from "@/lib/consultas";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

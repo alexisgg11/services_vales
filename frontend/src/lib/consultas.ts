@@ -1,4 +1,10 @@
-import { queryOptions, type QueryClient } from "@tanstack/react-query";
+import {
+  queryOptions,
+  useQuery,
+  useQueryClient,
+  type QueryClient,
+  type QueryKey,
+} from "@tanstack/react-query";
 import { api } from "./api";
 import type { Contexto, Vale } from "./types";
 
@@ -8,6 +14,20 @@ export const contextoConsulta = queryOptions({
   staleTime: 30_000,
   retry: false,
 });
+
+export function useData() {
+  return useQuery(contextoConsulta);
+}
+
+export function useRefresh() {
+  const cache = useQueryClient();
+  return async (...claves: QueryKey[]) => {
+    if (claves.length === 0) return cache.invalidateQueries();
+    await Promise.all(
+      claves.map((queryKey) => cache.invalidateQueries({ queryKey })),
+    );
+  };
+}
 
 export const detalleValeConsulta = (idQr: string) =>
   queryOptions({

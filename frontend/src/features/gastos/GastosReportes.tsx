@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef, useState, type RefObject } from "react";
 import { FileSpreadsheet, FileText, LoaderCircle } from "lucide-react";
-import { ErrorText } from "@/components/common";
+import { ErrorText } from "@/components/ui/feedback";
 import { Button } from "@/components/ui/button";
 import {
   descargarArchivo,

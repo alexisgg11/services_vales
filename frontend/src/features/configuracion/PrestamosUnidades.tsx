@@ -2,14 +2,11 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { InfoPopover } from "@/components/info-popover";
-import {
-  ErrorText,
-  Field,
-  useData,
-  useModal,
-  useRefresh,
-} from "@/components/common";
+import { InfoPopover } from "@/components/ui/info-popover";
+import { ErrorText } from "@/components/ui/feedback";
+import { Field } from "@/components/formularios/campos";
+import { useData, useRefresh } from "@/lib/consultas";
+import { useModal } from "@/components/dialogos/confirmacion";
 import type { Unidad, Centro } from "@/lib/types";
 import { api, today } from "@/lib/api";
 

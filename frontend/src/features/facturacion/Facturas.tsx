@@ -3,17 +3,13 @@ import { useQuery } from "@tanstack/react-query";
 import { Receipt, CheckCircle2, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { InfoPopover } from "@/components/info-popover";
+import { InfoPopover } from "@/components/ui/info-popover";
 import { api, money, today, date } from "@/lib/api";
 import type { Vale, Factura } from "@/lib/types";
-import {
-  Field,
-  Empty,
-  ErrorText,
-  useData,
-  useRefresh,
-  useModal,
-} from "@/components/common";
+import { Field } from "@/components/formularios/campos";
+import { Empty, ErrorText } from "@/components/ui/feedback";
+import { useData, useRefresh } from "@/lib/consultas";
+import { useModal } from "@/components/dialogos/confirmacion";
 import { AsociarFactura } from "./AsociarFactura";
 export default function Facturas({ onOpen }: { onOpen: (v: Vale) => void }) {
   const { data } = useData();

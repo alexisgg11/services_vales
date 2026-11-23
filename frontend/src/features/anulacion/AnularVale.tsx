@@ -1,20 +1,21 @@
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Ban } from "lucide-react";
+import { ErrorText } from "@/components/ui/feedback";
+import { Field, Search } from "@/components/formularios/campos";
+import { ValeCard } from "@/components/vales/TarjetaVale";
+import { matches } from "@/lib/busqueda-vales";
 import {
-  ErrorText,
-  Field,
-  Search,
-  ValeCard,
-  matches,
   useData,
-  useModal,
-} from "@/components/common";
+  actualizarContexto,
+  invalidarDetalles,
+} from "@/lib/consultas";
+import { useModal } from "@/components/dialogos/confirmacion";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { ValesList } from "@/components/vales-list";
+import { ValesList } from "@/components/vales/lista-vales";
 import { api } from "@/lib/api";
-import { actualizarContexto, invalidarDetalles } from "@/lib/consultas";
+
 import { puedeAnularVale } from "@/lib/permisos";
 import type { Contexto, Vale } from "@/lib/types";
 import "./anulacion.css";

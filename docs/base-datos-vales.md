@@ -4,6 +4,8 @@
 
 Una instalación nueva prepara el esquema y genera [datos de demostración](../backend/src/main/resources/db/demo) con fechas relativas al día de carga en Perú. Incluye vales en los cuatro estados, facturas con tickets conciliables e historial del mes actual y los seis meses anteriores.
 
+Al crear una base local, Vales usa `VALES_DEMO_PASSWORD` de `.env` si está definida. Si queda vacía, genera la clave inicial en `.local/demo.clave`. Las cuentas de bases ya instaladas usan su contraseña existente.
+
 ## Ver la instancia privada en pgAdmin
 
 1. Iniciar Vales desde VS Code y mantenerlo abierto.
@@ -18,12 +20,19 @@ Una instalación nueva prepara el esquema y genera [datos de demostración](../b
 
 ## Instalar una base de demostración en PostgreSQL 5432
 
-1. Crear una base nueva. Ejecutar el instalador con una cuenta que pueda crear el rol `vales_app` si aún no existe. Ejemplo en PowerShell desde la raíz del proyecto.
+1. Crear una base nueva. Ejecutar el instalador como propietario con permiso para crear `vales_app` y habilitar `pgcrypto`. La clave de prueba debe tener al menos 8 caracteres y como máximo 72 bytes. PowerShell permite ingresarla sin mostrarla en pantalla.
 
    ```powershell
    $pg = 'C:\Program Files\PostgreSQL\18\bin'
    & "$pg\createdb.exe" -h 127.0.0.1 -p 5432 -U postgres services_vales
-   & "$pg\psql.exe" -h 127.0.0.1 -p 5432 -U postgres -d services_vales -f backend/src/main/resources/db/instalar-demo.sql
+   $claveDemo = Read-Host 'Clave para las cuentas de prueba' -AsSecureString
+   $env:VALES_DEMO_PASSWORD = [System.Net.NetworkCredential]::new('', $claveDemo).Password
+   try {
+       & "$pg\psql.exe" -h 127.0.0.1 -p 5432 -U postgres -d services_vales -f backend/src/main/resources/db/instalar-demo.sql
+   } finally {
+       Remove-Item Env:VALES_DEMO_PASSWORD
+       $claveDemo.Dispose()
+   }
    ```
 
 2. Desde Query Tool, crear una cuenta de conexión que herede `vales_app` y asignarle una contraseña propia desde pgAdmin.

@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
 import {randomUUID} from 'node:crypto';
 const base=process.env.VALES_TEST_URL||'http://127.0.0.1:18085';
+const claveDemo=process.env.VALES_DEMO_PASSWORD;
+if(!claveDemo)throw new Error('Define VALES_DEMO_PASSWORD con la clave de la base de demostración aislada.');
 if(new URL(base).hostname!=='127.0.0.1'||new URL(base).port!=='18085')throw new Error('Esta prueba con registros nuevos requiere la instancia aislada en 127.0.0.1:18085.');
 class Session {
  cookies=new Map(); csrf=null;
@@ -11,7 +13,7 @@ class Session {
   for(const c of r.headers.getSetCookie()){const [k,v]=c.split(';')[0].split('=');this.cookies.set(k,v);}
   const text=await r.text();assert.equal(r.status,status,url+' '+text);return text?JSON.parse(text):null;
  }
- async login(name){this.csrf=await this.request('/api/csrf');const r=await fetch(base+'/login',{method:'POST',headers:{Cookie:[...this.cookies].map(([k,v])=>k+'='+v).join('; '),[this.csrf.header]:this.csrf.token,'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({username:name,password:'demo'}),redirect:'manual'});assert.equal(r.status,302);assert.ok(!r.headers.get('location')?.includes('error'),'login '+name);for(const c of r.headers.getSetCookie()){const[k,v]=c.split(';')[0].split('=');this.cookies.set(k,v);}this.csrf=null;return this;}
+ async login(name){this.csrf=await this.request('/api/csrf');const r=await fetch(base+'/login',{method:'POST',headers:{Cookie:[...this.cookies].map(([k,v])=>k+'='+v).join('; '),[this.csrf.header]:this.csrf.token,'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({username:name,password:claveDemo}),redirect:'manual'});assert.equal(r.status,302);assert.ok(!r.headers.get('location')?.includes('error'),'login '+name);for(const c of r.headers.getSetCookie()){const[k,v]=c.split(';')[0].split('=');this.cookies.set(k,v);}this.csrf=null;return this;}
 }
 const anonymous=new Session();await anonymous.request('/api/aplicacion',undefined,{status:401});
 await anonymous.request('/api/v1/autorizacion/vales',{vales:[1]},{status:401,csrf:false});

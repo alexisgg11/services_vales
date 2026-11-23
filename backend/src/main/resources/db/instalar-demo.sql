@@ -2,6 +2,20 @@
 \set ON_ERROR_STOP on
 \encoding UTF8
 
+\set clave_demo ''
+\getenv clave_demo VALES_DEMO_PASSWORD
+SELECT char_length(:'clave_demo') >= 8
+    AND octet_length(:'clave_demo') <= 72 AS clave_demo_valida
+\gset
+\if :clave_demo_valida
+\else
+DO $$
+BEGIN
+    RAISE EXCEPTION 'Configura VALES_DEMO_PASSWORD antes de instalar los datos de prueba. Debe tener al menos 8 caracteres y como máximo 72 bytes.';
+END;
+$$;
+\endif
+
 DO $$
 BEGIN
     IF to_regnamespace('vales') IS NOT NULL THEN
@@ -13,6 +27,21 @@ BEGIN
     END IF;
 END;
 $$;
+
+CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
+SELECT n.nspname AS esquema_pgcrypto
+FROM pg_extension e
+JOIN pg_namespace n ON n.oid = e.extnamespace
+WHERE e.extname = 'pgcrypto'
+\gset
+SELECT set_config(
+    'vales.demo_clave_hash',
+    '{bcrypt}' || :"esquema_pgcrypto".crypt(:'clave_demo', :"esquema_pgcrypto".gen_salt('bf', 10)),
+    false
+) AS credencial_demo_preparada
+\gset
+\unset clave_demo
+\unset credencial_demo_preparada
 
 \ir migraciones/01-esquema.sql
 \ir migraciones/02-consultas.sql

@@ -9,8 +9,9 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Busy, ErrorText, useData } from "@/components/common";
-import { detalleValeConsulta } from "@/lib/consultas";
+import { Busy, ErrorText } from "@/components/ui/feedback";
+import { useData, detalleValeConsulta } from "@/lib/consultas";
+
 import type { Vale } from "@/lib/types";
 
 const PdfPreview = lazy(() => import("./PdfPreview"));

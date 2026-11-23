@@ -1,5 +1,5 @@
 import { Clock3, Route } from "lucide-react";
-import { InfoPopover } from "@/components/info-popover";
+import { InfoPopover } from "@/components/ui/info-popover";
 import { mostrarDistancia } from "@/lib/geografia/coordenadas";
 
 export type RecorridoVial = {

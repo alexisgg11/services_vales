@@ -12,11 +12,11 @@ Jefatura puede editar fechas, asignaciones, paradas y estado. Cada edición incr
 
 ## Registrar y probar
 
-1. Entrar con `demo.jefe.piura`, contraseña `demo`. Abrir **Configuración → Rutas de trabajo**. Pulsar **Nueva ruta** o el lápiz de una fila para abrir el editor.
+1. Entrar con `demo.jefe.piura` y la clave de la base de demostración. Abrir **Configuración → Rutas de trabajo**. Pulsar **Nueva ruta** o el lápiz de una fila para abrir el editor.
 2. En **Datos**, escribir un nombre y fechas que incluyan el día de prueba. En **Operativos**, abrir el selector y marcar la casilla de **Rosa Gutiérrez**.
 3. En **Paradas**, tocar la casa para ajustar la partida o pulsar **Elegir partida** si está por definir. Elegir una localidad o marcar el mapa y pulsar **Usar partida**. Añadir el primer lugar de trabajo con **Añadir parada**. Al ubicar la parada, **Ubicar centro** y **Ajustar centro** conservan el vínculo con el centro de costo. **Marcar punto libre** lo retira al confirmar con **Usar punto**.
 4. Añadir los demás lugares. Tocar una parada en la lista o su pin para editarla. Arrastrar su número para cambiar el orden. Con teclado, pulsar **Espacio**, mover con las flechas y pulsar **Espacio** para soltar. **Expandir mapa** amplía el recorrido en el editor. Con dos o más paradas ubicadas, pulsar la varita para optimizar y pulsarla de nuevo para restaurar el orden anterior. Revisar el trazado y pulsar **Guardar ruta**.
-5. Entrar como `demo.operativo.piura`, contraseña `demo`. En **Registrar vale**, elegir modalidad, suministro y galones. El grifo puede quedar sin seleccionar mientras se genera la recomendación.
+5. Entrar como `demo.operativo.piura`. En **Registrar vale**, elegir modalidad, suministro y galones. El grifo puede quedar sin seleccionar mientras se genera la recomendación.
 6. Pulsar la varita junto al campo **Grifo** para abrir **Comparar grifos** y elegir la ruta. Si solo hay una vigente se propone automáticamente. El vale propone la partida guardada por Jefatura. Las rutas anteriores sin partida guardada proponen la localidad del operativo. Usar **Cambiar** para ajustar el origen de ese vale.
 7. Pulsar **Generar mejor opción** para abrir el mapa del recorrido con el grifo recomendado. Pasar el puntero, enfocar o tocar los pines para consultar el origen, las paradas y los datos de cada grifo.
 8. Pulsar **Elegir grifo** para aplicar la recomendación al vale. Para elegir otro proveedor, usar **Grifo** en **Datos de emisión**. Completar la asignación y confirmar el registro. La ruta guardada aparece en el detalle compartido del vale.

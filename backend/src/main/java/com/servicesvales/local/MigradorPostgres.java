@@ -3,6 +3,7 @@ package com.servicesvales.local;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -55,7 +56,9 @@ final class MigradorPostgres {
     String urlAplicacion,
     String propietario,
     String clavePropietario,
-    String appPassword
+    String appPassword,
+    Path directorio,
+    String claveDemo
   ) throws Exception {
     try (
       Connection connection = DriverManager.getConnection(
@@ -106,10 +109,36 @@ final class MigradorPostgres {
       }
       for (String migration : MIGRACIONES) migrar(connection, migration);
       if (!aplicada(connection, COPIA_ANTERIOR)) {
-        for (String archivo : DATOS_DEMO) migrar(connection, archivo);
+        cargarDemostracion(connection, directorio, claveDemo);
       }
       for (String migration : MIGRACIONES_POSTERIORES_A_DATOS)
         migrar(connection, migration);
+    }
+  }
+
+  private static void cargarDemostracion(
+    Connection connection,
+    Path directorio,
+    String claveDemo
+  ) throws IOException, SQLException {
+    boolean credencialPreparada = false;
+    for (String archivo : DATOS_DEMO) {
+      if (aplicada(connection, archivo)) continue;
+      if (!credencialPreparada) {
+        try (
+          var configurar = connection.prepareStatement(
+            "SELECT set_config('vales.demo_clave_hash', ?, false)"
+          )
+        ) {
+          configurar.setString(
+            1,
+            CredencialDemostracion.hash(directorio, claveDemo)
+          );
+          configurar.execute();
+        }
+        credencialPreparada = true;
+      }
+      migrar(connection, archivo);
     }
   }
 

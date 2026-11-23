@@ -17,8 +17,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { InfoPopover } from "@/components/info-popover";
-import { ErrorText, Field } from "@/components/common";
+import { InfoPopover } from "@/components/ui/info-popover";
+import { ErrorText } from "@/components/ui/feedback";
+import { Field } from "@/components/formularios/campos";
 import { api, money } from "@/lib/api";
 import type { Cuenta, Recomendacion, RutaTrabajo } from "@/lib/types";
 import type { Modalidad } from "./condiciones";

@@ -35,29 +35,10 @@ public class SeguridadConfig {
             HttpMethod.GET,
             "/vales/q/*",
             "/vales/q/*/verificacion",
-            "/app/verificacion-vale.html",
             "/api/publico/vales/*"
           )
           .permitAll()
-          .requestMatchers(
-            "/app/**",
-            "/app/login",
-            "/app/index.html",
-            "/app/*.css",
-            "/app/*.js",
-            "/app/styles/**",
-            "/app/vendor/**",
-            "/app/api/**",
-            "/app/components/**",
-            "/app/model/**",
-            "/app/router/**",
-            "/app/service/**",
-            "/app/shared/**",
-            "/app/state/**",
-            "/app/features/**",
-            "/api/csrf",
-            "/favicon.ico"
-          )
+          .requestMatchers("/app/**", "/api/csrf", "/favicon.ico")
           .permitAll()
           .anyRequest()
           .authenticated()

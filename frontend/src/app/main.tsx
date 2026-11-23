@@ -2,8 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import App from "./App";
-import { ModalProvider } from "./components/common";
-import { ValePdfProvider } from "./components/vale-pdf";
+import { ModalProvider } from "@/components/dialogos/confirmacion";
+import { ValePdfProvider } from "@/components/vales/pdf-provider";
 import "./styles.css";
 const query = new QueryClient({
   defaultOptions: { queries: { retry: false, staleTime: 30_000 } },
@@ -43,5 +43,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
 );
 if ("serviceWorker" in navigator && import.meta.env.PROD)
   navigator.serviceWorker
-    .register("/app/sw.js", { scope: "/app/" })
+    .register(import.meta.env.BASE_URL + "sw.js", {
+      scope: import.meta.env.BASE_URL,
+    })
     .catch(() => {});
