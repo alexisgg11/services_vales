@@ -198,6 +198,13 @@ function FilaParada({
     disabled: !movible || ubicando || guardando,
   });
   const nombre = parada.nombre.trim();
+  const centro = centros.find(({ codigo }) => codigo === parada.centro);
+  const direccion =
+    centro?.punto &&
+    parada.punto?.latitud === centro.punto.latitud &&
+    parada.punto.longitud === centro.punto.longitud
+      ? centro.direccion
+      : undefined;
   const estado =
     !parada.punto || !origenValido(parada.punto)
       ? "Falta ubicar"
@@ -299,6 +306,7 @@ function FilaParada({
               <Field label="Centro de costo">
                 <select
                   value={parada.centro ?? ""}
+                  aria-describedby={direccion ? `${id}-direccion` : undefined}
                   onChange={(e) =>
                     onActualizar(
                       seleccionarCentro(parada, e.target.value, centros),
@@ -345,6 +353,11 @@ function FilaParada({
                 cambiarPunto
               )}
             </div>
+            {direccion && (
+              <p id={`${id}-direccion`} className="route-stop-address muted">
+                {direccion}
+              </p>
+            )}
             <Field label="Nombre de la parada">
               <Input
                 maxLength={150}

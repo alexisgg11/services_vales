@@ -32,12 +32,13 @@ El modo predeterminado `VALES_DB_MODE=local` conserva sus archivos en `.local/` 
 
 Las credenciales de `.env` corresponden al PostgreSQL de esa PC. Las cuentas `demo.*` se utilizan en la pantalla de ingreso de Vales. El instalador solo admite bases vacías. Para actualizar una base con registros, se respalda y se aplican únicamente sus migraciones pendientes como propietario. Una cuenta de conexión limitada puede recibir el rol `vales_app`; `postgres` facilita la instalación de desarrollo.
 
-## Preparar el despliegue en Railway
+## Desplegar en Railway
 
-El [Dockerfile](Dockerfile) compila React y lo empaqueta con Spring Boot. En Railway se necesita un proyecto con dos servicios, Vales y PostgreSQL. Conserva la raíz del repositorio como directorio de compilación, ya que Maven usa `backend/` y `frontend/`.
+El [Dockerfile](Dockerfile) compila React y lo empaqueta con Spring Boot. En Railway se usa un proyecto con dos servicios, Vales y PostgreSQL. El servicio Vales se construye desde la rama `main` de GitHub y desde la raíz del repositorio, ya que Maven usa `backend/` y `frontend/`.
 
 1. Sube el código, las migraciones de `backend/src/main/resources/db/`, `frontend/package-lock.json`, el Maven Wrapper, los archivos Docker y `.env.example`. Mantén `.env`, `.local/`, las fuentes privadas y las carpetas generadas fuera del repositorio.
 2. Prepara el esquema de PostgreSQL antes de publicar Vales. Para conservar los registros de una instalación, restaura su respaldo en privado y prepara un usuario de conexión con los permisos de `vales_app`. Consulta la [guía de base de datos](docs/base-datos-vales.md).
+   - En una base existente, respalda los datos y aplica las migraciones pendientes como propietario antes de desplegar. La [migración 22](backend/src/main/resources/db/migraciones/22-ubicaciones-centros-costo.sql) carga las referencias geográficas de los centros de costo. El modo externo requiere ejecutar estas migraciones por separado.
 3. Genera un dominio público para Vales y configura estas variables en su servicio. Cambia `Postgres` si el servicio de base de datos tiene otro nombre.
 
    ```dotenv
@@ -51,7 +52,9 @@ El [Dockerfile](Dockerfile) compila React y lo empaqueta con Spring Boot. En Rai
    SERVER_FORWARD_HEADERS_STRATEGY=framework
    ```
 
-Vales toma el puerto de `PORT` en Railway, salvo que se defina `VALES_PORT`. Railway termina HTTPS en su proxy. El dominio público se usa en los QR y enlaces de reportes. [Guía de despliegue](https://docs.railway.com/quick-start) y [conexión privada a PostgreSQL](https://docs.railway.com/databases/postgresql).
+4. Configura la [consulta de DNI](#consulta-de-dni) en **Vales → Variables** y revisa que el despliegue de `main` quede activo.
+
+Vales toma el puerto de `PORT` en Railway, salvo que se defina `VALES_PORT`. Railway termina HTTPS en su proxy y el navegador puede usar la cámara para escanear. El dominio público se usa en los QR y los enlaces de reportes. [Guía de despliegue](https://docs.railway.com/quick-start) y [conexión privada a PostgreSQL](https://docs.railway.com/databases/postgresql).
 
 ## Probar el flujo completo
 
@@ -66,7 +69,9 @@ Vales toma el puerto de `PORT` en Railway, salvo que se defina `VALES_PORT`. Rai
 
 Todas estas cuentas usan la clave inicial de su base de demostración. El emisor puede anular vales propios antes del despacho. PDF del vale muestra el documento y el historial actualizado.
 
-Jefatura programa los lugares de trabajo desde **Configuración → Rutas de trabajo**. Un operativo puede tener varias rutas asignadas. La varita junto al campo **Grifo** abre el comparador, donde elige la ruta, revisa el origen y pulsa **Generar mejor opción** para comparar combustible y desvío vial. La ruta utilizada queda guardada con el vale. Consulta el [ejemplo y la configuración del motor vial](docs/rutas-trabajo.md).
+Jefatura programa los lugares de trabajo desde **Configuración → Rutas de trabajo**. En **Paradas**, al elegir un centro con dirección y coordenadas en PostgreSQL, como **POZO PACHITEA — PIURA**, el mapa lo ubica en el acto. Las ubicaciones precargadas son ficticias. Jefatura puede ajustar el punto de una parada.
+
+Un operativo puede tener varias rutas asignadas. La varita junto al campo **Grifo** abre el comparador, donde elige la ruta, revisa el origen y pulsa **Generar mejor opción** para comparar combustible y desvío vial. La ruta utilizada queda guardada con el vale. Consulta el [ejemplo y la configuración del motor vial](docs/rutas-trabajo.md).
 
 ## Stack y conexión
 
@@ -82,16 +87,16 @@ flowchart LR
     dns["DuckDNS y lego<br/>Certificado de Let's Encrypt"] -.->|"HTTPS local opcional"| api
 ```
 
-Spring Boot sirve React y las APIs desde el mismo origen. Spring Security administra la sesión y CSRF. PostgreSQL conserva las relaciones, los permisos por perfil y ámbito, los correlativos y las validaciones transaccionales. Los siete módulos se ejecutan en un proceso y utilizan una base de datos.
+Spring Boot 4 sobre Java 17 sirve React 19 y las APIs desde el mismo origen. Spring Security administra la sesión y CSRF. PostgreSQL conserva las relaciones, los permisos por perfil y ámbito, los correlativos y las validaciones transaccionales. Los siete módulos se ejecutan en un proceso y utilizan una base de datos.
 
 | Bloque | Carpeta o herramienta | Función |
 | --- | --- | --- |
 | Frontend | `frontend/src/app/` | Inicio de React, navegación, proveedores y estilos compartidos. |
 | Frontend | `frontend/src/features/` | Pantallas de cada servicio, acceso, consulta pública y administración. |
-| Frontend | `frontend/src/components/` | Formularios, diálogos, mapas, componentes de vales y controles shadcn compartidos. |
+| Frontend | shadcn/ui, Radix UI y Tailwind CSS 4 | Formularios, diálogos y controles compartidos en `frontend/src/components/`. |
 | Frontend | `frontend/src/lib/` | Cliente HTTP con CSRF, tipos TypeScript, importes, QR y PDF comparativo. |
 | Frontend | TanStack Query | Consultas y actualización de datos después de cada operación. |
-| Frontend | `frontend/public/pwa/` y `frontend/public/documentos/` | Identidad de la PWA y bibliotecas del PDF con sus licencias. El service worker está en la raíz pública del frontend. |
+| Frontend | Leaflet, OpenStreetMap y PDF.js | Mapas de recorridos y vista previa del PDF en el navegador. |
 | Backend | `modulos/<servicio>/api/` | Controladores y DTO de las solicitudes y respuestas HTTP. |
 | Backend | `modulos/<servicio>/aplicacion/` | Casos de uso y transacciones. |
 | Backend | `modulos/<servicio>/dominio/` | Modelos propios cuando el caso de uso los requiere. |
@@ -99,7 +104,8 @@ Spring Boot sirve React y las APIs desde el mismo origen. Spring Security admini
 | Backend | `modulos/identidad/` y `modulos/administracion/` | Sesión, DNI y configuración compartida. |
 | Backend | `ServicesValesApplication.java`, `config/` y `local/` | Punto de entrada, configuración del arranque y ciclo de vida de PostgreSQL local. |
 | Base de datos | `backend/src/main/resources/db/` | Migraciones numeradas, instalador y datos de prueba. |
-| Compilación | Vite y Maven Wrapper | Generación del frontend e incorporación al JAR de Spring Boot. |
+| Compilación | TypeScript 5, Vite 7, Node.js 24 y Maven Wrapper | Generación del frontend e incorporación al JAR de Spring Boot. |
+| Despliegue | Docker y Railway | Aplicación con HTTPS público y PostgreSQL en la red privada del proyecto. |
 | HTTPS local | DuckDNS, lego y Let's Encrypt | Subdominio, validación DNS y certificado para usar la cámara del teléfono. |
 
 Las rutas Java parten de `backend/src/main/java/com/servicesvales/`.
@@ -120,18 +126,19 @@ Se conservan las rutas anteriores para compatibilidad.
 
 ## Funciones de apoyo
 
-- **Comparar grifos.** Pulsa la varita junto a **Grifo**, elige la ruta y ajusta el origen si hace falta. **Generar mejor opción** muestra el recorrido por el grifo que minimiza el costo estimado de combustible y desvío. **Elegir grifo** aplica la recomendación al formulario.
+- **Comparar grifos.** Pulsa la varita junto a **Grifo**, elige la ruta y ajusta el origen si hace falta. **Generar mejor opción** usa OSRM Table para comparar distancias viales y OSRM Route para dibujar el recorrido por el grifo recomendado. **Elegir grifo** aplica la recomendación al formulario. El servidor de OSRM se configura con `VALES_ROUTING_URL`.
 - **Conciliación asistida.** Sugiere vales por tickets y exige el conjunto exacto y el total a dos decimales.
-- **Seguimiento.** Comparte QR, responsables y fechas en el detalle del vale.
+- **QR con estado actualizado.** La verificación pública consulta `GET /api/publico/vales/{uuid}` cada 3 segundos mientras la página está visible y el vale está emitido o autorizado. Al atenderlo, muestra **Usado** sin volver a escanearlo.
+- **Reportes.** Gastos filtra por período y combustible y exporta el resultado en Excel y PDF.
 - El navegador recuerda el menú y la vista del comparativo de gastos en `localStorage`. `sessionStorage` conserva los campos del borrador de emisión durante la sesión. El borrador excluye el DNI, el destino y las observaciones.
 - TanStack Query reutiliza temporalmente las lecturas en memoria. Los cambios guardados actualizan las consultas afectadas y PostgreSQL valida cada operación. **Actualizar datos** fuerza una consulta nueva.
-- El uso móvil incluye tarjetas, lector QR y PWA. Las operaciones que guardan cambios requieren conexión y confirmación.
+- En el teléfono se abre Vales en el navegador. La cámara del lector QR requiere HTTPS o localhost.
 
 ### Consulta de DNI
 
 En **Sin contrato para tercero**, **Consultar** busca el DNI en el catálogo. Para un DNI nuevo, APIs Perú devuelve el nombre y los apellidos. Al confirmar el vale, Vales guarda el DNI y el nombre completo del tercero y los vincula con la emisión. En atención se verifica el DNI contra el tercero del vale.
 
-Configurar estas variables en el `.env` privado para ejecución local o en **Vales → Variables** del entorno de Railway. El backend usa el token de tu cuenta de APIs Perú. Aplicar la configuración con el despliegue de la versión que incluye la integración.
+Configura estas variables en el `.env` privado para ejecución local o en **Vales → Variables** del entorno de Railway. Spring Boot envía la consulta a APIs Perú con el token de tu cuenta y devuelve el nombre al formulario. Aplica la configuración con el despliegue de la versión que incluye la integración.
 
 ```properties
 VALES_DNI_PROVIDER=apisperu

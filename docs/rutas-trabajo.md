@@ -6,7 +6,7 @@ Jefatura registra los recorridos de su zonal desde **Configuración → Rutas de
 
 Cada ruta tiene un punto de partida compartido. El sistema propone la referencia de la localidad del primer operativo asignado. Jefatura puede elegir otra localidad o marcar un punto en el mapa. Cuando la partida y todas las paradas están ubicadas, el mapa dibuja automáticamente el recorrido por calles. La casa indica la partida, los números indican el orden de visita y la bandera indica la llegada.
 
-Los lugares pueden vincularse a un centro de costo o registrarse como otro punto de trabajo. El nombre del trabajo, sus coordenadas y el centro de costo son datos separados. La ruta no asigna permanentemente un vehículo al trabajador ni cambia su localidad administrativa.
+Los lugares pueden vincularse a un centro de costo o registrarse como otro punto de trabajo. Si el centro tiene dirección y coordenadas en el catálogo, se ubica automáticamente al elegirlo. Los pozos y otros centros físicos de ejemplo tienen referencias ficticias. La ruta guarda las coordenadas elegidas para cada parada junto con su centro y su nombre.
 
 Jefatura puede editar fechas, asignaciones, paradas y estado. Cada edición incrementa la versión; una versión desactualizada se rechaza para evitar sobrescribir cambios de otro usuario. Los vales ya registrados conservan su copia de la ruta y del origen utilizado.
 
@@ -14,7 +14,7 @@ Jefatura puede editar fechas, asignaciones, paradas y estado. Cada edición incr
 
 1. Entrar con `demo.jefe.piura` y la clave de la base de demostración. Abrir **Configuración → Rutas de trabajo**. Pulsar **Nueva ruta** o el lápiz de una fila para abrir el editor.
 2. En **Datos**, escribir un nombre y fechas que incluyan el día de prueba. En **Operativos**, abrir el selector y marcar la casilla de **Rosa Gutiérrez**.
-3. En **Paradas**, tocar la casa para ajustar la partida o pulsar **Elegir partida** si está por definir. Elegir una localidad o marcar el mapa y pulsar **Usar partida**. Añadir el primer lugar de trabajo con **Añadir parada**. Al ubicar la parada, **Ubicar centro** y **Ajustar centro** conservan el vínculo con el centro de costo. **Marcar punto libre** lo retira al confirmar con **Usar punto**.
+3. En **Paradas**, tocar la casa para ajustar la partida o pulsar **Elegir partida** si está por definir. Elegir una localidad o marcar el mapa y pulsar **Usar partida**. Pulsar **Añadir parada** y elegir **POZO PACHITEA — PIURA** en **Centro de costo**. La parada pasa a **Ubicada** y muestra su dirección de referencia y el pin. **Ubicar centro** y **Ajustar centro** conservan el vínculo con el centro de costo. **Marcar punto libre** lo retira al confirmar con **Usar punto**.
 4. Añadir los demás lugares. Tocar una parada en la lista o su pin para editarla. Arrastrar su número para cambiar el orden. Con teclado, pulsar **Espacio**, mover con las flechas y pulsar **Espacio** para soltar. **Expandir mapa** amplía el recorrido en el editor. Con dos o más paradas ubicadas, pulsar la varita para optimizar y pulsarla de nuevo para restaurar el orden anterior. Revisar el trazado y pulsar **Guardar ruta**.
 5. Entrar como `demo.operativo.piura`. En **Registrar vale**, elegir modalidad, suministro y galones. El grifo puede quedar sin seleccionar mientras se genera la recomendación.
 6. Pulsar la varita junto al campo **Grifo** para abrir **Comparar grifos** y elegir la ruta. Si solo hay una vigente se propone automáticamente. El vale propone la partida guardada por Jefatura. Las rutas anteriores sin partida guardada proponen la localidad del operativo. Usar **Cambiar** para ajustar el origen de ese vale.
@@ -50,13 +50,14 @@ Si faltan rutas o el motor vial no responde, se puede seleccionar el grifo en **
 | Tabla | Responsabilidad |
 | --- | --- |
 | `vales.ruta_trabajo` | Nombre, zonal responsable, período, estado, versión, creador y punto de partida. |
+| `vales.centro_costo` | Catálogo de centros, localidad, dirección y coordenadas opcionales. |
 | `vales.ruta_parada` | Lugares de trabajo, centro de costo opcional, coordenadas y orden. |
 | `vales.ruta_asignacion` | Relación de varios operativos con varias rutas. |
 | `vales.vale_ruta` | Ruta, versión, copia de las paradas y origen utilizados en un vale. |
 
 La migración [18-rutas-trabajo.sql](../backend/src/main/resources/db/migraciones/18-rutas-trabajo.sql) añade las tablas y funciones de rutas. La [19-punto-partida-ruta.sql](../backend/src/main/resources/db/migraciones/19-punto-partida-ruta.sql) añade la partida guardada y su vínculo con el vale. El modo local aplica las migraciones pendientes al arrancar. En una base externa con registros, hacer un respaldo y aplicar solo las migraciones pendientes en orden con la cuenta propietaria.
 
-La migración **19-punto-partida-ruta.sql** incorpora coordenadas de partida y una localidad opcional. El arranque en modo local la aplica automáticamente. Para el modo externo, el propietario ejecuta el archivo de migración en la base que ya tiene la migración 18.
+La [migración 22](../backend/src/main/resources/db/migraciones/22-ubicaciones-centros-costo.sql) carga los puntos y direcciones de referencia del catálogo.
 
 Las funciones de PostgreSQL validan rol, zonal, vigencia y asignación. La cuenta de aplicación solo ejecuta esas funciones y no recibe permisos de escritura directa sobre las tablas nuevas. La vinculación de la ruta y el registro del vale se confirman en la misma transacción; si la versión cambió, se revierte el vale.
 

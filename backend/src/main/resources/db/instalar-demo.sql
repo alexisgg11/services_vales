@@ -70,5 +70,6 @@ SELECT set_config(
 \ir migraciones/19-punto-partida-ruta.sql
 \ir migraciones/20-despacho-guiado.sql
 \ir migraciones/21-consistencia-operativa.sql
+\ir migraciones/22-ubicaciones-centros-costo.sql
 
 SELECT count(*) AS vales_de_prueba, count(DISTINCT cod_zonal) AS zonales FROM vales.vales;
