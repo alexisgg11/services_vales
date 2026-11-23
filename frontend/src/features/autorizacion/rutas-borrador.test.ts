@@ -9,12 +9,20 @@ import {
   type CentroRuta,
 } from "./rutas-borrador";
 
-const centros: CentroRuta[] = [
-  { codigo: "A", nombre: "Pozo Los Algarrobos", localidad: "Piura" },
-  { codigo: "B", nombre: "Pozo Pachitea", localidad: "Piura" },
-];
 const puntoAnterior = { latitud: -5.19, longitud: -80.65 };
 const puntoLibre = { latitud: -5.2, longitud: -80.63 };
+const puntoPachitea = { latitud: -5.18877, longitud: -80.63744 };
+const centros: CentroRuta[] = [
+  { codigo: "A", nombre: "Pozo Los Algarrobos", localidad: "Piura" },
+  {
+    codigo: "B",
+    nombre: "Pozo Pachitea",
+    localidad: "Piura",
+    direccion: "Calle de los Pozos 220, Pachitea, Piura",
+    punto: puntoPachitea,
+  },
+  { codigo: "C", nombre: "Gastos operacionales", localidad: null, punto: null },
+];
 const parada = {
   clave: 3,
   centro: "A",
@@ -61,9 +69,21 @@ describe("ubicación de paradas", () => {
     expect(ubicada).toEqual({ ...parada, punto: puntoLibre });
   });
 
-  it("pide ubicar de nuevo al cambiar de centro", () => {
+  it("ubica la parada con las coordenadas del centro elegido", () => {
     const otroCentro = seleccionarCentro(parada, "B", centros);
-    expect(otroCentro.nombre).toBe("Pozo Pachitea");
+    expect(otroCentro).toMatchObject({
+      centro: "B",
+      nombre: "Pozo Pachitea",
+      punto: puntoPachitea,
+    });
+    expect(
+      datosParaGuardarRuta({ ...ruta, paradas: [otroCentro] }).paradas[0],
+    ).toMatchObject({ centro: "B", ...puntoPachitea });
+  });
+
+  it("pide ubicar de nuevo cuando el centro elegido no tiene coordenadas", () => {
+    const otroCentro = seleccionarCentro(parada, "C", centros);
+    expect(otroCentro.nombre).toBe("Gastos operacionales");
     expect(otroCentro.punto).toBeUndefined();
   });
 });

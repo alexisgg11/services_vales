@@ -66,7 +66,7 @@ export function seleccionarCentro(
     ...parada,
     centro: codigo,
     nombre: nombrePersonalizado ? parada.nombre : (nuevo?.nombre ?? ""),
-    punto: undefined,
+    punto: nuevo?.punto ?? undefined,
   };
 }
 

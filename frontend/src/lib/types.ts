@@ -184,7 +184,13 @@ export interface ContextoRutas {
     zonal: string;
     localidad?: string | null;
   }[];
-  centros: { codigo: string; nombre: string; localidad: string | null }[];
+  centros: {
+    codigo: string;
+    nombre: string;
+    localidad: string | null;
+    direccion?: string | null;
+    punto?: Coordenadas | null;
+  }[];
 }
 export interface VinculoRuta {
   rutaId: string;

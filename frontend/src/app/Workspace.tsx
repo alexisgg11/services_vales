@@ -9,7 +9,6 @@ import {
   Settings,
   WifiOff,
   RefreshCw,
-  Download,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -57,28 +56,19 @@ export default function Workspace() {
       onAuthorize?: (actual: Vale) => void;
     } | null>(null),
     [online, setOnline] = useState(navigator.onLine);
-  const [install, setInstall] = useState<
-    (Event & { prompt: () => Promise<void> }) | null
-  >(null);
   useEffect(() => {
     const hash = () => {
         setRoute(location.hash.slice(2).split("?")[0]);
         setMobile(false);
       },
-      on = () => setOnline(navigator.onLine),
-      prompt = (e: Event) => {
-        e.preventDefault();
-        setInstall(e as Event & { prompt: () => Promise<void> });
-      };
+      on = () => setOnline(navigator.onLine);
     window.addEventListener("hashchange", hash);
     window.addEventListener("online", on);
     window.addEventListener("offline", on);
-    window.addEventListener("beforeinstallprompt", prompt);
     return () => {
       window.removeEventListener("hashchange", hash);
       window.removeEventListener("online", on);
       window.removeEventListener("offline", on);
-      window.removeEventListener("beforeinstallprompt", prompt);
     };
   }, []);
   useEffect(() => {
@@ -277,19 +267,6 @@ export default function Workspace() {
             {collapsed ? <PanelLeftOpen /> : <PanelLeftClose />}
           </Button>
           <span className="app-header-title">Control de combustible</span>
-          {install && (
-            <Button
-              variant="ghost"
-              className="install"
-              onClick={async () => {
-                await install.prompt();
-                setInstall(null);
-              }}
-            >
-              <Download />
-              Instalar
-            </Button>
-          )}
           <Button
             variant="ghost"
             size="icon"

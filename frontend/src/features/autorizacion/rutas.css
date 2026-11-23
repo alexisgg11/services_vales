@@ -554,6 +554,11 @@ button.route-stop-summary {
 .route-location-button {
   width: 100%;
 }
+.route-stop-address {
+  margin: 0;
+  font-size: 0.875rem;
+  overflow-wrap: anywhere;
+}
 .route-location-menu {
   position: relative;
   z-index: 1000;
