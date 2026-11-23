@@ -1,5 +1,10 @@
 /.local/
+/frontend/node_modules/
+/frontend/dist/
+/frontend/node/
+/frontend/.vite/
 /backend/target/
+/backend/.._frontend/
 /docs/fuentes/
 
 # Notas internas y referencias de desarrollo
@@ -25,3 +30,6 @@
 *.backup
 *.log
 *.crt
+*.tmp
+Thumbs.db
+.DS_Store

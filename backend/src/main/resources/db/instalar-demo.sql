@@ -25,18 +25,21 @@ $$;
 \ir migraciones/09-gastos-modalidad.sql
 \ir migraciones/10-sc-contrato-vencido.sql
 \ir migraciones/11-dni-documento-qr.sql
-\if :{?datos_relativos}
 \ir demo/01-datos.sql
 \ir demo/02-acceso.sql
 \ir demo/03-historial.sql
 \ir demo/04-cobertura.sql
 \ir demo/05-sc-vencido.sql
-\else
-\ir datos/copia-prueba.sql
-\endif
 
 \ir migraciones/12-unidad-movil-por-vale.sql
 \ir migraciones/13-unidades-por-zonal.sql
 \ir migraciones/14-conciliacion-tickets-ubicaciones.sql
+\ir migraciones/15-asociacion-desde-vales.sql
+\ir migraciones/16-modulos-facturacion-identidad.sql
+\ir migraciones/17-vinculo-factura-emitida.sql
+\ir migraciones/18-rutas-trabajo.sql
+\ir migraciones/19-punto-partida-ruta.sql
+\ir migraciones/20-despacho-guiado.sql
+\ir migraciones/21-consistencia-operativa.sql
 
 SELECT count(*) AS vales_de_prueba, count(DISTINCT cod_zonal) AS zonales FROM vales.vales;

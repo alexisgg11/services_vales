@@ -75,7 +75,7 @@ INSERT INTO contrato_suministro VALUES
 DO $$
 DECLARE
     hoy date := CURRENT_DATE;
-    noviembre date := make_date(extract(year FROM hoy)::integer - 1, 11, 29);
+    consumo_anterior date := date_trunc('month', hoy)::date - 1;
     op_piura integer := (SELECT id_usuario FROM usuario WHERE login = 'demo.operativo.piura');
     op_sullana integer := (SELECT id_usuario FROM usuario WHERE login = 'demo.operativo.sullana');
     jefe_piura integer := (SELECT id_usuario FROM usuario WHERE login = 'demo.jefe.piura');
@@ -89,6 +89,8 @@ DECLARE
     vale_b bigint;
     vale_historico bigint;
     factura_historica bigint;
+    total_piura numeric;
+    total_sullana numeric;
 BEGIN
     PERFORM registrar_tarifa(admin, '20000000001', 'REGULAR', '2020-01-01', 22.55);
     PERFORM registrar_tarifa(admin, '20000000001', 'REGULAR', hoy, 22.60);
@@ -103,17 +105,20 @@ BEGIN
     vale_a := (registrar_vale(op_piura, '90000001', '20000000001', 'REGULAR', 20,
         'Demo: atención de 15 galones')).id_vale;
     PERFORM autorizar_vales(jefe_piura, ARRAY[vale_a]);
-    PERFORM registrar_atencion(grifo_a, vale_a, hoy, 15, p_dni_presentado => '90000001', p_identidad_verificada => true);
+    total_piura := (registrar_atencion(grifo_a, vale_a, hoy, 15,
+        p_dni_presentado => '90000001', p_identidad_verificada => true)).importe;
 
     vale_a := (registrar_vale(op_piura, '90000001', '20000000001', 'REGULAR', 2,
         'Demo: precio corregido y redondeo')).id_vale;
     PERFORM autorizar_vales(jefe_piura, ARRAY[vale_a]);
-    PERFORM registrar_atencion(grifo_a, vale_a, hoy, 1.25, 22.46, 22.60, '90000001', true);
+    total_piura := total_piura + (registrar_atencion(grifo_a, vale_a, hoy,
+        1.25, 22.46, 22.60, '90000001', true)).importe;
 
     vale_b := (registrar_vale(op_sullana, '90000002', '20000000002', 'DIESEL_B5', 8,
         'Demo: usado de otro grifo')).id_vale;
     PERFORM autorizar_vales(jefe_sullana, ARRAY[vale_b]);
-    PERFORM registrar_atencion(grifo_b, vale_b, hoy, 6, p_dni_presentado => '90000002', p_identidad_verificada => true);
+    total_sullana := (registrar_atencion(grifo_b, vale_b, hoy, 6,
+        p_dni_presentado => '90000002', p_identidad_verificada => true)).importe;
 
     vale_a := (registrar_vale(op_piura, '90000001', '20000000001', 'PREMIUM', 5,
         'Demo: anulado antes del uso')).id_vale;
@@ -126,16 +131,17 @@ BEGIN
         'Demo: agota el saldo del contrato');
 
     vale_historico := (registrar_vale(op_piura, '90000001', '20000000001', 'DIESEL_B5', 3,
-        'Demo: consumo noviembre, factura diciembre', p_fecha => noviembre)).id_vale;
+        'Demo: facturado el mes siguiente al consumo', p_fecha => consumo_anterior)).id_vale;
     PERFORM autorizar_vales(jefe_piura, ARRAY[vale_historico]);
-    PERFORM registrar_atencion(grifo_a, vale_historico, noviembre, 3, p_dni_presentado => '90000001', p_identidad_verificada => true);
+    PERFORM registrar_atencion(grifo_a, vale_historico, consumo_anterior, 3,
+        p_dni_presentado => '90000001', p_identidad_verificada => true);
 
     INSERT INTO factura (cod_proveedor, serie, numero, fecha_emision, total) VALUES
-        ('20000000001', 'F001', '000100', hoy, 367.08),
-        ('20000000001', 'F001', '000101', hoy, 367.07),
-        ('20000000002', 'F002', '000100', hoy, 150.60);
+        ('20000000001', 'F001', '000100', hoy, total_piura),
+        ('20000000002', 'F002', '000100', hoy, total_sullana);
     INSERT INTO factura (cod_proveedor, serie, numero, fecha_emision, total)
-    VALUES ('20000000001', 'F001', '000090', noviembre + 4, 76.50)
+    SELECT cod_proveedor, 'F001', '000090', consumo_anterior + 1, importe
+    FROM vales WHERE id_vale = vale_historico
     RETURNING codigo_factura INTO factura_historica;
     PERFORM asociar_factura(pagos, factura_historica, ARRAY[vale_historico]);
 END;

@@ -1,0 +1,57 @@
+.configuracion-jefatura {
+  gap: 16px;
+}
+
+.configuracion-jefatura > [data-slot="tabs-list"] {
+  height: auto;
+  max-width: 100%;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  background: #f5f9f9;
+}
+
+.configuracion-jefatura > [data-slot="tabs-list"] > button {
+  min-height: 44px;
+  padding-inline: 14px;
+}
+
+.configuracion-jefatura > [data-slot="tabs-list"] > [data-state="active"] {
+  background: var(--primary);
+  color: white;
+}
+
+.prestamos-centro,
+.prestamos-fechas {
+  grid-column: 1 / -1;
+  min-width: 0;
+}
+
+.prestamos-fechas {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 22px;
+}
+
+.prestamos-fechas input[type="date"] {
+  min-width: 0;
+}
+
+@media (max-width: 760px) {
+  .configuracion-jefatura > [data-slot="tabs-list"] {
+    width: 100%;
+  }
+
+  .configuracion-jefatura > [data-slot="tabs-list"] > button {
+    padding-inline: 6px;
+    white-space: normal;
+  }
+
+  .prestamos-fechas {
+    gap: 10px;
+  }
+
+  .prestamos-fechas input[type="date"] {
+    padding-inline: 8px;
+  }
+}

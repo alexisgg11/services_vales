@@ -95,9 +95,8 @@ BEGIN
         PERFORM autorizar_vales(ejemplo.autorizador, ARRAY[emitido.id_vale]);
         PERFORM anular_vale(ejemplo.emisor, emitido.id_vale, 'Se canceló el traslado de prueba.');
 
-        INSERT INTO factura (cod_proveedor, serie, numero, fecha_emision, total) VALUES
-            (ejemplo.proveedor, ejemplo.serie, '000001', hoy, atendido.importe),
-            (ejemplo.proveedor, ejemplo.serie, '000002', hoy, atendido.importe + 0.01);
+        INSERT INTO factura (cod_proveedor, serie, numero, fecha_emision, total)
+        VALUES (ejemplo.proveedor, ejemplo.serie, '000001', hoy, atendido.importe);
     END LOOP;
 END;
 $$;

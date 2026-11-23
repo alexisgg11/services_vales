@@ -1,0 +1,54 @@
+.anulacion-buscador {
+  width: min(100%, 390px);
+}
+
+.anulacion-panel {
+  width: min(100%, 620px);
+}
+
+.anulacion-panel > form,
+.anulacion-panel .actions {
+  margin-top: 0;
+}
+
+.anulacion-panel textarea:focus {
+  border-color: #858585;
+  outline: none;
+  box-shadow: none;
+}
+
+.anulacion-motivo {
+  display: grid;
+  gap: 4px;
+}
+
+.anulacion-motivo > span {
+  font-size: 12px;
+}
+
+.anulacion-motivo > p {
+  color: var(--foreground);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 420px) {
+  :is(.anulacion-panel, .anulacion-resumen) .vale-card-head {
+    flex-wrap: nowrap;
+    gap: 8px;
+    padding-inline: 10px;
+  }
+
+  :is(.anulacion-panel, .anulacion-resumen) .vale-card-head > .grow {
+    flex-basis: 0;
+  }
+
+  :is(.anulacion-panel, .anulacion-resumen) .vale-card-head strong {
+    font-size: 16px;
+  }
+
+  :is(.anulacion-panel, .anulacion-resumen) .vale-card-head > .ticket-icon {
+    width: 34px;
+    height: 34px;
+  }
+}

@@ -157,10 +157,6 @@ BEGIN
                 WHERE id_vale = ANY(por_facturar) AND accion = 'FACTURA';
             INSERT INTO factura (cod_proveedor, serie, numero, fecha_emision, total)
             VALUES (sucursal.proveedor, serie, to_char(inicio,'YYYYMM') || '02', fecha_factura, pendiente);
-            IF mes = 0 THEN
-                INSERT INTO factura (cod_proveedor, serie, numero, fecha_emision, total)
-                VALUES (sucursal.proveedor, serie, to_char(inicio,'YYYYMM') || '03', hoy, pendiente + 0.01);
-            END IF;
         END LOOP;
     END LOOP;
 

@@ -34,7 +34,7 @@ function Detener-Vales([string]$jar) {
 # Las versiones anteriores arrancaban directamente desde el JAR de compilación.
 Detener-Vales $compilado
 $wrapper = Join-Path $raiz '.mvn\wrapper\maven-wrapper.jar'
-& java "-Dmaven.multiModuleProjectDirectory=$raiz" -cp $wrapper org.apache.maven.wrapper.MavenWrapperMain -f backend/pom.xml clean package
+& java "-Dmaven.multiModuleProjectDirectory=$raiz" -cp $wrapper org.apache.maven.wrapper.MavenWrapperMain -f (Join-Path $raiz 'backend/pom.xml') clean package
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
 # La instancia activa usa una copia, así Maven puede compilar antes de reiniciarla.

@@ -268,6 +268,6 @@ erDiagram
 
 Un vale corresponde a un grifo y a un combustible. Si tiene contrato, sus referencias validan tanto el grifo del contrato como el combustible pactado. S/C admite un tercero registrado o un trabajador cuando el grifo tiene un contrato vencido y ninguno vigente. La factura se asocia por `(codigo_factura, cod_proveedor)` y puede reunir varios vales usados del mismo grifo.
 
-En las nuevas conciliaciones, `factura_ticket` identifica los despachos del respaldo del grifo. Se guarda su origen en la factura y la referencia cuando procede de un anexo. Los vínculos históricos se conservan.
+`factura_ticket` identifica los despachos que figuran en la factura del grifo. Se usa para verificar el conjunto de vales seleccionados antes de asociarlos. Los campos de origen y referencia conservan el respaldo registrado en asociaciones previas.
 
 El correlativo del ticket es por grifo. La unicidad corresponde al par `(cod_proveedor, ticket)`. Los estados vigentes son EMITIDO (0), AUTORIZADO (1), USADO (3) y ANULADO (4).
