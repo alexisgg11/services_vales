@@ -1,0 +1,761 @@
+.asociar-factura {
+  display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+  align-items: start;
+  gap: 24px;
+}
+
+.asociar-vales,
+.factura-comparador-escritorio {
+  display: grid;
+  min-width: 0;
+  gap: 16px;
+}
+
+.asociar-factura h2 {
+  font-size: 16px;
+  gap: 9px;
+}
+
+.asociar-vales-cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.factura-activar-seleccion {
+  display: none;
+}
+
+.asociar-factura h2 > svg,
+.factura-tarjeta-titulo > svg {
+  width: 20px;
+  height: 20px;
+  color: var(--primary);
+}
+
+.factura-asociada {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 12px 14px;
+  background: #eff8f3;
+  border: 1px solid #cee8dc;
+  border-radius: 9px;
+  color: #216246;
+}
+
+.asociar-vales-filtros {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+  padding: 13px;
+  border-bottom: 1px solid var(--line);
+}
+
+.asociar-vales-filtros select {
+  min-width: 0;
+  width: 100%;
+  text-overflow: ellipsis;
+}
+
+.asociar-vales-lista > .list-surface {
+  border: 0;
+  border-radius: 0;
+}
+
+.asociar-vales-lista .table-scroll {
+  max-height: clamp(210px, 55dvh, 490px);
+  overflow: auto;
+}
+
+.asociar-vales-lista table {
+  min-width: 432px;
+  table-layout: fixed;
+}
+
+.factura-col-seleccion {
+  width: 36px;
+}
+
+.factura-col-ticket {
+  width: 120px;
+}
+
+.factura-col-consumo {
+  width: 103px;
+}
+
+.factura-col-importe {
+  width: 95px;
+}
+
+.asociar-vales-lista :is(th, td) {
+  padding: 9px;
+}
+
+.asociar-vales-lista th {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+}
+
+.asociar-vales-lista th.sticky-code {
+  z-index: 4;
+}
+
+.asociar-vales-lista .sticky-code {
+  min-width: 0;
+}
+
+.asociar-vales-lista .code-link {
+  min-height: 44px;
+}
+
+.asociar-vales-lista .code-link small {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  white-space: normal;
+}
+
+.asociar-vales-lista .code-link svg {
+  width: 12px;
+  height: 12px;
+  margin-top: 2px;
+}
+
+.asociar-vales-lista .factura-ticket {
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.asociar-vales-lista .numeric {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.asociar-vales-lista tr[data-seleccionado="true"] td {
+  background: #f0f8f8;
+}
+
+.factura-comparacion {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 22px minmax(0, 1fr);
+  gap: 10px;
+  align-items: stretch;
+}
+
+.factura-comparador-escritorio .factura-comparacion {
+  height: clamp(360px, 44dvh, 400px);
+  grid-template-rows: minmax(0, 1fr);
+}
+
+.factura-comparacion-flecha {
+  justify-self: center;
+  align-self: center;
+  width: 22px;
+  height: 22px;
+  color: #8198a5;
+}
+
+.factura-comparacion[data-listo="true"] .factura-comparacion-flecha {
+  color: #216246;
+}
+
+.factura-tarjeta {
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 15px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--card);
+}
+
+.factura-comparacion[data-listo="true"] .factura-tarjeta {
+  border-color: #bbdbcd;
+}
+
+.factura-tarjeta-titulo {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 8px;
+  overflow-wrap: anywhere;
+}
+
+.factura-tarjeta-titulo h3 {
+  min-width: 0;
+  font-size: 14px;
+}
+
+.factura-recuento {
+  margin-left: auto;
+}
+
+.factura-total {
+  display: grid;
+  flex-shrink: 0;
+  gap: 4px;
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+
+.factura-total span {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.factura-total strong {
+  font-size: clamp(18px, 2vw, 24px);
+  font-weight: 600;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.factura-datos {
+  display: grid;
+  gap: 12px;
+}
+
+.factura-comparacion .factura-datos {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 12px;
+}
+
+.factura-comparacion .factura-datos > div:first-child {
+  grid-column: 1 / -1;
+}
+
+.factura-datos > div {
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr);
+  align-content: start;
+  gap: 2px 8px;
+}
+
+.factura-datos svg {
+  grid-row: span 2;
+  width: 16px;
+  height: 16px;
+  color: #56848b;
+}
+
+.factura-datos dd {
+  margin: 0;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.factura-lote-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-gutter: stable;
+  padding: 1px 2px;
+}
+
+.factura-lote-scroll:focus-visible {
+  outline-offset: -2px;
+}
+
+.factura-lote {
+  display: grid;
+  gap: 9px;
+  list-style: none;
+}
+
+.factura-lote .vale-card-head {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) auto;
+  column-gap: 8px;
+  min-height: 56px;
+  padding: 8px 10px;
+  cursor: pointer;
+}
+
+.factura-lote .vale-card-head[data-accion-cabecera] {
+  padding-inline-end: 48px;
+}
+
+.factura-lote .vale-card-head:is(:hover, [aria-expanded="true"]) {
+  background: #f0f8f8;
+}
+
+.factura-lote .vale-card-head:focus-visible {
+  outline-offset: -3px;
+}
+
+.factura-lote .vale-card-head .ticket-icon {
+  width: 28px;
+  height: 33px;
+}
+
+.factura-lote .vale-card-head .grow {
+  min-width: 0;
+}
+
+.factura-lote .ticket-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.factura-lote .vale-card-head strong {
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
+.factura-lote .vale-card-head > .state {
+  align-self: center;
+  justify-self: end;
+  margin-inline-start: 0;
+  min-height: 22px;
+  padding: 2px 8px;
+}
+
+.factura-lote .vale-card-accion-cabecera {
+  inset-block-start: 4px;
+  inset-inline-end: 2px;
+}
+
+.factura-lote .vale-card-accion-cabecera button {
+  width: 44px;
+  height: 44px;
+  color: var(--muted);
+}
+
+.factura-lote .vale-card-body {
+  padding: 12px;
+}
+
+.factura-lote .vale-card-body .facts {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px 14px;
+}
+
+.factura-lote .vale-card-body dt {
+  font-size: 12px;
+}
+
+.factura-lote .vale-card-body dd {
+  font-size: 14px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.factura-consumo-cantidad {
+  white-space: nowrap;
+}
+
+.factura-consumo-suministro {
+  display: inline-block;
+  max-width: 100%;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.factura-lote .vale-card-ver-detalle {
+  display: flex;
+  width: fit-content;
+  min-height: 44px;
+  margin-top: 4px;
+  margin-inline-start: auto;
+  padding-inline: 8px;
+  font-size: 12px;
+  color: var(--primary);
+}
+
+.factura-selector {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 44px;
+  align-items: center;
+  gap: 8px;
+}
+
+.factura-selector select {
+  width: 100%;
+  min-width: 0;
+}
+
+.factura-selector .factura-optimizar {
+  width: 44px;
+  height: 44px;
+  color: var(--primary);
+  background: #f3faf9;
+}
+
+.factura-selector .factura-optimizar:hover {
+  background: #e6f4f3;
+}
+
+.factura-aviso-optimizacion {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.factura-estado {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  min-height: 46px;
+  padding: 0 13px;
+  border: 1px solid #eedbb9;
+  border-radius: 9px;
+  background: #fff9ee;
+  color: #805019;
+  font-size: 13px;
+}
+
+.factura-estado[data-listo="true"] {
+  border-color: #cee8dc;
+  background: #eff8f3;
+  color: #216246;
+}
+
+.factura-estado > svg {
+  flex: none;
+  width: 18px;
+  height: 18px;
+}
+
+.factura-estado-texto {
+  min-width: 0;
+  padding-block: 8px;
+}
+
+.factura-estado > button {
+  width: 44px;
+  height: 44px;
+}
+
+.factura-estado p {
+  margin-top: 3px;
+}
+
+.factura-grupos-tickets {
+  display: grid;
+  gap: 10px;
+}
+
+.factura-grupo-tickets {
+  min-width: 0;
+}
+
+.factura-grupo-tickets + .factura-grupo-tickets {
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+}
+
+.factura-grupo-tickets h4 {
+  margin: 0 0 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #805019;
+}
+
+.factura-grupo-tickets[data-tono="conforme"] h4 {
+  color: #216246;
+}
+
+.factura-grupo-tickets ul {
+  list-style: none;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.factura-grupo-tickets li + li {
+  margin-top: 3px;
+}
+
+.factura-comparador-acciones {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.factura-revision,
+.factura-confirmacion {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.factura-revision {
+  width: 100%;
+  max-width: 520px;
+  height: 100dvh;
+}
+
+.factura-confirmacion {
+  width: min(540px, calc(100% - 24px));
+  max-width: none;
+  max-height: min(90dvh, 830px);
+}
+
+.factura-dialogo-cabecera {
+  flex-shrink: 0;
+  padding: calc(17px + env(safe-area-inset-top)) 56px 16px 17px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+}
+
+.factura-dialogo-cabecera
+  :is([data-slot="sheet-title"], [data-slot="dialog-title"]) {
+  font-size: 18px;
+  line-height: 1.35;
+}
+
+:is(.factura-revision, .factura-confirmacion)
+  > :is([data-slot="sheet-close"], [data-slot="dialog-close"]) {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  top: calc(7px + env(safe-area-inset-top));
+  right: 8px;
+}
+
+.factura-dialogo-cuerpo {
+  display: grid;
+  align-content: start;
+  flex: 1;
+  min-height: 0;
+  gap: 14px;
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: 16px;
+}
+
+.factura-revision .factura-dialogo-cuerpo {
+  grid-template-rows: minmax(0, 1fr);
+}
+
+.factura-revision .factura-comparacion {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(170px, 1fr) minmax(270px, auto);
+  gap: 10px;
+}
+
+.factura-revision .factura-comparacion-flecha {
+  display: none;
+}
+
+.factura-revision .factura-tarjeta {
+  padding: 12px;
+  gap: 8px;
+}
+
+.factura-revision .factura-total {
+  padding-top: 9px;
+}
+
+.factura-dialogo-pie {
+  display: grid;
+  flex-shrink: 0;
+  gap: 8px;
+  padding: 11px 16px max(11px, env(safe-area-inset-bottom));
+  border-top: 1px solid var(--line);
+  background: #f6fafb;
+}
+
+.factura-dialogo-acciones {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.factura-dialogo-acciones button {
+  min-height: 44px;
+}
+
+.factura-confirmacion-documento {
+  padding: 15px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #f8fbfb;
+}
+
+.factura-confirmacion-documento h3 {
+  font-size: 18px;
+}
+
+.factura-confirmacion-documento .factura-datos {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 140px), 1fr));
+  margin-top: 14px;
+}
+
+.factura-confirmacion-totales {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 20px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid #cee8dc;
+  border-radius: 9px;
+  background: #eff8f3;
+  color: #216246;
+}
+
+.factura-confirmacion-totales .factura-total {
+  margin: 0;
+  border: 0;
+  padding: 0;
+}
+
+.factura-confirmacion-totales .factura-total:last-child {
+  text-align: right;
+}
+
+.factura-confirmacion-vales {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.factura-confirmacion-cantidad {
+  min-width: 22px;
+  height: 22px;
+  justify-content: center;
+  border-radius: 999px;
+  padding-inline: 5px;
+  font-variant-numeric: tabular-nums;
+}
+
+.factura-barra-movil {
+  display: none;
+}
+
+@media (max-width: 1230px) {
+  .asociar-factura {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .asociar-factura[data-seleccion="true"] {
+    padding-bottom: calc(64px + env(safe-area-inset-bottom));
+  }
+
+  .factura-comparador-escritorio {
+    display: none;
+  }
+
+  .factura-barra-movil {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    z-index: 24;
+    inset-inline: var(--ancho-menu) 0;
+    bottom: 0;
+    gap: 10px;
+    border-top: 1px solid #c9e2e3;
+    background: var(--card);
+    padding: 10px max(14px, env(safe-area-inset-right))
+      max(10px, env(safe-area-inset-bottom))
+      max(14px, env(safe-area-inset-left));
+    box-shadow: 0 -4px 18px #18324b0d;
+  }
+
+  .factura-barra-movil strong {
+    font-variant-numeric: tabular-nums;
+    font-size: 17px;
+  }
+
+  .factura-barra-movil button {
+    min-height: 44px;
+  }
+
+  .factura-barra-movil .factura-cancelar-seleccion {
+    width: 44px;
+    height: 44px;
+    color: var(--primary);
+  }
+
+  .factura-resumen-movil {
+    min-width: 0;
+    flex: 1;
+    overflow-wrap: anywhere;
+  }
+}
+
+@media (max-width: 760px) {
+  .factura-activar-seleccion {
+    display: inline-flex;
+    width: 44px;
+    height: 44px;
+    color: var(--primary);
+  }
+
+  .asociar-vales-lista .mobile-cards {
+    padding-block-start: 12px;
+  }
+
+  .asociar-vales-lista .vale-card-link[data-seleccion-tactil] {
+    touch-action: pan-y pinch-zoom;
+    -webkit-touch-callout: none;
+    user-select: none;
+  }
+
+  .asociar-vales-lista [data-seleccionado="true"] .vale-card {
+    border-color: #63afb3;
+  }
+
+  .asociar-vales-lista [data-seleccionado="true"] .vale-card-head {
+    background: #e7f4f4;
+  }
+}
+
+@media (max-width: 480px) {
+  .asociar-vales-filtros select {
+    padding-inline: 8px;
+  }
+
+  .asociar-vales-lista .mobile-cards {
+    padding-inline: 10px;
+  }
+
+  .asociar-vales-lista .vale-card-head {
+    gap: 7px;
+    padding-inline: 9px;
+  }
+
+  .asociar-vales-lista .vale-card-head strong {
+    font-size: 15px;
+  }
+
+  .asociar-vales-lista .vale-card-body {
+    padding-inline: 12px;
+  }
+
+  .asociar-vales-lista .vale-card-body .facts {
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    column-gap: 8px;
+  }
+
+  .asociar-vales-lista .ticket-icon {
+    width: 29px;
+  }
+
+  .factura-dialogo-cuerpo {
+    padding: 12px;
+  }
+
+  .factura-dialogo-acciones > button:last-child {
+    flex: 1;
+  }
+}

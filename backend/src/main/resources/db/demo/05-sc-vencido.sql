@@ -28,7 +28,4 @@ SELECT id_usuario, 'GRIFO', '04', '20000000007' FROM cuenta;
 SELECT registrar_tarifa((SELECT id_usuario FROM usuario WHERE login = 'demo.admin'),
                         '20000000007', 'DIESEL_B5', CURRENT_DATE, 20.00);
 
-INSERT INTO factura (cod_proveedor, serie, numero, fecha_emision, total)
-VALUES ('20000000007', 'SC01', '000001', CURRENT_DATE, 80.00);
-
 COMMIT;

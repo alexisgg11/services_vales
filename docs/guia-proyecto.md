@@ -10,7 +10,7 @@ Cada vale corresponde a una zonal, un grifo y un combustible. El código de diez
 | S/C para tercero | Tarifa vigente del grifo | El consumo se registra aparte. El trabajador interno queda como responsable y el grifo verifica el DNI del tercero |
 | S/C por vencimiento | Tarifa vigente del grifo | El consumo se registra aparte. Se usa si el grifo tiene un contrato vencido y ninguno vigente. El grifo verifica el DNI del trabajador |
 
-Un contrato sin saldo suficiente bloquea la emisión con contrato. Para emitir S/C se requiere una tarifa aplicable. Desde **Avatar → Configuración**, Administración mantiene precios pactados de contratos existentes, tarifas del grifo, unidades móviles, cuentas y roles. La aplicación concilia facturas ya cargadas y reporta gastos. El pago se gestiona fuera de Vales.
+Un contrato sin saldo suficiente bloquea la emisión con contrato. Para emitir S/C se requiere una tarifa aplicable. Desde **Configuración** en el menú lateral, Administración mantiene precios pactados de contratos existentes, tarifas del grifo, unidades móviles, cuentas y roles. La aplicación concilia facturas ya cargadas y reporta gastos. El pago se gestiona fuera de Vales.
 
 ## Cuentas de prueba
 
@@ -25,23 +25,23 @@ La contraseña de las cuentas de ejemplo es `demo`.
 
 `demo.contabilidad` asocia facturas y consulta gastos. `demo.admin` gestiona la configuración. Para probar otro grifo de Piura, están `demo.operativo.piura3` (DNI `90000202`) y `demo.grifo.miraflores`.
 
-En una copia recién instalada, el vale autorizado **2026110044 de Piura** permite comparar el PDF de `demo.jefe.piura` con el de `demo.grifo.algarrobos`. El DNI ficticio de Mateo Salazar es `90000201`.
+Para comparar la vista del vale entre perfiles, abre un vale autorizado de **Los Algarrobos** con `demo.grifo.algarrobos` y busca el mismo código en **PDF del vale** con `demo.jefe.piura`.
 
 ## Pruebas de punta a punta
 
-1. **Emitir y autorizar.** El operativo de Piura elige **Con contrato**, verifica la fecha, selecciona **Estación Los Algarrobos (demo)** y registra **2 galones** de un suministro disponible. En **Asignación** elige la unidad móvil que se usará, si corresponde. Jefatura de Piura busca el código y autoriza. El vale pasa de **Emitido** a **Autorizado**.
+1. **Emitir y autorizar.** El operativo de Piura elige **Con contrato**, verifica la fecha, selecciona **Grifo Los Algarrobos (demo)** y registra **2 galones** de un suministro disponible. En **Asignación**, Rosa Gutiérrez conserva su localidad **CASTILLA**, selecciona **POZO LOS ALGARROBOS** y la unidad **DEM-101**, si corresponde. La localidad del trabajador se completa automáticamente y es independiente de la localidad del centro. Jefatura de Piura busca el código y autoriza. El vale pasa de **Emitido** a **Autorizado**.
 2. **Atender.** La cuenta de Los Algarrobos busca el vale por código, lista o QR. Verifica el DNI ficticio `90000001`, registra **1.50 galones** y revisa la confirmación. El sistema genera el ticket y cierra el vale como **Usado**. Si se supera lo autorizado, se bloquea el registro. Si se cambia el precio sugerido, la confirmación muestra la diferencia.
-3. **Facturar y consultar gastos.** Contabilidad elige una factura y copia los tickets de la factura o del anexo, uno por línea. En Miraflores, el ticket `T00000000000002` cuadra con `V002-000001` por S/ 121.80. La `V002-000002` queda bloqueada por un céntimo de diferencia. Los tickets duplicados, faltantes o ya facturados también bloquean la asociación. Tras confirmar, el gasto aparece en el mes del **consumo**.
+3. **Facturar y consultar gastos.** En **Facturas del grifo**, selecciona el ticket que acabas de generar y emite la factura simulada. Entra con `demo.contabilidad`, selecciona el vale usado y elige esa factura. Confirma cuando el ticket y el total coincidan. El gasto aparece en el mes del **consumo**.
 4. **Anular y consultar PDF.** El emisor puede anular un vale propio emitido o autorizado, indicando el motivo. El PDF refleja el estado actualizado. Se abre desde el servicio **PDF del vale** o desde la ficha del QR tras iniciar sesión.
 
-Si el respaldo de una factura de S/ 380 incluye un ticket de S/ 300 con contrato y otro de S/ 80 S/C, se registran los dos en la misma conciliación. [Flujo de asociación](flujos-vales.md#4-asociar-factura)
+Si una factura de S/ 380 incluye un ticket de S/ 300 con contrato y otro de S/ 80 S/C, Contabilidad selecciona los dos vales. [Flujo de asociación](flujos-vales.md#4-asociar-factura)
 
 Para probar **S/C por vencimiento**, el operativo de Sullana elige **Grifo Contrato Vencido (demo)** y **Diésel B5** si la fecha de emisión cumple la regla de vencimiento. Jefatura de Sullana autoriza y `demo.grifo.vencido` atiende con el DNI `90000002`. Para probar **S/C para tercero**, se puede usar **Estación Santa Elena (demo)** y el DNI ficticio `90000003`. El grifo verifica ese documento aunque el vale figure a nombre del trabajador interno responsable.
 
 ### Probar una unidad de otra zonal
 
 1. Entrar como `demo.operativo.piura`. En **Registrar vale → Asignación**, comprobar que **DEM-101** aparece entre las unidades de Piura.
-2. Entrar como `demo.admin`. En **Configuración → Unidades móviles**, buscar **DEM-202** y elegir **Habilitar para otra zonal**. Seleccionar **Piura**, el centro **Pozo Pachitea** y un período que incluya la fecha de emisión.
+2. Entrar como `demo.jefe.sullana`. En **Configuración → Préstamos de unidades**, seleccionar **DEM-202**. Seleccionar **Piura**, el centro **Pozo Pachitea** y un período que incluya la fecha de emisión.
 3. Volver a entrar como el operativo de Piura. Al elegir **Pozo Pachitea**, **DEM-202** aparece bajo **Habilitadas de otra zonal**. Al cambiar de centro o usar una fecha fuera del período, desaparece. Si se registra el vale con esa unidad, su placa queda visible en el detalle.
 
 ## HTTPS en la red local
@@ -58,8 +58,16 @@ Para probar **S/C por vencimiento**, el operativo de Sullana elige **Grifo Contr
    ```
 
 3. Reiniciar **Ejecutar Services Vales**. En Windows x64, Vales prepara lego, valida el dominio mediante DuckDNS y obtiene un certificado de Let's Encrypt. El token queda en `.env` y los certificados se guardan en `.local/https/`.
-4. Abrir en el celular la dirección HTTPS que anuncia Vales. Ir a **Registrar atención → Escanear QR → Activar cámara** y conceder el permiso. Los PDF descargados con otra dirección se generan nuevamente para actualizar el enlace impreso. Si cambia la IP privada de la PC, se actualiza `VALES_HTTPS_IPV4` y se reinicia.
+4. Abrir en el celular la dirección HTTPS que anuncia Vales. Ir a **Registrar atención → Escanear QR** y conceder el permiso. Los PDF descargados con otra dirección se generan nuevamente para actualizar el enlace impreso. Si cambia la IP privada de la PC, se actualiza `VALES_HTTPS_IPV4` y se reinicia.
 
-Para probar con un QR guardado, usar **Leer imagen** en el escáner.
+Para probar con un QR guardado, usar **Leer QR desde una imagen** en el escáner.
 
 El QR abre una ficha pública dentro de la red local con código, grifo, fecha de emisión y estado. Para ver el PDF o realizar operaciones se requiere sesión y permiso. Los accesos de la ficha llevan al servicio correspondiente. El PDF muestra el DNI del trabajador a las cuentas habilitadas para verlo. Al grifo le indica que debe verificarlo con el documento presentado.
+
+## Nuevas pruebas
+
+1. **DNI de tercero.** Operativo elige Sin contrato para tercero, escribe 99000001 y pulsa Consultar. Aparece Ana Torres Rojas como demostración ficticia. Debe completar destino o motivo antes de registrar.
+2. **Facturación automática.** Después de atender un vale, el grifo abre Facturas del grifo, selecciona el ticket y confirma Emitir factura. Se muestra la serie y número generado. Contabilidad lo elige en Asociar factura y verifica el conjunto de tickets y el total.
+3. **Generar mejor opción.** Jefatura programa rutas y asigna operativos desde **Configuración → Rutas de trabajo**. Al emitir el vale, el operativo completa modalidad, suministro y galones y pulsa la varita junto a **Grifo**. En la modal **Comparar grifos** elige su ruta y puede cambiar el origen. **Generar mejor opción** muestra el recorrido por el grifo que minimiza la suma de combustible y desvío vial, respetando el orden de las paradas. Se pueden consultar los pines del origen, las paradas y los grifos. **Elegir grifo** aplica la recomendación y vuelve al formulario. El importe del vale corresponde al combustible. El registro guarda la versión de la ruta y el origen sin modificar la localidad administrativa. [Ejemplo paso a paso, permisos y configuración](rutas-trabajo.md).
+5. **Móvil.** En el menú del navegador se puede instalar Vales cuando esté disponible. El lector con cámara requiere localhost o HTTPS. Las operaciones de registro necesitan conexión.
+6. **PDF separado.** La acción Ver PDF de la lista o del pie del detalle abre una ventana independiente. Descargar e Imprimir utilizan ese mismo documento. Cerrar PDF vuelve a la lista o al detalle sin perder la selección de vales.

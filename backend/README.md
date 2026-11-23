@@ -12,6 +12,6 @@
 
 ## Pruebas SQL
 
-El archivo [reglas.sql](src/test/sql/reglas.sql) verifica los servicios y revierte sus cambios. Se ejecuta como propietario en una base preparada con `instalar-demo.sql -v datos_relativos=1`. [Carga de ejemplos con fechas relativas](../docs/base-datos-vales.md#cargar-la-copia-en-postgresql-5432)
+El archivo [reglas.sql](src/test/sql/reglas.sql) verifica los servicios y revierte sus cambios. Se ejecuta como propietario en una base de pruebas preparada con `instalar-demo.sql`. [Instalación de la base de demostración](../docs/base-datos-vales.md#instalar-una-base-de-demostración-en-postgresql-5432)
 
 [Instalación local](../README.md#instalación-local-en-windows)

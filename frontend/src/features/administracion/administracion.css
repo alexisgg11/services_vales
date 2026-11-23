@@ -1,0 +1,405 @@
+.administracion {
+  container-type: inline-size;
+  gap: 20px;
+  min-width: 0;
+}
+
+.administracion > [data-slot="tabs-list"] {
+  height: auto;
+  max-width: 100%;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  background: #f5f9f9;
+}
+
+.administracion > [data-slot="tabs-list"] > button {
+  min-height: 44px;
+  padding-inline: 20px;
+}
+
+.administracion > [data-slot="tabs-list"] > [data-state="active"] {
+  background: var(--primary);
+  color: white;
+}
+
+.admin-seccion,
+.admin-precios {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
+
+.admin-precios > .admin-seccion + .admin-seccion {
+  margin-top: 16px;
+}
+
+.admin-cabecera,
+.admin-herramientas {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 16px;
+}
+
+.admin-herramientas > input {
+  min-width: 0;
+  width: min(280px, 32vw);
+}
+
+.admin-cabecera button,
+.admin-dialogo button[data-slot="button"] {
+  min-height: 44px;
+}
+
+.admin-ayuda {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.admin-tabla :is(th, td) {
+  padding: 12px 16px;
+  font-size: 13px;
+}
+
+.admin-tabla td > strong,
+.admin-tarjeta-titulo > strong {
+  font-weight: 600;
+}
+
+.admin-tabla tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.admin-tabla .admin-numero,
+.admin-tabla .admin-acciones-titulo {
+  text-align: right;
+}
+
+.admin-numero {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.admin-tabla .admin-acciones-celda {
+  width: 1%;
+  padding-block: 6px;
+}
+
+.admin-acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 2px;
+}
+
+.admin-acciones > button[data-size="icon"],
+.admin-roles-editor button[data-size="icon"] {
+  width: 44px;
+  height: 44px;
+  color: var(--primary);
+}
+
+.admin-acciones > button > svg,
+.admin-roles-editor button > svg {
+  width: 19px;
+  height: 19px;
+}
+
+.admin-estado[data-slot="badge"] {
+  padding: 3px 9px;
+  border-color: transparent;
+  border-radius: 999px;
+  background: #edf2f6;
+  color: #526578;
+  font-size: 11px;
+}
+
+.admin-estado[data-activa="true"] {
+  background: #e6f3ee;
+  color: #25674e;
+}
+
+.admin-roles,
+.admin-precios-pactados {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.admin-precios-pactados > li {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0 12px;
+}
+
+.admin-precios-pactados strong {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.admin-tarjetas {
+  display: none;
+}
+
+.admin-paginacion {
+  padding-block: 4px;
+  border-top: 1px solid var(--line);
+}
+
+.admin-aviso {
+  display: flex;
+  align-items: center;
+  justify-self: start;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 7px;
+  background: #e6f3ee;
+  color: #25674e;
+}
+
+.admin-aviso:empty {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  clip-path: inset(50%);
+}
+
+.admin-aviso > svg {
+  width: 17px;
+  height: 17px;
+}
+
+.admin-dialogo[data-slot="dialog-content"] {
+  display: flex;
+  flex-direction: column;
+  width: min(500px, calc(100% - 24px));
+  max-width: none;
+  max-height: calc(100dvh - 24px);
+  gap: 0;
+  overflow: hidden;
+  padding: 0;
+}
+
+.admin-dialogo .admin-dialogo-cabecera {
+  flex-shrink: 0;
+  padding: 18px 60px 17px 20px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+}
+
+.admin-dialogo-cabecera > h2 {
+  line-height: 1.35;
+}
+
+.admin-dialogo > .admin-dialogo-cerrar {
+  position: absolute;
+  inset: 7px 8px auto auto;
+  width: 44px;
+  min-height: 44px;
+  height: 44px;
+  color: var(--muted);
+}
+
+.admin-dialogo form {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.admin-dialogo-cuerpo {
+  padding: 18px 20px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.admin-dialogo-cuerpo > fieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.admin-dialogo-cuerpo > .error {
+  margin-top: 12px;
+}
+
+.admin-dialogo .admin-dialogo-pie {
+  flex: 0 0 auto;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 10px 20px;
+  border-top: 1px solid var(--line);
+  background: #f8fafb;
+}
+
+.admin-campos,
+.admin-campos-pareados {
+  display: grid;
+  gap: 14px;
+}
+
+.admin-campos-pareados {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.admin-campos-pareados input {
+  min-width: 0;
+}
+
+.admin-dialogo .admin-checkbox {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-checkbox > input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--primary);
+}
+
+.admin-clave {
+  position: relative;
+}
+
+.admin-clave > input {
+  padding-inline-end: 52px;
+}
+
+.admin-clave > input::-ms-reveal {
+  display: none;
+}
+
+.admin-clave > button[data-size="icon"] {
+  position: absolute;
+  inset: 0 0 auto auto;
+  width: 44px;
+  height: 44px;
+  color: var(--muted);
+}
+
+.admin-clave > button:focus-visible,
+.admin-acciones > button:focus-visible,
+.admin-dialogo-cerrar:focus-visible {
+  outline-offset: -2px;
+}
+
+.admin-roles-editor {
+  gap: 0;
+  margin-bottom: 4px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.admin-roles-editor > li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 4px 0 4px 4px;
+}
+
+.admin-roles-editor > li + li {
+  border-top: 1px solid var(--line);
+}
+
+@container (max-width: 650px) {
+  .admin-tabla {
+    display: none;
+  }
+
+  .admin-herramientas {
+    flex: 1 0 100%;
+  }
+
+  .admin-herramientas > input {
+    flex: 1 1 135px;
+    width: auto;
+  }
+
+  .admin-listado.list-surface {
+    border: 0;
+    background: transparent;
+  }
+
+  .admin-tarjetas {
+    display: grid;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .admin-tarjeta {
+    min-width: 0;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--card);
+    overflow-wrap: anywhere;
+  }
+
+  .admin-tarjeta-titulo {
+    padding: 11px 13px;
+    border-bottom: 1px solid var(--line);
+    border-radius: 9px 9px 0 0;
+    background: #f5f9f9;
+  }
+
+  .admin-tarjeta > dl {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(104px, 100%), 1fr));
+    gap: 9px 12px;
+    margin: 0;
+    padding: 11px 13px;
+    font-size: 13px;
+  }
+
+  .admin-tarjeta dt {
+    margin-bottom: 3px;
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  .admin-tarjeta dd {
+    margin: 0;
+  }
+
+  .admin-tarjeta > .admin-acciones {
+    padding-inline: 8px;
+    border-top: 1px solid var(--line);
+  }
+
+  .admin-paginacion {
+    margin-top: 8px;
+    padding-inline: 4px;
+    border-top: 0;
+  }
+}
+
+@media (max-width: 760px) {
+  .administracion > [data-slot="tabs-list"] {
+    width: 100%;
+  }
+
+  .administracion > [data-slot="tabs-list"] > button {
+    padding-inline: 8px;
+  }
+
+  .admin-dialogo .admin-dialogo-cabecera {
+    padding-inline-start: 15px;
+  }
+
+  .admin-dialogo-cuerpo,
+  .admin-dialogo .admin-dialogo-pie {
+    padding-inline: 15px;
+  }
+}

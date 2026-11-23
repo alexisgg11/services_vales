@@ -33,6 +33,11 @@
       <artifactId>postgresql</artifactId>
       <scope>runtime</scope>
     </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
   <build>
     <finalName>services-vales</finalName>
@@ -41,26 +46,20 @@
         <directory>src/main/resources</directory>
       </resource>
       <resource>
-        <directory>${project.basedir}/../frontend</directory>
+        <directory>${project.basedir}/../frontend/dist</directory>
         <targetPath>static/app</targetPath>
-        <includes>
-          <include>*.html</include>
-          <include>*.css</include>
-          <include>*.js</include>
-          <include>styles/**</include>
-          <include>vendor/**</include>
-          <include>api/**</include>
-          <include>components/**</include>
-          <include>model/**</include>
-          <include>router/**</include>
-          <include>service/**</include>
-          <include>state/**</include>
-          <include>shared/**</include>
-          <include>features/**</include>
-        </includes>
       </resource>
     </resources>
     <plugins>
+      <plugin>
+        <groupId>com.github.eirslett</groupId><artifactId>frontend-maven-plugin</artifactId><version>1.15.1</version>
+        <configuration><workingDirectory>../frontend</workingDirectory><nodeVersion>v24.21.0</nodeVersion></configuration>
+        <executions>
+          <execution><id>node</id><phase>generate-resources</phase><goals><goal>install-node-and-npm</goal></goals></execution>
+          <execution><id>dependencias-web</id><phase>generate-resources</phase><goals><goal>npm</goal></goals><configuration><arguments>ci --no-fund --no-audit</arguments></configuration></execution>
+          <execution><id>compilar-web</id><phase>generate-resources</phase><goals><goal>npm</goal></goals><configuration><arguments>run build</arguments></configuration></execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>

@@ -1,18 +1,8 @@
 # Base de datos y datos de prueba
 
-## Copia incluida
+## Datos de demostración
 
-Una instalación nueva prepara el esquema, carga la [copia de prueba](../backend/src/main/resources/db/datos/copia-prueba.sql) y aplica las migraciones 12 a 14. Cada vale conserva la unidad con la que se emitió.
-
-| Registros | Cantidad |
-| --- | ---: |
-| Vales | 178 |
-| Facturas | 77 |
-| Trabajadores | 27 |
-| Cuentas de prueba | 25 |
-| Movimientos de historial | 526 |
-
-Para probar los reportes, seleccionar noviembre de 2026 o un mes anterior.
+Una instalación nueva prepara el esquema y genera [datos de demostración](../backend/src/main/resources/db/demo) con fechas relativas al día de carga en Perú. Incluye vales en los cuatro estados, facturas con tickets conciliables e historial del mes actual y los seis meses anteriores.
 
 ## Ver la instancia privada en pgAdmin
 
@@ -26,7 +16,7 @@ Para probar los reportes, seleccionar noviembre de 2026 o un mes anterior.
 3. En pgAdmin, registrar un servidor con **Host** `127.0.0.1`, **Port** igual al puerto obtenido, **Maintenance database** `services_vales` y **Username** `vales_owner`. La contraseña se lee en `.local/propietario.clave`.
 4. Abrir **Databases → services_vales → Schemas → vales → Tables**. Si el puerto cambia tras reiniciar, se actualiza en la conexión de pgAdmin.
 
-## Cargar la copia en PostgreSQL 5432
+## Instalar una base de demostración en PostgreSQL 5432
 
 1. Crear una base nueva. Ejecutar el instalador con una cuenta que pueda crear el rol `vales_app` si aún no existe. Ejemplo en PowerShell desde la raíz del proyecto.
 
@@ -35,8 +25,6 @@ Para probar los reportes, seleccionar noviembre de 2026 o un mes anterior.
    & "$pg\createdb.exe" -h 127.0.0.1 -p 5432 -U postgres services_vales
    & "$pg\psql.exe" -h 127.0.0.1 -p 5432 -U postgres -d services_vales -f backend/src/main/resources/db/instalar-demo.sql
    ```
-
-   Para generar ejemplos con fechas relativas al día de instalación se agrega `-v datos_relativos=1` al comando de `psql`.
 
 2. Desde Query Tool, crear una cuenta de conexión que herede `vales_app` y asignarle una contraseña propia desde pgAdmin.
 
@@ -65,11 +53,21 @@ La [migración 13](../backend/src/main/resources/db/migraciones/13-unidades-por-
 
 La [migración 14](../backend/src/main/resources/db/migraciones/14-conciliacion-tickets-ubicaciones.sql) añade los tickets y su origen a las nuevas conciliaciones. Las asociaciones históricas conservan sus vínculos y carecen de respaldo registrado por este flujo. La migración separa la ubicación explícita del nombre del centro de costo. Si el texto identifica una localidad única del catálogo, guarda su código. Los demás textos explícitos se conservan como referencia. El catálogo guarda la zonal base de la unidad por separado y retira el sufijo de la descripción cuando coincide con esa zonal.
 
+La [migración 15](../backend/src/main/resources/db/migraciones/15-asociacion-desde-vales.sql) carga los tickets de las facturas de ejemplo. Contabilidad selecciona los vales atendidos y el sistema comprueba los tickets y el total antes de asociarlos. Se conservan las asociaciones previas.
+
 ## Dónde se guarda cada dato
 
 - **Identidad y acceso.** `persona` guarda el DNI, `trabajador` guarda la ficha laboral y `usuario` referencia al trabajador. `usuario_rol` asigna el rol y, cuando corresponde, la zonal y el grifo.
-- **Operación.** `vales` guarda emisión, responsables, despacho, ticket y factura. `factura_ticket` guarda los tickets de las nuevas conciliaciones. `historial_vale` registra cada cambio.
+- **Operación.** `vales` guarda emisión, responsables, despacho, ticket y factura. `factura_ticket` guarda los tickets que figuran en cada factura. `historial_vale` registra cada cambio.
 - **Precios.** `contrato_suministro` guarda el precio pactado por combustible. `tarifa` guarda el precio vigente del grifo. El vale conserva el precio de emisión y el de atención.
 - **Organización.** `asignacion_costo` vincula centros de costo con sus unidades organizativas. El centro puede tener una localidad de catálogo. `unidad_maquinaria` guarda la zonal base y `habilitacion_unidad` registra los préstamos por zonal, centro y fechas. El vale conserva el centro y la unidad elegidos.
 
 [Diagrama de relaciones](diagrama-base-datos.md) · [Guía de uso y cuentas](guia-proyecto.md)
+
+## Ampliación por módulos
+
+Las migraciones 16 y 17 agregan correlativos de factura, solicitudes de emisión idempotentes, reserva de tickets por factura y ubicaciones de grifos de demostración. Conservan los registros anteriores. El grifo emite documentos simulados desde sus atenciones y Contabilidad conserva la asociación por tickets e importe.
+
+La [migración 21](../backend/src/main/resources/db/migraciones/21-consistencia-operativa.sql) impide volver a facturar un ticket que ya figura en una factura. También valida el motivo de anulación y retira las funciones del surtidor simulado. Conserva los vales, las facturas y el historial existentes.
+
+El propietario puede ejecutar [consistencia.sql](../backend/src/test/sql/consistencia.sql) para revisar los estados, el historial, los saldos de contrato y el respaldo de las facturas en una transacción de solo lectura. Las facturas pendientes con diferencias requieren revisar su respaldo.

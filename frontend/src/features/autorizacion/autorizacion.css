@@ -1,0 +1,370 @@
+.aprobacion-bandeja {
+  min-width: 0;
+}
+
+.aprobacion-encabezado {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.aprobacion-encabezado > span {
+  min-width: 24px;
+  padding: 2px 7px;
+  border-radius: 8px;
+  background: #e7f2f3;
+  color: #06676d;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.aprobacion-controles,
+.aprobacion-busqueda,
+.aprobacion-filtros {
+  display: flex;
+  gap: 10px;
+}
+
+.aprobacion-controles {
+  flex-wrap: wrap;
+  align-items: end;
+}
+
+.aprobacion-busqueda {
+  flex: 1 1 250px;
+  min-width: 0;
+}
+
+.aprobacion-busqueda > input {
+  flex: 1;
+  min-width: 0;
+}
+
+.aprobacion-filtros {
+  flex: 1 1 550px;
+  align-items: end;
+  flex-wrap: wrap;
+}
+
+.aprobacion-filtros > .field {
+  flex: 1 1 138px;
+  min-width: 0;
+  margin: 0;
+}
+
+.aprobacion-filtros-boton[data-slot="button"] {
+  display: none;
+}
+
+.aprobacion-seleccion {
+  border-color: #c6dfe1;
+}
+
+.aprobacion-seleccion strong,
+.aprobacion-seleccion small {
+  display: block;
+}
+
+.aprobacion-seleccion strong {
+  font-weight: 600;
+}
+
+.aprobacion-seleccion small {
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.aprobacion-resultado {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 11px 14px;
+  border: 1px solid #cde3d6;
+  border-radius: 8px;
+  background: #f1f9f4;
+  color: #226344;
+}
+
+.aprobacion-resultado svg {
+  width: 18px;
+  height: 18px;
+  flex: none;
+}
+
+.vale-solicitud {
+  margin-top: 16px;
+  padding: 14px 16px;
+  border: 1px solid #d1e4e3;
+  border-radius: 10px;
+  background: #f5fafa;
+}
+
+.vale-solicitud-importes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  padding-bottom: 11px;
+  margin-bottom: 11px;
+  border-bottom: 1px solid #dce9e9;
+}
+
+.vale-solicitud-importes > :last-child {
+  text-align: right;
+}
+
+.vale-solicitud-importes dt,
+.vale-solicitud-importes small {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.vale-solicitud-importes dd {
+  margin-top: 2px;
+  color: #12646a;
+  font-size: 20px;
+  line-height: 1.3;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.vale-solicitud .vale-facts {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 14px;
+}
+
+.vale-solicitud .vale-facts > :last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
+
+.vale-detail-autorizar > button {
+  min-height: 44px;
+}
+
+.revision-autorizacion[data-slot="dialog-content"] {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 0;
+  width: min(620px, calc(100% - 24px));
+  max-width: none;
+  max-height: min(725px, calc(100dvh - 24px));
+  padding: 0;
+  overflow: hidden;
+  border-color: var(--line);
+  color: var(--foreground);
+}
+
+.revision-autorizacion-encabezado {
+  padding: 20px 60px 17px 22px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+}
+
+.revision-autorizacion[data-slot="dialog-content"]
+  > [data-slot="dialog-close"] {
+  top: 7px;
+  right: 8px;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  background: transparent;
+}
+
+.revision-autorizacion-cuerpo {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  padding: 12px 22px;
+}
+
+.revision-autorizacion-lista {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.revision-autorizacion-lista > li,
+.revision-vale-tarjeta {
+  min-width: 0;
+}
+
+.revision-vale-tarjeta .vale-card-head {
+  padding-block: 12px;
+}
+
+.revision-vale-tarjeta .vale-card-body {
+  padding-block: 13px;
+}
+
+.revision-vale-quitar[data-slot="button"] {
+  width: 44px;
+  height: 44px;
+  color: var(--muted);
+}
+
+.revision-aviso {
+  margin-bottom: 5px;
+  padding: 9px 11px;
+  border: 1px solid #f0debd;
+  border-radius: 7px;
+  background: #fff8ea;
+  color: #795315;
+  font-size: 12px;
+}
+
+.revision-vale-cambio {
+  margin-top: 3px;
+  color: #855021;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.revision-autorizacion-pie {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 22px max(13px, env(safe-area-inset-bottom));
+  border-top: 1px solid var(--line);
+  background: #f7fafa;
+}
+
+.revision-autorizacion-total > span,
+.revision-autorizacion-total > strong {
+  display: block;
+}
+
+.revision-autorizacion-total > span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.revision-autorizacion-total > strong {
+  color: #12646a;
+  font-size: 20px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.revision-autorizacion-acciones {
+  display: flex;
+  gap: 8px;
+}
+
+.revision-autorizacion-acciones > button {
+  min-height: 44px;
+}
+
+@media (max-width: 760px) {
+  .aprobacion-controles {
+    display: grid;
+    align-items: initial;
+  }
+
+  .aprobacion-filtros-boton[data-slot="button"] {
+    display: inline-flex;
+    min-height: 44px;
+  }
+
+  .aprobacion-filtros {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    padding: 12px;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    background: white;
+  }
+
+  .aprobacion-filtros:not([data-abiertos="true"]) {
+    display: none;
+  }
+
+  .aprobacion-filtros > .field:last-of-type {
+    grid-column: 1 / -1;
+  }
+
+  .aprobacion-filtros > button {
+    justify-self: start;
+  }
+
+  .aprobacion-seleccion {
+    gap: 8px;
+    padding: 10px;
+    font-size: 12px;
+  }
+
+  .aprobacion-seleccion button {
+    min-height: 44px;
+    padding-inline: 10px;
+    font-size: 12px;
+  }
+
+  .vale-solicitud {
+    padding: 12px;
+  }
+
+  .vale-solicitud-importes dd {
+    font-size: 18px;
+  }
+
+  .vale-detail-autorizar {
+    gap: 8px;
+  }
+
+  .vale-detail-autorizar > button {
+    padding-inline: 8px;
+  }
+
+  .vale-detail-autorizar > button:last-child {
+    flex: 1;
+  }
+
+  .revision-autorizacion-encabezado {
+    padding: 16px 52px 14px 16px;
+  }
+
+  .revision-autorizacion-cuerpo {
+    padding-inline: 16px;
+  }
+
+  .revision-vale-tarjeta .vale-card-head {
+    padding-inline-start: 9px;
+    flex-wrap: nowrap;
+    gap: 6px;
+  }
+
+  .revision-vale-tarjeta .vale-card-head:not([data-accion-cabecera]) {
+    padding-inline-end: 9px;
+  }
+
+  .revision-vale-tarjeta .vale-card-head > .grow {
+    flex-basis: 0;
+  }
+
+  .revision-vale-tarjeta .ticket-icon {
+    width: 30px;
+    height: 34px;
+  }
+
+  .revision-autorizacion-pie {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    padding-inline: 16px;
+  }
+
+  .revision-autorizacion-total {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .revision-autorizacion-acciones > button {
+    flex: 1;
+  }
+}

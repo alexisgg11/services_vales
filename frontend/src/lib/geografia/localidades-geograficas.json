@@ -1,0 +1,224 @@
+{
+  "fuente": "https://download.geonames.org/export/dump/PE.zip",
+  "licencia": "https://creativecommons.org/licenses/by/4.0/",
+  "fecha": "2026-11-21",
+  "referencias": [
+    {
+      "localidad": "PIURA",
+      "zonal": "PIURA",
+      "latitud": -5.18192,
+      "longitud": -80.65715,
+      "geonames": 3693528
+    },
+    {
+      "localidad": "CASTILLA",
+      "zonal": "PIURA",
+      "latitud": -5.22658,
+      "longitud": -80.61579,
+      "geonames": 3698671
+    },
+    {
+      "localidad": "CATACAOS",
+      "zonal": "PIURA",
+      "latitud": -5.26667,
+      "longitud": -80.68333,
+      "geonames": 3698658
+    },
+    {
+      "localidad": "LAS LOMAS",
+      "zonal": "PIURA",
+      "latitud": -4.65333,
+      "longitud": -80.24667,
+      "geonames": 3695552
+    },
+    {
+      "localidad": "CHULUCANAS",
+      "zonal": "CHULUCANAS",
+      "latitud": -5.0925,
+      "longitud": -80.1625,
+      "geonames": 3698105
+    },
+    {
+      "localidad": "MORROPON",
+      "zonal": "CHULUCANAS",
+      "latitud": -5.1868,
+      "longitud": -79.97076,
+      "geonames": 3694582
+    },
+    {
+      "localidad": "PAITA",
+      "zonal": "PAITA",
+      "latitud": -5.08917,
+      "longitud": -81.11444,
+      "geonames": 3694112
+    },
+    {
+      "localidad": "AMOTAPE",
+      "zonal": "PAITA",
+      "latitud": -4.88167,
+      "longitud": -81.01556,
+      "geonames": 3699691
+    },
+    {
+      "localidad": "EL ARENAL",
+      "zonal": "PAITA",
+      "latitud": -4.88333,
+      "longitud": -81.0275,
+      "geonames": 3699572
+    },
+    {
+      "localidad": "COLAN",
+      "zonal": "PAITA",
+      "latitud": -5.0061,
+      "longitud": -81.05864,
+      "geonames": 3697977
+    },
+    {
+      "localidad": "LA HUACA",
+      "zonal": "PAITA",
+      "latitud": -4.91167,
+      "longitud": -80.96,
+      "geonames": 3695829
+    },
+    {
+      "localidad": "TAMARINDO",
+      "zonal": "PAITA",
+      "latitud": -4.87722,
+      "longitud": -80.97306,
+      "geonames": 3691569
+    },
+    {
+      "localidad": "VICHAYAL",
+      "zonal": "PAITA",
+      "latitud": -4.83843,
+      "longitud": -81.10731,
+      "geonames": 8351405
+    },
+    {
+      "localidad": "VIVIATE",
+      "zonal": "PAITA",
+      "latitud": -4.91958,
+      "longitud": -80.91622,
+      "geonames": 3690851
+    },
+    {
+      "localidad": "PUEBLO NUEVO COLAN",
+      "zonal": "PAITA",
+      "latitud": -4.90874,
+      "longitud": -81.05686,
+      "geonames": 3692414
+    },
+    {
+      "localidad": "EL TAMBO",
+      "zonal": "PAITA",
+      "latitud": -4.88714,
+      "longitud": -81.00432,
+      "geonames": 3817123
+    },
+    {
+      "localidad": "MIRAMAR",
+      "zonal": "PAITA",
+      "latitud": -4.87295,
+      "longitud": -81.10171,
+      "geonames": 3694750
+    },
+    {
+      "localidad": "YACILA",
+      "zonal": "PAITA",
+      "latitud": -5.13303,
+      "longitud": -81.1691,
+      "geonames": 3690741
+    },
+    {
+      "localidad": "SULLANA",
+      "zonal": "SULLANA",
+      "latitud": -4.90389,
+      "longitud": -80.68528,
+      "geonames": 3691674
+    },
+    {
+      "localidad": "LANCONES",
+      "zonal": "SULLANA",
+      "latitud": -4.57694,
+      "longitud": -80.47792,
+      "geonames": 3695712
+    },
+    {
+      "localidad": "MARCAVELICA",
+      "zonal": "SULLANA",
+      "latitud": -4.87778,
+      "longitud": -80.70528,
+      "geonames": 3694939
+    },
+    {
+      "localidad": "QUERECOTILLO",
+      "zonal": "SULLANA",
+      "latitud": -4.83778,
+      "longitud": -80.64556,
+      "geonames": 3693057
+    },
+    {
+      "localidad": "SALITRAL",
+      "zonal": "SULLANA",
+      "latitud": -4.85722,
+      "longitud": -80.68111,
+      "geonames": 3692727
+    },
+    {
+      "localidad": "TALARA-PARIÑAS",
+      "zonal": "TALARA",
+      "latitud": -4.57722,
+      "longitud": -81.27194,
+      "geonames": 3691582
+    },
+    {
+      "localidad": "TALARA",
+      "zonal": "TALARA",
+      "latitud": -4.57722,
+      "longitud": -81.27194,
+      "geonames": 3691582
+    },
+    {
+      "localidad": "NEGRITOS",
+      "zonal": "TALARA",
+      "latitud": -4.65389,
+      "longitud": -81.30472,
+      "geonames": 3694414
+    },
+    {
+      "localidad": "MANCORA",
+      "zonal": "TALARA",
+      "latitud": -4.10778,
+      "longitud": -81.0475,
+      "geonames": 3695000
+    },
+    {
+      "localidad": "LOS ORGANOS",
+      "zonal": "TALARA",
+      "latitud": -4.17806,
+      "longitud": -81.12472,
+      "geonames": 3695161
+    },
+    {
+      "localidad": "EL ALTO",
+      "zonal": "TALARA",
+      "latitud": -4.26851,
+      "longitud": -81.21719,
+      "geonames": 3697441
+    },
+    {
+      "localidad": "SECHURA",
+      "zonal": "SECHURA",
+      "latitud": -5.55694,
+      "longitud": -80.82222,
+      "geonames": 3691954
+    },
+    {
+      "localidad": "VICE",
+      "zonal": "SECHURA",
+      "latitud": -5.41667,
+      "longitud": -80.78333,
+      "geonames": 3690935
+    }
+  ]
+}
