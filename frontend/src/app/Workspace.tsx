@@ -218,7 +218,7 @@ export default function Workspace() {
   };
   return (
     <div className={"workspace " + (collapsed ? "compact" : "")}>
-      <aside className="sidebar">{nav}</aside>
+      <aside className="workspace-sidebar">{nav}</aside>
       <Sheet open={mobile} onOpenChange={setMobile}>
         <SheetContent
           side="left"

@@ -523,7 +523,7 @@ dd {
 .workspace.compact {
   --ancho-menu: 76px;
 }
-.sidebar {
+.workspace-sidebar {
   position: sticky;
   top: 0;
   height: 100dvh;
@@ -560,12 +560,12 @@ dd {
   font-size: 11px;
   margin-top: 2px;
 }
-.sidebar nav,
+.workspace-sidebar nav,
 .mobile-menu nav {
   display: grid;
   gap: 8px;
 }
-.sidebar nav a,
+.workspace-sidebar nav a,
 .mobile-menu nav a {
   display: flex;
   align-items: center;
@@ -576,24 +576,24 @@ dd {
   font-size: 13px;
   min-height: 46px;
 }
-.sidebar nav svg,
+.workspace-sidebar nav svg,
 .mobile-menu nav svg {
   width: 19px;
   height: 19px;
   color: #687f91;
 }
-.sidebar nav a:hover,
+.workspace-sidebar nav a:hover,
 .mobile-menu nav a:hover {
   background: #f4f8f9;
 }
-.sidebar nav a[aria-current],
+.workspace-sidebar nav a[aria-current],
 .mobile-menu nav a[aria-current] {
   background: #e8f4f4;
   border-color: #cfe5e6;
   color: var(--primary);
   font-weight: 500;
 }
-.sidebar nav a[aria-current] svg,
+.workspace-sidebar nav a[aria-current] svg,
 .mobile-menu nav a[aria-current] svg {
   color: var(--primary);
 }
@@ -638,20 +638,20 @@ dd {
   font-size: 12px;
   color: var(--primary);
 }
-.compact .sidebar .brand > div,
-.compact .sidebar nav a > span,
-.compact .sidebar .profile > div {
+.compact .workspace-sidebar .brand > div,
+.compact .workspace-sidebar nav a > span,
+.compact .workspace-sidebar .profile > div {
   display: none;
 }
-.compact .sidebar .brand {
+.compact .workspace-sidebar .brand {
   padding: 0;
   justify-content: center;
 }
-.compact .sidebar nav a {
+.compact .workspace-sidebar nav a {
   justify-content: center;
   padding: 12px 0;
 }
-.compact .sidebar .profile {
+.compact .workspace-sidebar .profile {
   justify-content: center;
 }
 .workspace-main {
@@ -1941,7 +1941,7 @@ th.sticky-code {
     --ancho-menu: 0px;
     display: block;
   }
-  .sidebar {
+  .workspace-sidebar {
     display: none;
   }
   .mobile-only {
